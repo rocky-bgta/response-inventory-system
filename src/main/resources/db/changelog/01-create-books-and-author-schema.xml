@@ -40,6 +40,11 @@
                 <constraints nullable="false"/>
             </column>
             <column name="description" type="varchar(200)"></column>
+            <column name="createdBy" type="varchar(50)"></column>
+            <column name="updatedBy" type="varchar(50)"></column>
+            <column name="createdDate" type="date"></column>
+            <column name="updatedDate" type="date"></column>
+            <column name="status" type="boolean"></column>
         </createTable>
 
 

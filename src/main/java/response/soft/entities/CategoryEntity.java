@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Data
-@Table(name = "tbl_store")
+@Table(name = "category")
 public class CategoryEntity extends BaseModel {
     @Id
     @GeneratedValue(generator = "uuid2")
