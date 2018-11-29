@@ -10,7 +10,7 @@ package response.soft.core;
 
 public class RequestMessage {
     public String token;
-    public Object requestData;
+    public Object data;
     public Integer pageOffset;
     public Integer pageSize;
 

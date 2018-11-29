@@ -11,13 +11,12 @@ package response.soft.core;
 public class ResponseMessage {
 
     public String token;
-    public Object responseData;
-    public Integer responseCode;
+    public Object data;
+    public Integer code;
     public String message;
 
 
     // Pagination
-
     public Integer pageOffset;
     public Integer pageSize;
     public Integer totalRow;
