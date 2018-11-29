@@ -15,6 +15,7 @@ import org.hibernate.SessionFactory;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.ReflectionUtils;
@@ -132,6 +133,8 @@ public abstract class Core {
         responseObject.data = data;
         responseObject.totalRow = Core.totalRowCount.get();
         responseObject.token="token1122555";
+        responseObject.code=HttpStatus.ACCEPTED.value();
+        responseObject.message="Successful";
         return responseObject;
     }
 
