@@ -65,7 +65,7 @@ public abstract class Core {
     public static final ThreadLocal<String> userId = new ThreadLocal<>();
     public static final ThreadLocal<Integer> pageOffset = new ThreadLocal<>();
     public static final ThreadLocal<Integer> pageSize = new ThreadLocal<>();
-    public static final ThreadLocal<Integer> totalRowCount = new ThreadLocal<>();
+    public static final ThreadLocal<Long> totalRowCount = new ThreadLocal<>();
 
 
 
@@ -120,6 +120,13 @@ public abstract class Core {
             throw ex;
         }
         return (T) convertedObject;
+    }
+
+    public ResponseObject buildResponseObject(Object data){
+        ResponseObject responseObject = new ResponseObject();
+        responseObject.data = data;
+        responseObject.totalRow = Core.totalRowCount.get();
+        return responseObject;
     }
 
   /*

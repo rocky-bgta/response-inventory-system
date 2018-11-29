@@ -212,7 +212,7 @@ public class Dao<T> extends BaseDao {
         Object entity = null;
         StringBuilder query;
         String entityName;
-
+        Boolean isPagination=false;
         EntityManager entityManager;
 
         try {
@@ -226,16 +226,28 @@ public class Dao<T> extends BaseDao {
             query.append("SELECT t ")
                     .append("FROM " + entityName + " t ");
 
-
             javax.persistence.Query q = entityManager.createQuery(query.toString());
 
-            if(Core.pageOffset.get()!=0 && Core.pageOffset.get()!=null)
+            if(Core.pageOffset.get()!=0 && Core.pageOffset.get()!=null) {
                 q.setFirstResult(Core.pageOffset.get());
+                isPagination=true;
+            }
 
-            if(Core.pageSize.get()!=0 && Core.pageSize.get()!=null)
+            if(Core.pageSize.get()!=0 && Core.pageSize.get()!=null) {
                 q.setMaxResults(Core.pageSize.get());
+                isPagination=true;
+            }
+
+            if(isPagination){
+                CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+                CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+                cq.select(cb.count(cq.from(clazz)));
+                Long count= entityManager.createQuery(cq).getSingleResult();
+                Core.totalRowCount.set(count);
+            }
 
             list = q.getResultList();
+
             entityManager.getTransaction().commit();
             entityManager.close();
             //this.sessionFactory.close();

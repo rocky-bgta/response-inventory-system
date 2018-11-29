@@ -17,8 +17,8 @@ public class ResponseObject {
 
 
     // Pagination
-    public Integer pageOffset;
-    public Integer pageSize;
-    public Integer totalRow;
+    //public Integer pageOffset;
+    //public Integer pageSize;
+    public Long totalRow;
 
 }

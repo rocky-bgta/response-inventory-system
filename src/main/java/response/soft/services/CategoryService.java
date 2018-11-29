@@ -57,7 +57,7 @@ public class CategoryService  extends BaseService<Category> {
     }
 
     public ResponseObject getAllCategory(RequestObject requestMessage){
-        ResponseObject responseMessage = new ResponseObject();
+        ResponseObject responseMessage=null;
         List<CategoryModel> list;
         try {
             Core.getRequestObject(requestMessage,CategoryModel.class);
@@ -69,7 +69,8 @@ public class CategoryService  extends BaseService<Category> {
 
             list = this.getAll();
 
-            responseMessage.data = list;
+            responseMessage = this.buildResponseObject(list);
+
           /*  if(categoryModel != null)
             {
                 responseMessage.responseCode = HttpConstant.SUCCESS_CODE;
