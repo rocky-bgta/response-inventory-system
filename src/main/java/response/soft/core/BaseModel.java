@@ -8,6 +8,8 @@
  */
 package response.soft.core;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -17,9 +19,14 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode
 public abstract class BaseModel implements Serializable {
+    @JsonIgnore
     private String createdBy;
+    @JsonIgnore
     private String updatedBy;
+    @JsonIgnore
     private Date createdDate;
+    @JsonIgnore
     private Date updatedDate;
+    @JsonIgnore
     private Integer status;
 }

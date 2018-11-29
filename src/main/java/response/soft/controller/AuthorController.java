@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import response.soft.core.RequestMessage;
-import response.soft.core.ResponseMessage;
+import response.soft.core.RequestObject;
+import response.soft.core.ResponseObject;
 import response.soft.entities.Author;
 
 @RestController
@@ -18,8 +18,8 @@ public class AuthorController {
 
     @ApiOperation(value ="", response = Author.class)
     @RequestMapping(value = "getAll", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseMessage getAllUser(@RequestBody RequestMessage requestMessage){
-        ResponseMessage responseMessage = null;
+    public ResponseObject getAllUser(@RequestBody RequestObject requestMessage){
+        ResponseObject responseMessage = null;
         try {
 
             //responseMessage = this.mqttSubscribePublished.getResponseMessage("api/user/getAll", requestMessage);

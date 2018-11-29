@@ -8,7 +8,7 @@
  */
 package response.soft.constant;
 
-public final class TillBoxDbConstant {
+public final class DbConstant {
     public static final String DB_DRIVER_CLASS = "org.postgresql.Driver";
     public static final String DB_DIALECT = "org.hibernate.dialect.PostgreSQL9Dialect";
     public static final String DB_URL = "jdbc:postgresql://localhost:5432/";

@@ -11,16 +11,16 @@ import java.util.Date;
 @MappedSuperclass
 public abstract class BaseEntity implements Serializable {
 
-    @Column(name = "createdBy")
+    @Column(name = "created_by")
     private String createdBy;
 
-    @Column(name = "updatedBy")
+    @Column(name = "updated_by")
     private String updatedBy;
 
-    @Column(name = "createdDate")
+    @Column(name = "created_date")
     private Date createdDate;
 
-    @Column(name = "updatedDate")
+    @Column(name = "updated_date")
     private Date updatedDate;
 
     @Column(name = "status")

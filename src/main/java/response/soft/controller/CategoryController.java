@@ -5,8 +5,8 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import response.soft.core.RequestMessage;
-import response.soft.core.ResponseMessage;
+import response.soft.core.RequestObject;
+import response.soft.core.ResponseObject;
 import response.soft.entities.Author;
 import response.soft.model.CategoryModel;
 import response.soft.services.CategoryService;
@@ -21,8 +21,8 @@ public class CategoryController {
 
     @ApiOperation(value ="", response = Author.class)
     @RequestMapping(value = "getAll", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseMessage getAllUser(@RequestBody RequestMessage requestMessage){
-        ResponseMessage responseMessage = null;
+    public ResponseObject getAllUser(@RequestBody RequestObject requestMessage){
+        ResponseObject responseMessage = null;
         try {
 
             //responseMessage = this.mqttSubscribePublished.getResponseMessage("api/user/getAll", requestMessage);
@@ -35,8 +35,8 @@ public class CategoryController {
 
     @ApiOperation(value ="", response = CategoryModel.class)
     @RequestMapping(value = "save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseMessage save(@RequestBody RequestMessage requestMessage) {
-        ResponseMessage responseMessage;
+    public ResponseObject save(@RequestBody RequestObject requestMessage) {
+        ResponseObject responseMessage;
         responseMessage = this.categoryService.save(requestMessage);
         return responseMessage;
     }

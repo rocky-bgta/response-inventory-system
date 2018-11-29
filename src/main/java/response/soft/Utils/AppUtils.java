@@ -15,7 +15,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-import response.soft.constant.TillBoxDbConstant;
+import response.soft.constant.DbConstant;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -26,18 +26,17 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Properties;
 import java.util.UUID;
-import java.util.concurrent.CyclicBarrier;
 
 import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
 
 //@Component
-public final class TillBoxUtils {
+public final class AppUtils {
 
     public static final Runtime runtime = Runtime.getRuntime();
 
     //@Autowired
     //public static JavaMailSender emailSender;
-    private static final Logger log = LoggerFactory.getLogger(TillBoxUtils.class);
+    private static final Logger log = LoggerFactory.getLogger(response.soft.Utils.AppUtils.class);
     private static final JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
     private static final Properties props = mailSender.getJavaMailProperties();
 
@@ -148,15 +147,15 @@ public final class TillBoxUtils {
 
     public static boolean isDatabaseExists(String dbName) throws SQLException {
         boolean isDatabaseExists = false;
-        String url = TillBoxDbConstant.DB_URL;
-        //String JDBC_DRIVER = TillBoxDbConstant.DB_DRIVER_CLASS;
+        String url = DbConstant.DB_URL;
+        //String JDBC_DRIVER = DbConstant.DB_DRIVER_CLASS;
         Connection conn = null;
         Statement stmt = null;
         String query = "SELECT count(*) FROM pg_database WHERE datname = '" + dbName + "'";
         try {
             //Class.forName(JDBC_DRIVER);
             System.out.println("Connecting to database...");
-            conn = DriverManager.getConnection(url, TillBoxDbConstant.DB_USER_NAME, TillBoxDbConstant.DB_USER_PASSWORD);
+            conn = DriverManager.getConnection(url, DbConstant.DB_USER_NAME, DbConstant.DB_USER_PASSWORD);
             System.out.println("Connected database successfully...");
 
             stmt = conn.createStatement();
@@ -203,15 +202,15 @@ public final class TillBoxUtils {
 
     public static boolean createDatabase(String dbName) throws SQLException {
         boolean isDatabaseCreated = false;
-        String url = TillBoxDbConstant.DB_URL;
-        //String JDBC_DRIVER = TillBoxDbConstant.DB_DRIVER_CLASS;
+        String url = DbConstant.DB_URL;
+        //String JDBC_DRIVER = DbConstant.DB_DRIVER_CLASS;
         Connection conn = null;
         Statement stmt = null;
         String query = "CREATE DATABASE " + dbName;
         try {
             //Class.forName(JDBC_DRIVER);
             System.out.println("Connecting to database...");
-            conn = DriverManager.getConnection(url, TillBoxDbConstant.DB_USER_NAME, TillBoxDbConstant.DB_USER_PASSWORD);
+            conn = DriverManager.getConnection(url, DbConstant.DB_USER_NAME, DbConstant.DB_USER_PASSWORD);
             System.out.println("Connected database successfully...");
 
             stmt = conn.createStatement();

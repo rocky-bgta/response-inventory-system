@@ -19,8 +19,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
-import response.soft.Utils.TillBoxUtils;
-import response.soft.appenum.TillBoxAppEnum;
+import response.soft.appenum.SqlEnum;
 
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -64,16 +63,11 @@ public abstract class Core {
     //public static final ThreadLocal<ClientMessage> clientMessage = new ThreadLocal<>();
 
     public static final ThreadLocal<String> userId = new ThreadLocal<>();
-    public static final ThreadLocal<Integer> businessId = new ThreadLocal<>();
-    public static final ThreadLocal<String> userDataBase = new ThreadLocal<>();
-    public static final ThreadLocal<String> requestToken = new ThreadLocal<>();
+    public static final ThreadLocal<Integer> pageOffset = new ThreadLocal<>();
+    public static final ThreadLocal<Integer> pageSize = new ThreadLocal<>();
+    public static final ThreadLocal<Integer> totalRowCount = new ThreadLocal<>();
 
 
-    // Currency value ===========================================================
-    public static final ThreadLocal<Integer> baseCurrencyID = new ThreadLocal<>();
-    public static final ThreadLocal<Integer> entryCurrencyID = new ThreadLocal<>();
-    public static final ThreadLocal<Double> exchangeRate = new ThreadLocal<>();
-    //===========================================================================
 
     //public static final Map<String,SecurityResMessage> securityResponseCollection;
 
@@ -109,12 +103,15 @@ public abstract class Core {
     }
     */
 
-    public static <T> T getRequestObject(RequestMessage requestMessage, Class clazz) {
+    public static <T> T getRequestObject(RequestObject requestMessage, Class clazz) {
         Object convertedObject;
         Object requestObject=null;
         try {
-            if(requestMessage.data!=null)
+            if(requestMessage.data!=null) {
                 requestObject = requestMessage.data;
+                Core.pageOffset.set(requestMessage.pageOffset);
+                Core.pageSize.set(requestMessage.pageSize);
+            }
 
             convertedObject = Core.jsonMapper.convertValue(requestObject, clazz);
         } catch (Exception ex) {
@@ -125,7 +122,7 @@ public abstract class Core {
     }
 
   /*
-    public static <T> T getResponseObject(ResponseMessage requestMessage, Class clazz) {
+    public static <T> T getResponseObject(ResponseObject requestMessage, Class clazz) {
         Object convertedObject;
         Object responseObject=null;
         try {
@@ -140,7 +137,7 @@ public abstract class Core {
         return (T) convertedObject;
     }
 */
-    /*public static <T extends BaseModel> T getRequestObject(RequestMessage requestMessage) {
+    /*public static <T extends BaseModel> T getRequestObject(RequestObject requestMessage) {
         Object convertedObject = null;
         try {
             Object requestObj = requestMessage.requestObj;
@@ -155,19 +152,19 @@ public abstract class Core {
         return (T) convertedObject;
     }*/
 
-    public static ResponseMessage buildDefaultResponseMessage() {
-        ResponseMessage responseMessage = new ResponseMessage();
+    public static ResponseObject buildDefaultResponseMessage() {
+        ResponseObject responseMessage = new ResponseObject();
         return responseMessage;
     }
 
     /*
 
-    public static RequestMessage getDefaultWorkerRequestMessage() {
-        RequestMessage requestMessage = new RequestMessage();
+    public static RequestObject getDefaultWorkerRequestMessage() {
+        RequestObject requestMessage = new RequestObject();
         requestMessage.brokerMessage = new BrokerMessage();
         requestMessage.brokerMessage.requestFrom =
-                TillBoxAppEnum.BrokerRequestType.WORKER.get();
-        requestMessage.brokerMessage.messageId = TillBoxUtils.getUUID();
+                SqlEnum.BrokerRequestType.WORKER.get();
+        requestMessage.brokerMessage.messageId = AppUtils.getUUID();
         return requestMessage;
     }
     */
@@ -184,7 +181,7 @@ public abstract class Core {
                 type = org.apache.commons.lang3.StringUtils.substringAfterLast(type, "class").trim();
 
                 //Object something = "1";
-                //Object result= TillBoxUtils.castValue(type.trim(),something);
+                //Object result= AppUtils.castValue(type.trim(),something);
 
 
                 boolean condition1 = true, condition2, condition3, condition4, condition5;
@@ -199,9 +196,9 @@ public abstract class Core {
                 // condition5 = !StringUtils.startsWithIgnoreCase(field.getName().toString(), "updated");
                 if (condition3 && condition2) {
                     if (queryType != null)
-                        keyValue.put(field.getName().toString() + queryType, TillBoxUtils.castValue(type, field.get(obj)));
+                        keyValue.put(field.getName().toString() + queryType, response.soft.Utils.AppUtils.castValue(type, field.get(obj)));
                     else
-                        keyValue.put(field.getName().toString(), TillBoxUtils.castValue(type, field.get(obj)));
+                        keyValue.put(field.getName().toString(), response.soft.Utils.AppUtils.castValue(type, field.get(obj)));
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -263,37 +260,37 @@ public abstract class Core {
 
             query = new StringBuilder();
 
-            if (TillBoxAppEnum.QueryType.Select.get() == queryType) {
+            if (SqlEnum.QueryType.Select.get() == queryType) {
                 query.append("SELECT t ")
                         .append("FROM " + entityName + " t ")
                         .append(" WHERE ");
-                query = this.criteriaBuilder(keyValueParisForWhereCondition, query, TillBoxAppEnum.QueryType.Select.get());
+                query = this.criteriaBuilder(keyValueParisForWhereCondition, query, SqlEnum.QueryType.Select.get());
             }
 
-            if (TillBoxAppEnum.QueryType.Delete.get() == queryType) {
+            if (SqlEnum.QueryType.Delete.get() == queryType) {
                 query.append("DELETE FROM ");
                 query.append("" + entityName + " t ");
                 keyValuePairsWhereConditionForDelete = Core.getKeyValuePairFromObject(whereCondition);
                 query.append(" WHERE ");
-                query = this.criteriaBuilder(keyValuePairsWhereConditionForDelete, query, TillBoxAppEnum.QueryType.Select.get());
+                query = this.criteriaBuilder(keyValuePairsWhereConditionForDelete, query, SqlEnum.QueryType.Select.get());
             }
 
-            if (TillBoxAppEnum.QueryType.Update.get() == queryType) {
+            if (SqlEnum.QueryType.Update.get() == queryType) {
                 query.append("UPDATE ");
                 query.append("" + entityName + " t ");
                 query.append("set ");
                 keyValuePairsForUpdate = Core.getKeyValuePairFromObject(updateObject);
-                query = this.criteriaBuilder(keyValuePairsForUpdate, query, TillBoxAppEnum.QueryType.Update.get());
+                query = this.criteriaBuilder(keyValuePairsForUpdate, query, SqlEnum.QueryType.Update.get());
                 query.append(" WHERE ");
-                query = this.criteriaBuilder(keyValueParisForWhereCondition, query, TillBoxAppEnum.QueryType.Select.get());
+                query = this.criteriaBuilder(keyValueParisForWhereCondition, query, SqlEnum.QueryType.Select.get());
 
             }
 
-            if (TillBoxAppEnum.QueryType.CountRow.get() == queryType) {
+            if (SqlEnum.QueryType.CountRow.get() == queryType) {
                 query.append("SELECT COUNT(*) FROM ");
                 query.append("" + entityName + " t");
                 query.append(" WHERE ");
-                query = this.criteriaBuilder(keyValueParisForWhereCondition, query, TillBoxAppEnum.QueryType.Select.get());
+                query = this.criteriaBuilder(keyValueParisForWhereCondition, query, SqlEnum.QueryType.Select.get());
 
             }
 
@@ -319,9 +316,9 @@ public abstract class Core {
             }
             for (int i = 0; i < criteria.size(); i++) {
                 if (i > 0) {
-                    if (queryType == TillBoxAppEnum.QueryType.Select.get())
+                    if (queryType == SqlEnum.QueryType.Select.get())
                         query.append(" AND ");
-                    if (queryType == TillBoxAppEnum.QueryType.Update.get())
+                    if (queryType == SqlEnum.QueryType.Update.get())
                         query.append(" , ");
                 }
                 query.append(criteria.get(i));
@@ -357,7 +354,7 @@ public abstract class Core {
         Core.publisherForRollBackAndCommit.publishedMessageForCommit(messageId);
     }*/
 
-    public static <M> List<M> convertResponseToList(ResponseMessage responseMessage, M model) throws Exception {
+    public static <M> List<M> convertResponseToList(ResponseObject responseMessage, M model) throws Exception {
         List<M> finalList = new ArrayList<>();
         List tempList;
         try {

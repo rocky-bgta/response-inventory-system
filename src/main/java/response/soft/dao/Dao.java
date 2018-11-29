@@ -13,11 +13,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import response.soft.appenum.TillBoxAppEnum;
-import response.soft.constant.TillBoxDbConstant;
+import response.soft.appenum.SqlEnum;
+import response.soft.constant.DbConstant;
 import response.soft.core.BaseDao;
 import response.soft.core.BaseHistoryEntity;
 import response.soft.core.Core;
+import response.soft.core.History;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -62,7 +63,7 @@ public class Dao<T> extends BaseDao {
 
             //================ code regarding history table======================
             if(insertDataInHistory) {
-                historyEntity = buildHistoryEntity(t, TillBoxAppEnum.QueryType.Insert.get());
+                historyEntity = buildHistoryEntity(t, SqlEnum.QueryType.Insert.get());
                 entityManager.persist(historyEntity);
                 entityManager.flush();
             }
@@ -92,7 +93,7 @@ public class Dao<T> extends BaseDao {
                 primaryKeyValue = this.getPrimaryFieldValue(t);
                 oldEntity = getById(primaryKeyValue);
 
-                historyEntity = buildHistoryEntity(oldEntity, TillBoxAppEnum.QueryType.Update.get());
+                historyEntity = buildHistoryEntity(oldEntity, SqlEnum.QueryType.Update.get());
                 session.save(historyEntity);
                 session.flush();
             }
@@ -122,7 +123,7 @@ public class Dao<T> extends BaseDao {
             session.flush();
             session.refresh(t);
 
-            historyEntity = buildHistoryEntity(t,TillBoxAppEnum.QueryType.Insert.get());
+            historyEntity = buildHistoryEntity(t,SqlEnum.QueryType.Insert.get());
             session.save(historyEntity);
             session.flush();
 
@@ -249,7 +250,7 @@ public class Dao<T> extends BaseDao {
                 entityName = this.getEntityNameFromHql(updateHql);
                 // Insert data into history table
                 historyEntity = buildHistoryEntity(selectedUpdateRowList,
-                        TillBoxAppEnum.QueryType.UpdateByConditions.get(),
+                        SqlEnum.QueryType.UpdateByConditions.get(),
                         entityName);
                 session.save(historyEntity);
                 session.flush();
@@ -377,19 +378,19 @@ public class Dao<T> extends BaseDao {
             session.beginTransaction();
             Query q = session.createQuery(hql);
 
-            if(TillBoxAppEnum.QueryType.Join.get()==queryType) {
+            if(SqlEnum.QueryType.Join.get()==queryType) {
                 result = q.getResultList();
                 if( result.size()>0) {
                     convertedModels = this.getObjectListFromObjectArray(result, clazz);
                 }
             }
-            else if(TillBoxAppEnum.QueryType.Select.get()==queryType){
+            else if(SqlEnum.QueryType.Select.get()==queryType){
                 result = q.getResultList();
                 if( result.size()>0) {
                     convertedModels = (List<M>) result;
                 }
             }
-            else if(TillBoxAppEnum.QueryType.GetOne.get()==queryType){
+            else if(SqlEnum.QueryType.GetOne.get()==queryType){
                 q.setMaxResults(1);
                 result = q.getResultList();
                 if( result.size()>0) {
@@ -397,7 +398,7 @@ public class Dao<T> extends BaseDao {
                 }
             }
 
-            else if(TillBoxAppEnum.QueryType.Update.get()==queryType){
+            else if(SqlEnum.QueryType.Update.get()==queryType){
 
                 //================ code regarding history table======================
                 if(insertDataInHistory) {
@@ -407,7 +408,7 @@ public class Dao<T> extends BaseDao {
                     entityName = this.getEntityNameFromHql(hql);
                     // Insert data into history table
                     historyEntity = buildHistoryEntity(selectedUpdateRowList,
-                            TillBoxAppEnum.QueryType.UpdateByConditions.get(),
+                            SqlEnum.QueryType.UpdateByConditions.get(),
                             entityName);
                     session.save(historyEntity);
                     session.flush();
@@ -434,11 +435,11 @@ public class Dao<T> extends BaseDao {
             Session session = getSession();
             session.beginTransaction();
             NativeQuery query = session.createNativeQuery(hql);
-            if(TillBoxAppEnum.QueryType.Select.get()==queryType)
+            if(SqlEnum.QueryType.Select.get()==queryType)
                 if(result.size()>0) {
                     result = query.getResultList();
                 }
-            if(TillBoxAppEnum.QueryType.Update.get()==queryType)
+            if(SqlEnum.QueryType.Update.get()==queryType)
                 query.executeUpdate();
             session.getTransaction().commit();
             session.close();
@@ -465,7 +466,7 @@ public class Dao<T> extends BaseDao {
         entityName = StringUtils.substringAfterLast(entityClassPath,".");
 
         try {
-            hql = this.queryBuilder(keyValueParis, TillBoxAppEnum.QueryType.CountRow.get(),entityName);
+            hql = this.queryBuilder(keyValueParis, SqlEnum.QueryType.CountRow.get(),entityName);
 
             Session session = getSession();
             session.beginTransaction();
@@ -514,15 +515,16 @@ public class Dao<T> extends BaseDao {
     private BaseHistoryEntity buildHistoryEntity(Object entity, int QueryType, String entityName) throws JsonProcessingException {
         String jsonString,entityClassPath;
         jsonString = Core.jsonMapper.writeValueAsString(entity);
-        Core.HistoryEntity.setMessageId(Core.messageId.get());
-        Core.HistoryEntity.setActionType(QueryType);
-        Core.HistoryEntity.setDateTime(new Date());
-        Core.HistoryEntity.setJsonObject(jsonString);
+        HistoryEntity = new History();
+        HistoryEntity.setMessageId(Core.messageId.get());
+        HistoryEntity.setActionType(QueryType);
+        HistoryEntity.setDateTime(new Date());
+        HistoryEntity.setJsonObject(jsonString);
         entityClassPath = entity.getClass().toString();
 
 
         if(entityName!=null){
-            entityClassPath = TillBoxDbConstant.DEFAULT_DB_ENTITY_PATH + "."+entityName;
+            entityClassPath = DbConstant.DEFAULT_DB_ENTITY_PATH + "."+entityName;
         }else {
             entityClassPath = StringUtils.substringAfterLast(entityClassPath, "class").trim();
             entityName = StringUtils.substringAfterLast(entityClassPath,".");

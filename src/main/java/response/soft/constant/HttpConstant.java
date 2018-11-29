@@ -1,6 +1,6 @@
 package response.soft.constant;
 
-public final class TillBoxAppConstant {
+public final class HttpConstant {
 
     //Base Url
     public static final String FRONT_END_BASE_URL = "http://localhost:4200/";

@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import response.soft.appenum.TillBoxAppEnum;
+import response.soft.appenum.SqlEnum;
 import response.soft.dao.Dao;
 
 import java.util.ArrayList;
@@ -65,7 +65,7 @@ public abstract class BaseService<T extends BaseEntity> extends Core {
         List modelList = new ArrayList();
         Object model;
         String hql;
-        Integer queryType = TillBoxAppEnum.QueryType.Select.get();
+        Integer queryType = SqlEnum.QueryType.Select.get();
         try {
             hql = this.queryBuilder(whereCondition, queryType);
             keyValueParis = Core.getKeyValuePairFromObject(whereCondition,queryType);
@@ -95,9 +95,9 @@ public abstract class BaseService<T extends BaseEntity> extends Core {
         List modelList = new ArrayList();
         Object model;
         String hql;
-        Integer queryType = TillBoxAppEnum.QueryType.Select.get();
+        Integer queryType = SqlEnum.QueryType.Select.get();
         try {
-            whereCondition.setStatus(TillBoxAppEnum.Status.Active.get());
+            whereCondition.setStatus(SqlEnum.Status.Active.get());
             hql = this.queryBuilder(whereCondition,queryType);
             keyValueParis = Core.getKeyValuePairFromObject(whereCondition,queryType);
             entityList = this.dao.getAllByConditions(hql, keyValueParis);
@@ -126,7 +126,7 @@ public abstract class BaseService<T extends BaseEntity> extends Core {
             t = (T) Core.modelMapper.map(m, Core.runTimeEntityType.get());
 
             // ================================================
-            t.setStatus(TillBoxAppEnum.Status.Active.get());
+            t.setStatus(SqlEnum.Status.Active.get());
             if(Core.userId.get()== null ||StringUtils.equals(Core.userId.get(),"") || StringUtils.equals(Core.userId.get(),"string")){
                 t.setCreatedBy("System");
                 t.setUpdatedBy("System");
@@ -165,7 +165,7 @@ public abstract class BaseService<T extends BaseEntity> extends Core {
 
             // ================================================
             if(t.getStatus() == null) {//check condition
-                t.setStatus(TillBoxAppEnum.Status.Active.get());
+                t.setStatus(SqlEnum.Status.Active.get());
             }
             if(Core.userId.get()== null ||StringUtils.equals(Core.userId.get(),"") || StringUtils.equals(Core.userId.get(),"string")){
                 t.setCreatedBy("System");
@@ -220,7 +220,7 @@ public abstract class BaseService<T extends BaseEntity> extends Core {
             t = (T) Core.modelMapper.map(m, Core.runTimeEntityType.get());
 
             // ================================================
-            t.setStatus(TillBoxAppEnum.Status.Deleted.get());
+            t.setStatus(SqlEnum.Status.Deleted.get());
             if(Core.userId.get()== null ||StringUtils.equals(Core.userId.get(),"") || StringUtils.equals(Core.userId.get(),"string")){
                 t.setUpdatedBy("System");
             }else {
@@ -253,7 +253,7 @@ public abstract class BaseService<T extends BaseEntity> extends Core {
             t = (T) Core.modelMapper.map(m, Core.runTimeEntityType.get());
 
             // ================================================
-            t.setStatus(TillBoxAppEnum.Status.Inactive.get());
+            t.setStatus(SqlEnum.Status.Inactive.get());
             if(Core.userId.get()== null ||StringUtils.equals(Core.userId.get(),"") || StringUtils.equals(Core.userId.get(),"string")){
                 t.setUpdatedBy("System");
             }else {
@@ -367,13 +367,13 @@ public abstract class BaseService<T extends BaseEntity> extends Core {
 
 
             updateHql = this.queryBuilder(whereCondition,
-                    TillBoxAppEnum.QueryType.Update.get(),
+                    SqlEnum.QueryType.Update.get(),
                     objectToUpdate);
 
-            selectHql = this.queryBuilder(whereCondition,TillBoxAppEnum.QueryType.Select.get());
+            selectHql = this.queryBuilder(whereCondition,SqlEnum.QueryType.Select.get());
 
-            keyValuePairForUpdate = Core.getKeyValuePairFromObject(objectToUpdate,TillBoxAppEnum.QueryType.Update.get());
-            keyValueParisForWhereCondition = Core.getKeyValuePairFromObject(whereCondition,TillBoxAppEnum.QueryType.Select.get());
+            keyValuePairForUpdate = Core.getKeyValuePairFromObject(objectToUpdate,SqlEnum.QueryType.Update.get());
+            keyValueParisForWhereCondition = Core.getKeyValuePairFromObject(whereCondition,SqlEnum.QueryType.Select.get());
 
 
           /*  if(Core.isCommonApi.get() || Core.commonDataBase.get())
@@ -403,7 +403,7 @@ public abstract class BaseService<T extends BaseEntity> extends Core {
         Integer numOfDeletedRows = 0;
         try {
             hql = this.queryBuilder(whereCondition,
-                    TillBoxAppEnum.QueryType.Delete.get());
+                    SqlEnum.QueryType.Delete.get());
             keyValueParis = Core.getKeyValuePairFromObject(whereCondition);
             numOfDeletedRows = this.dao.deleteByConditions(hql, keyValueParis);
         } catch (Exception ex) {
@@ -421,7 +421,7 @@ public abstract class BaseService<T extends BaseEntity> extends Core {
     }
 
     public <M extends BaseModel> M getByIdActiveStatus(Object id) throws Exception {
-        return getById(id,TillBoxAppEnum.Status.Active.get());
+        return getById(id,SqlEnum.Status.Active.get());
     }
 
     public <M extends BaseModel> M getById(Object id, Integer status) throws Exception {
@@ -488,8 +488,8 @@ public abstract class BaseService<T extends BaseEntity> extends Core {
         return bllResponseMessage;
     }*/
 
-    protected RequestMessage getDefaultRequestMessage() {
-        RequestMessage requestMessage = new RequestMessage();
+    protected RequestObject getDefaultRequestMessage() {
+        RequestObject requestMessage = new RequestObject();
         return requestMessage;
     }
 
