@@ -22,11 +22,11 @@ public class CategoryService  extends BaseService<Category> {
     }
 
 
-    public ResponseObject save(RequestObject requestMessage){
-        ResponseObject responseMessage = new ResponseObject();
+    public ResponseObject save(RequestObject requestObject){
+        ResponseObject responseObject = new ResponseObject();
         CategoryModel categoryModel;
         try {
-            categoryModel = Core.getRequestObject(requestMessage,CategoryModel.class);
+            categoryModel = Core.processRequestObject(requestObject,CategoryModel.class);
 
             /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(categoryModel);
             for (ConstraintViolation<CountryModel> violation : violations) {
@@ -35,32 +35,32 @@ public class CategoryService  extends BaseService<Category> {
 
             categoryModel = this.save(categoryModel);
 
-            responseMessage.data = categoryModel;
+            responseObject.data = categoryModel;
           /*  if(categoryModel != null)
             {
-                responseMessage.responseCode = HttpConstant.SUCCESS_CODE;
-                responseMessage.message = MessageConstant.COUNTRY_SAVED_SUCCESSFULLY;
+                responseObject.responseCode = HttpConstant.SUCCESS_CODE;
+                responseObject.message = MessageConstant.COUNTRY_SAVED_SUCCESSFULLY;
                 this.commit();
             }else
             {
-                responseMessage.responseCode = HttpConstant.FAILED_ERROR_CODE;
-                responseMessage.message = MessageConstant.COUNTRY_SAVED_FAILED;
+                responseObject.responseCode = HttpConstant.FAILED_ERROR_CODE;
+                responseObject.message = MessageConstant.COUNTRY_SAVED_FAILED;
                 this.rollBack();
             }*/
         }catch (Exception ex){
-            //responseMessage = this.getDefaultResponseMessage(requestMessage.requestObj, HttpConstant.INTERNAL_SERVER_ERROR, HttpConstant.UN_PROCESSABLE_REQUEST);
+            //responseObject = this.getDefaultResponseMessage(requestObject.requestObj, HttpConstant.INTERNAL_SERVER_ERROR, HttpConstant.UN_PROCESSABLE_REQUEST);
 
             //this.rollBack();
             //log.error("CountryServiceManager -> save got exception");
         }
-        return responseMessage;
+        return responseObject;
     }
 
-    public ResponseObject getAllCategory(RequestObject requestMessage){
-        ResponseObject responseMessage=null;
+    public ResponseObject getAllCategory(RequestObject requestObject){
+        ResponseObject responseObject=null;
         List<CategoryModel> list;
         try {
-            Core.getRequestObject(requestMessage,CategoryModel.class);
+            Core.processRequestObject(requestObject);
 
             /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(categoryModel);
             for (ConstraintViolation<CountryModel> violation : violations) {
@@ -69,25 +69,25 @@ public class CategoryService  extends BaseService<Category> {
 
             list = this.getAll();
 
-            responseMessage = this.buildResponseObject(list);
+            responseObject = this.buildResponseObject(list);
 
           /*  if(categoryModel != null)
             {
-                responseMessage.responseCode = HttpConstant.SUCCESS_CODE;
-                responseMessage.message = MessageConstant.COUNTRY_SAVED_SUCCESSFULLY;
+                responseObject.responseCode = HttpConstant.SUCCESS_CODE;
+                responseObject.message = MessageConstant.COUNTRY_SAVED_SUCCESSFULLY;
                 this.commit();
             }else
             {
-                responseMessage.responseCode = HttpConstant.FAILED_ERROR_CODE;
-                responseMessage.message = MessageConstant.COUNTRY_SAVED_FAILED;
+                responseObject.responseCode = HttpConstant.FAILED_ERROR_CODE;
+                responseObject.message = MessageConstant.COUNTRY_SAVED_FAILED;
                 this.rollBack();
             }*/
         }catch (Exception ex){
-            //responseMessage = this.getDefaultResponseMessage(requestMessage.requestObj, HttpConstant.INTERNAL_SERVER_ERROR, HttpConstant.UN_PROCESSABLE_REQUEST);
+            //responseObject = this.getDefaultResponseMessage(requestObject.requestObj, HttpConstant.INTERNAL_SERVER_ERROR, HttpConstant.UN_PROCESSABLE_REQUEST);
 
             //this.rollBack();
             //log.error("CountryServiceManager -> save got exception");
         }
-        return responseMessage;
+        return responseObject;
     }
 }

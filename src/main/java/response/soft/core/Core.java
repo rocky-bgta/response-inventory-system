@@ -103,18 +103,23 @@ public abstract class Core {
     }
     */
 
-    public static <T> T getRequestObject(RequestObject requestMessage, Class clazz) {
-        Object convertedObject;
-        Object requestObject=null;
+    public static <T> T processRequestObject(RequestObject requestObject) {
+      return  processRequestObject(requestObject,null);
+    }
+
+    public static <T> T processRequestObject(RequestObject requestObject, Class clazz) {
+        Object convertedObject=null;
+        Object requestData=null;
         try {
-            if(requestMessage.data!=null) {
-                requestObject = requestMessage.data;
+            if(requestObject.data!=null) {
+                requestData = requestObject.data;
             }
 
-            Core.pageOffset.set(requestMessage.pageOffset);
-            Core.pageSize.set(requestMessage.pageSize);
+            Core.pageOffset.set(requestObject.pageOffset);
+            Core.pageSize.set(requestObject.pageSize);
 
-            convertedObject = Core.jsonMapper.convertValue(requestObject, clazz);
+            if(clazz!=null)
+                convertedObject = Core.jsonMapper.convertValue(requestData, clazz);
         } catch (Exception ex) {
             ex.printStackTrace();
             throw ex;
@@ -126,6 +131,7 @@ public abstract class Core {
         ResponseObject responseObject = new ResponseObject();
         responseObject.data = data;
         responseObject.totalRow = Core.totalRowCount.get();
+        responseObject.token="token1122555";
         return responseObject;
     }
 
@@ -145,7 +151,7 @@ public abstract class Core {
         return (T) convertedObject;
     }
 */
-    /*public static <T extends BaseModel> T getRequestObject(RequestObject requestMessage) {
+    /*public static <T extends BaseModel> T processRequestObject(RequestObject requestMessage) {
         Object convertedObject = null;
         try {
             Object requestObj = requestMessage.requestObj;
@@ -160,11 +166,13 @@ public abstract class Core {
         return (T) convertedObject;
     }*/
 
+    /*
     public static ResponseObject buildDefaultResponseMessage() {
         ResponseObject responseMessage = new ResponseObject();
         return responseMessage;
     }
 
+    */
     /*
 
     public static RequestObject getDefaultWorkerRequestMessage() {

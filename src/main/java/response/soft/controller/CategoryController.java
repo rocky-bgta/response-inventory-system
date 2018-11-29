@@ -22,7 +22,7 @@ public class CategoryController {
     @ApiOperation(value ="", response = Author.class)
     @RequestMapping(value = "getAll", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseObject getAllUser(@RequestBody RequestObject requestMessage){
-        ResponseObject responseMessage = null;
+        ResponseObject responseMessage;
         responseMessage = this.categoryService.getAllCategory(requestMessage);
         return responseMessage;
     }
