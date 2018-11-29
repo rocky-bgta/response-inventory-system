@@ -23,14 +23,8 @@ public class CategoryController {
     @RequestMapping(value = "getAll", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseObject getAllUser(@RequestBody RequestObject requestMessage){
         ResponseObject responseMessage = null;
-        try {
-
-            //responseMessage = this.mqttSubscribePublished.getResponseMessage("api/user/getAll", requestMessage);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+        responseMessage = this.categoryService.getAllCategory(requestMessage);
+        return responseMessage;
     }
 
     @ApiOperation(value ="", response = CategoryModel.class)

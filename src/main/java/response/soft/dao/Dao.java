@@ -209,16 +209,35 @@ public class Dao<T> extends BaseDao {
     public List<T> getAll() throws HibernateException {
         List<T> list = null;
 
+        Object entity = null;
+        StringBuilder query;
+        String entityName;
+
+        EntityManager entityManager;
+
         try {
-            Session session = getSession();
-            session.beginTransaction();
-            CriteriaBuilder cb = session.getCriteriaBuilder();
-            CriteriaQuery<T> q = cb.createQuery(Core.runTimeEntityType.get());
-            Root<T> table = q.from(Core.runTimeEntityType.get());
-            q.select(table);
-            list = session.createQuery(q).getResultList();
-            session.getTransaction().commit();
-            session.close();
+            entityManager = entityManagerFactory.createEntityManager();
+            entityManager.getTransaction().begin();
+
+            query = new StringBuilder();
+            Class clazz = Core.runTimeEntityType.get();
+            entityName = clazz.getName();
+            entityName = StringUtils.substringAfterLast(entityName, ".").trim();
+            query.append("SELECT t ")
+                    .append("FROM " + entityName + " t ");
+
+
+            javax.persistence.Query q = entityManager.createQuery(query.toString());
+
+            if(Core.pageOffset.get()!=0 && Core.pageOffset.get()!=null)
+                q.setFirstResult(Core.pageOffset.get());
+
+            if(Core.pageSize.get()!=0 && Core.pageSize.get()!=null)
+                q.setMaxResults(Core.pageSize.get());
+
+            list = q.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
             //this.sessionFactory.close();
         } catch (Exception ex) {
             ex.printStackTrace();

@@ -109,9 +109,10 @@ public abstract class Core {
         try {
             if(requestMessage.data!=null) {
                 requestObject = requestMessage.data;
-                Core.pageOffset.set(requestMessage.pageOffset);
-                Core.pageSize.set(requestMessage.pageSize);
             }
+
+            Core.pageOffset.set(requestMessage.pageOffset);
+            Core.pageSize.set(requestMessage.pageSize);
 
             convertedObject = Core.jsonMapper.convertValue(requestObject, clazz);
         } catch (Exception ex) {

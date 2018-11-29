@@ -8,6 +8,8 @@ import response.soft.core.ResponseObject;
 import response.soft.entities.Category;
 import response.soft.model.CategoryModel;
 
+import java.util.List;
+
 @Service
 public class CategoryService  extends BaseService<Category> {
 
@@ -34,6 +36,40 @@ public class CategoryService  extends BaseService<Category> {
             categoryModel = this.save(categoryModel);
 
             responseMessage.data = categoryModel;
+          /*  if(categoryModel != null)
+            {
+                responseMessage.responseCode = HttpConstant.SUCCESS_CODE;
+                responseMessage.message = MessageConstant.COUNTRY_SAVED_SUCCESSFULLY;
+                this.commit();
+            }else
+            {
+                responseMessage.responseCode = HttpConstant.FAILED_ERROR_CODE;
+                responseMessage.message = MessageConstant.COUNTRY_SAVED_FAILED;
+                this.rollBack();
+            }*/
+        }catch (Exception ex){
+            //responseMessage = this.getDefaultResponseMessage(requestMessage.requestObj, HttpConstant.INTERNAL_SERVER_ERROR, HttpConstant.UN_PROCESSABLE_REQUEST);
+
+            //this.rollBack();
+            //log.error("CountryServiceManager -> save got exception");
+        }
+        return responseMessage;
+    }
+
+    public ResponseObject getAllCategory(RequestObject requestMessage){
+        ResponseObject responseMessage = new ResponseObject();
+        List<CategoryModel> list;
+        try {
+            Core.getRequestObject(requestMessage,CategoryModel.class);
+
+            /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(categoryModel);
+            for (ConstraintViolation<CountryModel> violation : violations) {
+                log.error(violation.getMessage());
+            }*/
+
+            list = this.getAll();
+
+            responseMessage.data = list;
           /*  if(categoryModel != null)
             {
                 responseMessage.responseCode = HttpConstant.SUCCESS_CODE;
