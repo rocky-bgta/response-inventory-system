@@ -7,8 +7,8 @@ import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
 import java.util.Date;
 
-@MappedSuperclass
 @Data
+@MappedSuperclass
 public abstract class BaseEntity implements Serializable {
 
     @Column(name = "createdBy")

@@ -2,18 +2,16 @@ package response.soft.entities;
 
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
-import response.soft.core.BaseModel;
+import response.soft.core.BaseEntity;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Data
+@Entity
 @Table(name = "category")
-public class CategoryEntity extends BaseModel {
+public class Category extends BaseEntity {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
