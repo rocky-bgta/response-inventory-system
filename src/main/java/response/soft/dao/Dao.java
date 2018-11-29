@@ -11,6 +11,7 @@ import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import response.soft.appenum.TillBoxAppEnum;
 import response.soft.constant.TillBoxDbConstant;
@@ -18,6 +19,8 @@ import response.soft.core.BaseDao;
 import response.soft.core.BaseHistoryEntity;
 import response.soft.core.Core;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -31,47 +34,42 @@ import java.util.Map;
 //@Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class Dao<T> extends BaseDao {
 
+    //@Autowired
     private SessionFactory sessionFactory;
+
+    @Autowired
+    EntityManagerFactory entityManagerFactory;
 
     public Dao(){
         super();
     }
 
-    public Dao(SessionFactory sessionFactory){
-        super();
-        this.sessionFactory = sessionFactory;
-    }
+
 
     private static final Logger log = LoggerFactory.getLogger(Dao.class);
-    //private Session session;
 
-    //private SessionFactory sessionFactory;
-    //{
-    //this.session = Core.sessionThreadLocal.get();
-    //this.sessionFactory = Core.sessionFactoryThreadLocal.get();
-
-    //}
 
     public T save(T t, Boolean insertDataInHistory) throws Exception {
         BaseHistoryEntity historyEntity;
         try {
-            Session session = getSession();
-            session.beginTransaction();
-            session.save(t);
-            session.flush();
-            session.refresh(t);
+
+            EntityManager entityManager = entityManagerFactory.createEntityManager();
+
+            entityManager.getTransaction().begin();
+            entityManager.persist(t);
+            entityManager.flush();
+            entityManager.refresh(t);
 
             //================ code regarding history table======================
             if(insertDataInHistory) {
                 historyEntity = buildHistoryEntity(t, TillBoxAppEnum.QueryType.Insert.get());
-                session.save(historyEntity);
-                session.flush();
+                entityManager.persist(historyEntity);
+                entityManager.flush();
             }
             //===================================================================
 
-            session.getTransaction().commit();
-            session.close();
-            //this.sessionFactory.close();
+            entityManager.getTransaction().commit();
+            entityManager.close();
         } catch (Exception ex) {
             ex.printStackTrace();
             log.error("Exception from Dao Save method");

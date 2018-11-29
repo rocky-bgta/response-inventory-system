@@ -44,7 +44,7 @@
             <column name="updatedBy" type="varchar(50)"></column>
             <column name="createdDate" type="date"></column>
             <column name="updatedDate" type="date"></column>
-            <column name="status" type="boolean"></column>
+            <column name="status" type="Integer"></column>
         </createTable>
 
 

@@ -15,23 +15,26 @@ import org.hibernate.SessionFactory;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 import response.soft.Utils.TillBoxUtils;
 import response.soft.appenum.TillBoxAppEnum;
 
-import javax.sql.DataSource;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.TimeUnit;
 
+@Component
 public abstract class Core {
     private static final Logger log = LoggerFactory.getLogger(Core.class);
     private static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -52,7 +55,7 @@ public abstract class Core {
 
     public CyclicBarrier barrier;
 
-    public static BaseHistoryEntity HistoryEntity;
+    public static BaseHistoryEntity HistoryEntity = new History();
     public static final ThreadLocal<String> messageId = new ThreadLocal<>();
 
   /*  public static final PublisherForRollBackAndCommit publisherForRollBackAndCommit
@@ -91,8 +94,11 @@ public abstract class Core {
     //public final Integer allowedTime = 10000;
     private static final Long nanoSecond = TimeUnit.NANOSECONDS.convert(allowedTime, TimeUnit.MILLISECONDS);
 
-    //@Autowired
-    static AnnotationConfigApplicationContext applicationContext;
+    /* @Autowired
+        static AnnotationConfigApplicationContext applicationContext;
+    */
+
+    /*
     static
     {
          applicationContext =
@@ -101,62 +107,7 @@ public abstract class Core {
             applicationContext.scan("nybsys.tillboxweb.dbConfig");
             applicationContext.refresh();
     }
-
-    /**
-     * CREATE DATA SOURCE
-     *
-     * @param dataBaseName *
-     * @return entity manager instance
-     * @throws IllegalStateException if the entity manager factory
-     */
-    public void selectDataBase(String dataBaseName) {
-        //log.info("Execute Thread: " + Thread.currentThread().getName().toString());
-
-        SessionFactory sessionFactory;
-        //Session session;
-        DataSource dataSource;
-
-        try {
-           /* AnnotationConfigApplicationContext applicationContext =
-                    new AnnotationConfigApplicationContext();
-
-            applicationContext.scan("com.nybsys.tillboxweb.dbConfig");
-            applicationContext.refresh();*/
-
-            //log.warn("Data base changing... Name: " + dataBaseName);
-
-            dataSource = (DataSource) this.applicationContext.getBean("dataSource", dataBaseName);
-            sessionFactory = (SessionFactory) this.applicationContext.getBean("sessionFactory", dataSource);
-
-            //log.warn("Data base changed");
-            //TillBoxUtils.changeDataBase(applicationContext,dataSource,sessionFactory);
-
-            //session = sessionFactory.openSession();
-            //sessionThreadLocal.set(session);
-            sessionFactoryThreadLocal.remove();
-            sessionFactoryThreadLocal.set(sessionFactory);
-            //Core.commonDataBase.set(false);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            log.error("Error in Database connection", ex);
-            throw ex;
-        }
-    }
-
-    public void setDefaultDateBase() {
-        try {
-            SessionFactory sessionFactory;
-            //Session session;
-            sessionFactory = (SessionFactory) this.applicationContext.getBean("defaultSessionFactory");
-            //session = sessionFactory.openSession();
-            sessionFactoryThreadLocal.set(sessionFactory);
-            //Core.commonDataBase.set(true);
-            //sessionThreadLocal.set(session);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            log.error("Error of getting session factory"+ex.getMessage());
-        }
-    }
+    */
 
     public static <T> T getRequestObject(RequestMessage requestMessage, Class clazz) {
         Object convertedObject;
