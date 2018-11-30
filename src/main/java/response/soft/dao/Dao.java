@@ -56,21 +56,24 @@ public class Dao<T> extends BaseDao {
 
             EntityManager entityManager = entityManagerFactory.createEntityManager();
 
-            entityManager.getTransaction().begin();
-            entityManager.persist(t);
-            entityManager.flush();
-            entityManager.refresh(t);
+            SessionFactory sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
+            Session session = sessionFactory.openSession();
+
+            session.getTransaction().begin();
+            session.save(t);
+            session.flush();
+            session.refresh(t);
 
             //================ code regarding history table======================
             if(insertDataInHistory) {
                 historyEntity = buildHistoryEntity(t, SqlEnum.QueryType.Insert.get());
-                entityManager.persist(historyEntity);
-                entityManager.flush();
+                session.save(historyEntity);
+                session.flush();
             }
             //===================================================================
 
-            entityManager.getTransaction().commit();
-            entityManager.close();
+            session.getTransaction().commit();
+            session.close();
         } catch (Exception ex) {
             ex.printStackTrace();
             log.error("Exception from Dao Save method");
