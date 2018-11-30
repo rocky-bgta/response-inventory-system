@@ -488,8 +488,8 @@ public abstract class BaseService<T extends BaseEntity> extends Core {
         return bllResponseMessage;
     }*/
 
-    protected RequestObject getDefaultRequestMessage() {
-        RequestObject requestMessage = new RequestObject();
+    protected RequestMessage getDefaultRequestMessage() {
+        RequestMessage requestMessage = new RequestMessage();
         return requestMessage;
     }
 

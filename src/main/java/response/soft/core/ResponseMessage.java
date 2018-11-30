@@ -10,7 +10,7 @@ package response.soft.core;
 
 import org.springframework.http.HttpStatus;
 
-public class ResponseObject {
+public class ResponseMessage {
 
     public String token;
     public Object data;

@@ -2,11 +2,10 @@ package response.soft.services;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import response.soft.constant.HttpConstant;
 import response.soft.core.BaseService;
 import response.soft.core.Core;
-import response.soft.core.RequestObject;
-import response.soft.core.ResponseObject;
+import response.soft.core.RequestMessage;
+import response.soft.core.ResponseMessage;
 import response.soft.entities.Category;
 import response.soft.model.CategoryModel;
 
@@ -24,11 +23,11 @@ public class CategoryService  extends BaseService<Category> {
     }
 
 
-    public ResponseObject save(RequestObject requestObject){
-        ResponseObject responseObject = new ResponseObject();
+    public ResponseMessage save(RequestMessage requestMessage){
+        ResponseMessage responseMessage = new ResponseMessage();
         CategoryModel categoryModel;
         try {
-            categoryModel = Core.processRequestObject(requestObject,CategoryModel.class);
+            categoryModel = Core.processRequestMessage(requestMessage,CategoryModel.class);
 
             /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(categoryModel);
             for (ConstraintViolation<CountryModel> violation : violations) {
@@ -37,33 +36,33 @@ public class CategoryService  extends BaseService<Category> {
 
             categoryModel = this.save(categoryModel);
 
-            responseObject.data = categoryModel;
-            responseObject.httpStatus=HttpStatus.CREATED;
+            responseMessage.data = categoryModel;
+            responseMessage.httpStatus=HttpStatus.CREATED;
           /*  if(categoryModel != null)
             {
-                responseObject.responseCode = HttpConstant.SUCCESS_CODE;
-                responseObject.message = MessageConstant.COUNTRY_SAVED_SUCCESSFULLY;
+                responseMessage.responseCode = HttpConstant.SUCCESS_CODE;
+                responseMessage.message = MessageConstant.COUNTRY_SAVED_SUCCESSFULLY;
                 this.commit();
             }else
             {
-                responseObject.responseCode = HttpConstant.FAILED_ERROR_CODE;
-                responseObject.message = MessageConstant.COUNTRY_SAVED_FAILED;
+                responseMessage.responseCode = HttpConstant.FAILED_ERROR_CODE;
+                responseMessage.message = MessageConstant.COUNTRY_SAVED_FAILED;
                 this.rollBack();
             }*/
         }catch (Exception ex){
-            //responseObject = this.getDefaultResponseMessage(requestObject.requestObj, HttpConstant.INTERNAL_SERVER_ERROR, HttpConstant.UN_PROCESSABLE_REQUEST);
+            //responseMessage = this.getDefaultResponseMessage(requestMessage.requestObj, HttpConstant.INTERNAL_SERVER_ERROR, HttpConstant.UN_PROCESSABLE_REQUEST);
 
             //this.rollBack();
             //log.error("CountryServiceManager -> save got exception");
         }
-        return responseObject;
+        return responseMessage;
     }
 
-    public ResponseObject getAllCategory(RequestObject requestObject){
-        ResponseObject responseObject=null;
+    public ResponseMessage getAllCategory(RequestMessage requestMessage){
+        ResponseMessage responseMessage =null;
         List<CategoryModel> list;
         try {
-            Core.processRequestObject(requestObject);
+            Core.processRequestMessage(requestMessage);
 
             /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(categoryModel);
             for (ConstraintViolation<CountryModel> violation : violations) {
@@ -72,25 +71,25 @@ public class CategoryService  extends BaseService<Category> {
 
             list = this.getAll();
 
-            responseObject = this.buildResponseObject(list);
+            responseMessage = this.buildResponseObject(list);
 
           /*  if(categoryModel != null)
             {
-                responseObject.responseCode = HttpConstant.SUCCESS_CODE;
-                responseObject.message = MessageConstant.COUNTRY_SAVED_SUCCESSFULLY;
+                responseMessage.responseCode = HttpConstant.SUCCESS_CODE;
+                responseMessage.message = MessageConstant.COUNTRY_SAVED_SUCCESSFULLY;
                 this.commit();
             }else
             {
-                responseObject.responseCode = HttpConstant.FAILED_ERROR_CODE;
-                responseObject.message = MessageConstant.COUNTRY_SAVED_FAILED;
+                responseMessage.responseCode = HttpConstant.FAILED_ERROR_CODE;
+                responseMessage.message = MessageConstant.COUNTRY_SAVED_FAILED;
                 this.rollBack();
             }*/
         }catch (Exception ex){
-            //responseObject = this.getDefaultResponseMessage(requestObject.requestObj, HttpConstant.INTERNAL_SERVER_ERROR, HttpConstant.UN_PROCESSABLE_REQUEST);
+            //responseMessage = this.getDefaultResponseMessage(requestMessage.requestObj, HttpConstant.INTERNAL_SERVER_ERROR, HttpConstant.UN_PROCESSABLE_REQUEST);
 
             //this.rollBack();
             //log.error("CountryServiceManager -> save got exception");
         }
-        return responseObject;
+        return responseMessage;
     }
 }

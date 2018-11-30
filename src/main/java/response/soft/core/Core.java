@@ -104,20 +104,20 @@ public abstract class Core {
     }
     */
 
-    public static <T> T processRequestObject(RequestObject requestObject) {
-      return  processRequestObject(requestObject,null);
+    public static <T> T processRequestMessage(RequestMessage requestMessage) {
+      return  processRequestMessage(requestMessage,null);
     }
 
-    public static <T> T processRequestObject(RequestObject requestObject, Class clazz) {
+    public static <T> T processRequestMessage(RequestMessage requestMessage, Class clazz) {
         Object convertedObject=null;
         Object requestData=null;
         try {
-            if(requestObject.data!=null) {
-                requestData = requestObject.data;
+            if(requestMessage.data!=null) {
+                requestData = requestMessage.data;
             }
 
-            Core.pageOffset.set(requestObject.pageOffset);
-            Core.pageSize.set(requestObject.pageSize);
+            Core.pageOffset.set(requestMessage.pageOffset);
+            Core.pageSize.set(requestMessage.pageSize);
 
             if(clazz!=null)
                 convertedObject = Core.jsonMapper.convertValue(requestData, clazz);
@@ -128,18 +128,18 @@ public abstract class Core {
         return (T) convertedObject;
     }
 
-    public ResponseObject buildResponseObject(Object data){
-        ResponseObject responseObject = new ResponseObject();
-        responseObject.data = data;
-        responseObject.totalRow = Core.totalRowCount.get();
-        responseObject.token="token1122555";
-        responseObject.httpStatus=HttpStatus.FOUND;
-        responseObject.message="Successful";
-        return responseObject;
+    public ResponseMessage buildResponseObject(Object data){
+        ResponseMessage responseMessage = new ResponseMessage();
+        responseMessage.data = data;
+        responseMessage.totalRow = Core.totalRowCount.get();
+        responseMessage.token="token1122555";
+        responseMessage.httpStatus=HttpStatus.FOUND;
+        responseMessage.message="Successful";
+        return responseMessage;
     }
 
   /*
-    public static <T> T getResponseObject(ResponseObject requestMessage, Class clazz) {
+    public static <T> T getResponseObject(ResponseMessage requestMessage, Class clazz) {
         Object convertedObject;
         Object responseObject=null;
         try {
@@ -154,7 +154,7 @@ public abstract class Core {
         return (T) convertedObject;
     }
 */
-    /*public static <T extends BaseModel> T processRequestObject(RequestObject requestMessage) {
+    /*public static <T extends BaseModel> T processRequestMessage(RequestMessage requestMessage) {
         Object convertedObject = null;
         try {
             Object requestObj = requestMessage.requestObj;
@@ -170,16 +170,16 @@ public abstract class Core {
     }*/
 
     /*
-    public static ResponseObject buildDefaultResponseMessage() {
-        ResponseObject responseMessage = new ResponseObject();
+    public static ResponseMessage buildDefaultResponseMessage() {
+        ResponseMessage responseMessage = new ResponseMessage();
         return responseMessage;
     }
 
     */
     /*
 
-    public static RequestObject getDefaultWorkerRequestMessage() {
-        RequestObject requestMessage = new RequestObject();
+    public static RequestMessage getDefaultWorkerRequestMessage() {
+        RequestMessage requestMessage = new RequestMessage();
         requestMessage.brokerMessage = new BrokerMessage();
         requestMessage.brokerMessage.requestFrom =
                 SqlEnum.BrokerRequestType.WORKER.get();
@@ -373,7 +373,7 @@ public abstract class Core {
         Core.publisherForRollBackAndCommit.publishedMessageForCommit(messageId);
     }*/
 
-    public static <M> List<M> convertResponseToList(ResponseObject responseMessage, M model) throws Exception {
+    public static <M> List<M> convertResponseToList(ResponseMessage responseMessage, M model) throws Exception {
         List<M> finalList = new ArrayList<>();
         List tempList;
         try {

@@ -8,7 +8,7 @@
  */
 package response.soft.core;
 
-public class RequestObject {
+public class RequestMessage {
     public String token;
     public Object data;
     public Integer pageOffset;

@@ -7,9 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import response.soft.core.RequestObject;
-import response.soft.core.ResponseObject;
-import response.soft.entities.Author;
+import response.soft.core.RequestMessage;
+import response.soft.core.ResponseMessage;
 import response.soft.model.CategoryModel;
 import response.soft.services.CategoryService;
 
@@ -21,24 +20,24 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
-    @ApiOperation(value ="", response = Author.class)
+    @ApiOperation(value ="", response = Object.class)
     @RequestMapping(value = "getAll", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseObject> getAllUser(@RequestBody RequestObject requestMessage){
-        ResponseObject responseObject;
-        responseObject = this.categoryService.getAllCategory(requestMessage);
-        if(responseObject.data!=null)
-            return new ResponseEntity<>(responseObject,responseObject.httpStatus);
+    public ResponseEntity<ResponseMessage> getAllUser(@RequestBody RequestMessage requestMessage){
+        ResponseMessage responseMessage;
+        responseMessage = this.categoryService.getAllCategory(requestMessage);
+        if(responseMessage.data!=null)
+            return new ResponseEntity<>(responseMessage, responseMessage.httpStatus);
         else
             return new ResponseEntity<>(null,null, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ApiOperation(value ="", response = CategoryModel.class)
     @RequestMapping(value = "save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseObject> save(@RequestBody RequestObject requestMessage) {
-        ResponseObject responseObject;
-        responseObject = this.categoryService.save(requestMessage);
-        if(responseObject.data!=null)
-           return new ResponseEntity<>(responseObject,responseObject.httpStatus);
+    public ResponseEntity<ResponseMessage> save(@RequestBody RequestMessage requestMessage) {
+        ResponseMessage responseMessage;
+        responseMessage = this.categoryService.save(requestMessage);
+        if(responseMessage.data!=null)
+           return new ResponseEntity<>(responseMessage, responseMessage.httpStatus);
         else
           return new ResponseEntity<>(null,null, HttpStatus.INTERNAL_SERVER_ERROR);
     }
