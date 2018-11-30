@@ -3,7 +3,9 @@ package response.soft.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import response.soft.core.RequestObject;
 import response.soft.core.ResponseObject;
@@ -21,17 +23,23 @@ public class CategoryController {
 
     @ApiOperation(value ="", response = Author.class)
     @RequestMapping(value = "getAll", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseObject getAllUser(@RequestBody RequestObject requestMessage){
-        ResponseObject responseMessage;
-        responseMessage = this.categoryService.getAllCategory(requestMessage);
-        return responseMessage;
+    public ResponseEntity<ResponseObject> getAllUser(@RequestBody RequestObject requestMessage){
+        ResponseObject responseObject;
+        responseObject = this.categoryService.getAllCategory(requestMessage);
+        if(responseObject.data!=null)
+            return new ResponseEntity<>(responseObject,responseObject.httpStatus);
+        else
+            return new ResponseEntity<>(null,null, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ApiOperation(value ="", response = CategoryModel.class)
     @RequestMapping(value = "save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseObject save(@RequestBody RequestObject requestMessage) {
-        ResponseObject responseMessage;
-        responseMessage = this.categoryService.save(requestMessage);
-        return responseMessage;
+    public ResponseEntity<ResponseObject> save(@RequestBody RequestObject requestMessage) {
+        ResponseObject responseObject;
+        responseObject = this.categoryService.save(requestMessage);
+        if(responseObject.data!=null)
+           return new ResponseEntity<>(responseObject,responseObject.httpStatus);
+        else
+          return new ResponseEntity<>(null,null, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

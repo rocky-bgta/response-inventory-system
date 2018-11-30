@@ -8,11 +8,13 @@
  */
 package response.soft.core;
 
+import org.springframework.http.HttpStatus;
+
 public class ResponseObject {
 
     public String token;
     public Object data;
-    public Integer code;
+    public HttpStatus httpStatus;
     public String message;
 
 

@@ -1,6 +1,8 @@
 package response.soft.services;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import response.soft.constant.HttpConstant;
 import response.soft.core.BaseService;
 import response.soft.core.Core;
 import response.soft.core.RequestObject;
@@ -36,6 +38,7 @@ public class CategoryService  extends BaseService<Category> {
             categoryModel = this.save(categoryModel);
 
             responseObject.data = categoryModel;
+            responseObject.httpStatus=HttpStatus.CREATED;
           /*  if(categoryModel != null)
             {
                 responseObject.responseCode = HttpConstant.SUCCESS_CODE;

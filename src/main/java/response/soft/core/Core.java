@@ -133,7 +133,7 @@ public abstract class Core {
         responseObject.data = data;
         responseObject.totalRow = Core.totalRowCount.get();
         responseObject.token="token1122555";
-        responseObject.code=HttpStatus.ACCEPTED.value();
+        responseObject.httpStatus=HttpStatus.FOUND;
         responseObject.message="Successful";
         return responseObject;
     }

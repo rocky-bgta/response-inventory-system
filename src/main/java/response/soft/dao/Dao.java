@@ -238,13 +238,13 @@ public class Dao<T> extends BaseDao {
                 isPagination=true;
             }
 
-            if(isPagination){
+            //if(isPagination){
                 CriteriaBuilder cb = entityManager.getCriteriaBuilder();
                 CriteriaQuery<Long> cq = cb.createQuery(Long.class);
                 cq.select(cb.count(cq.from(clazz)));
                 Long count= entityManager.createQuery(cq).getSingleResult();
                 Core.totalRowCount.set(count);
-            }
+            //}
 
             list = q.getResultList();
 
