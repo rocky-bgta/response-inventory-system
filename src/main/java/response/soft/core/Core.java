@@ -65,10 +65,13 @@ public abstract class Core {
     //public static final ThreadLocal<ClientMessage> clientMessage = new ThreadLocal<>();
 
     public static final ThreadLocal<String> userId = new ThreadLocal<>();
+
     public static final ThreadLocal<Integer> pageOffset = new ThreadLocal<>();
     public static final ThreadLocal<Integer> pageSize = new ThreadLocal<>();
     public static final ThreadLocal<Long> totalRowCount = new ThreadLocal<>();
     public static final ThreadLocal<Long> dataTableDraw = new ThreadLocal<>();
+    public static final ThreadLocal<String> shortDirection = new ThreadLocal<>();
+    public static final ThreadLocal<String> shortColumnName = new ThreadLocal<>();
 
 
 
@@ -113,6 +116,10 @@ public abstract class Core {
     public static <T> T processRequestMessage(RequestMessage requestMessage, Class clazz) {
         Object convertedObject=null;
         Object requestData=null;
+        Integer shortColumnIndex;
+        String shortColumnName;
+        String shortDirection;
+
         try {
             if(requestMessage.data!=null) {
                 requestData = requestMessage.data;
@@ -121,6 +128,14 @@ public abstract class Core {
                 Core.pageOffset.set(requestMessage.dataTableRequest.getStart());
                 Core.pageSize.set(requestMessage.dataTableRequest.getLength());
                 Core.dataTableDraw.set(requestMessage.dataTableRequest.getDraw());
+
+                shortDirection = requestMessage.dataTableRequest.getOrder().get(0).dir;
+                shortColumnIndex = requestMessage.dataTableRequest.getOrder().get(0).column;
+                shortColumnName = requestMessage.dataTableRequest.getColumns().get(shortColumnIndex).data;
+
+               Core.shortDirection.set(shortDirection);
+               Core.shortColumnName.set(shortColumnName);
+
             }else {
                 Core.pageOffset.set(requestMessage.pageOffset);
                 Core.pageSize.set(requestMessage.pageSize);

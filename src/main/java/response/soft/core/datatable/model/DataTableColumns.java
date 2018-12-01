@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class DataTableColumns {
-    private String data;
-    private String name;
+    public String data;
+    public String name;
 }

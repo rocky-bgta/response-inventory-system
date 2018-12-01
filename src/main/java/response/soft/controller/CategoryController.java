@@ -39,11 +39,10 @@ public class CategoryController {
 
     @ApiOperation(value ="", response = Object.class)
     @RequestMapping(value = "getAll", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public DataTableResponse getAllUser(@RequestBody RequestMessage requestMessage){
+    public ResponseMessage getAllUser(@RequestBody RequestMessage requestMessage){
         ResponseMessage responseMessage;
         responseMessage = this.categoryService.getAllCategory(requestMessage);
-        DataTableResponse dataTableResponse = responseMessage.dataTableResponse;
-        return dataTableResponse;
+        return responseMessage;
 
        //return responseMessage;
     }

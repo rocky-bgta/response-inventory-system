@@ -215,7 +215,7 @@ public class Dao<T> extends BaseDao {
         Object entity = null;
         StringBuilder query;
         String entityName;
-        Boolean isPagination=false;
+        //Boolean isPagination=false;
         EntityManager entityManager;
 
         try {
@@ -229,16 +229,19 @@ public class Dao<T> extends BaseDao {
             query.append("SELECT t ")
                     .append("FROM " + entityName + " t ");
 
+            if(Core.shortColumnName.get()!=null && Core.shortColumnName.get()!="")
+                query.append("ORDER BY t."+ Core.shortColumnName.get() + " "+Core.shortDirection.get().toUpperCase());
+
             javax.persistence.Query q = entityManager.createQuery(query.toString());
 
             if(Core.pageOffset.get()!=0 && Core.pageOffset.get()!=null) {
                 q.setFirstResult(Core.pageOffset.get());
-                isPagination=true;
+                //isPagination=true;
             }
 
             if(Core.pageSize.get()!=0 && Core.pageSize.get()!=null) {
                 q.setMaxResults(Core.pageSize.get());
-                isPagination=true;
+                //isPagination=true;
             }
 
             //if(isPagination){
