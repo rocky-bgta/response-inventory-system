@@ -6,6 +6,7 @@ import response.soft.core.BaseService;
 import response.soft.core.Core;
 import response.soft.core.RequestMessage;
 import response.soft.core.ResponseMessage;
+import response.soft.core.datatable.model.DataTableRequest;
 import response.soft.entities.Category;
 import response.soft.model.CategoryModel;
 
@@ -61,8 +62,13 @@ public class CategoryService  extends BaseService<Category> {
     public ResponseMessage getAllCategory(RequestMessage requestMessage){
         ResponseMessage responseMessage =null;
         List<CategoryModel> list;
+
+        DataTableRequest dataTableRequest;
+
         try {
-            Core.processRequestMessage(requestMessage);
+             Core.processRequestMessage(requestMessage);
+            //dataTableRequest = requestMessage.dataTableRequest;
+
 
             /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(categoryModel);
             for (ConstraintViolation<CountryModel> violation : violations) {
@@ -72,6 +78,7 @@ public class CategoryService  extends BaseService<Category> {
             list = this.getAll();
 
             responseMessage = this.buildResponseObject(list);
+            //responseMessage.dataTableResponse.setDraw(responseMessage.dataTableResponse.getDraw());
 
           /*  if(categoryModel != null)
             {

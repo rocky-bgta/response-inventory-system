@@ -21,6 +21,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 import response.soft.appenum.SqlEnum;
+import response.soft.core.datatable.model.DataTableResponse;
 
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -67,6 +68,7 @@ public abstract class Core {
     public static final ThreadLocal<Integer> pageOffset = new ThreadLocal<>();
     public static final ThreadLocal<Integer> pageSize = new ThreadLocal<>();
     public static final ThreadLocal<Long> totalRowCount = new ThreadLocal<>();
+    public static final ThreadLocal<Long> dataTableDraw = new ThreadLocal<>();
 
 
 
@@ -115,9 +117,14 @@ public abstract class Core {
             if(requestMessage.data!=null) {
                 requestData = requestMessage.data;
             }
-
-            Core.pageOffset.set(requestMessage.pageOffset);
-            Core.pageSize.set(requestMessage.pageSize);
+            if(requestMessage.dataTableRequest!=null){
+                Core.pageOffset.set(requestMessage.dataTableRequest.getStart());
+                Core.pageSize.set(requestMessage.dataTableRequest.getLength());
+                Core.dataTableDraw.set(requestMessage.dataTableRequest.getDraw());
+            }else {
+                Core.pageOffset.set(requestMessage.pageOffset);
+                Core.pageSize.set(requestMessage.pageSize);
+            }
 
             if(clazz!=null)
                 convertedObject = Core.jsonMapper.convertValue(requestData, clazz);
@@ -129,12 +136,24 @@ public abstract class Core {
     }
 
     public ResponseMessage buildResponseObject(Object data){
+        DataTableResponse dataTableResponse = new DataTableResponse();
         ResponseMessage responseMessage = new ResponseMessage();
         responseMessage.data = data;
         responseMessage.totalRow = Core.totalRowCount.get();
         responseMessage.token="token1122555";
         responseMessage.httpStatus=HttpStatus.FOUND;
         responseMessage.message="Successful";
+
+        List<Object> objectList = new ArrayList<>();
+        objectList.add(data);
+
+        responseMessage.dataTableResponse = dataTableResponse;
+        responseMessage.dataTableResponse.setData((List)data);
+        responseMessage.dataTableResponse.setRecordsTotal(Core.totalRowCount.get());
+        responseMessage.dataTableResponse.setRecordsFiltered(Core.totalRowCount.get());
+        responseMessage.dataTableResponse.setDraw(Core.dataTableDraw.get());
+
+
         return responseMessage;
     }
 

@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import response.soft.core.RequestMessage;
 import response.soft.core.ResponseMessage;
+import response.soft.core.datatable.model.DataTableResponse;
 import response.soft.model.CategoryModel;
 import response.soft.services.CategoryService;
 
@@ -20,6 +21,8 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
+    /*
+
     @ApiOperation(value ="", response = Object.class)
     @RequestMapping(value = "getAll", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseMessage> getAllUser(@RequestBody RequestMessage requestMessage){
@@ -29,6 +32,20 @@ public class CategoryController {
             return new ResponseEntity<>(responseMessage, responseMessage.httpStatus);
         else
             return new ResponseEntity<>(null,null, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    */
+
+
+    @ApiOperation(value ="", response = Object.class)
+    @RequestMapping(value = "getAll", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public DataTableResponse getAllUser(@RequestBody RequestMessage requestMessage){
+        ResponseMessage responseMessage;
+        responseMessage = this.categoryService.getAllCategory(requestMessage);
+        DataTableResponse dataTableResponse = responseMessage.dataTableResponse;
+        return dataTableResponse;
+
+       //return responseMessage;
     }
 
     @ApiOperation(value ="", response = CategoryModel.class)

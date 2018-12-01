@@ -8,10 +8,14 @@
  */
 package response.soft.core;
 
+import response.soft.core.datatable.model.DataTableRequest;
+
 public class RequestMessage {
     public String token;
     public Object data;
     public Integer pageOffset;
     public Integer pageSize;
+
+    public DataTableRequest dataTableRequest;
 
 }

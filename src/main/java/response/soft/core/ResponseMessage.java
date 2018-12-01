@@ -9,6 +9,7 @@
 package response.soft.core;
 
 import org.springframework.http.HttpStatus;
+import response.soft.core.datatable.model.DataTableResponse;
 
 public class ResponseMessage {
 
@@ -22,5 +23,7 @@ public class ResponseMessage {
     //public Integer pageOffset;
     //public Integer pageSize;
     public Long totalRow;
+
+    public DataTableResponse dataTableResponse;
 
 }
