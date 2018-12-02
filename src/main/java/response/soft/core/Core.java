@@ -11,6 +11,7 @@ package response.soft.core;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import javafx.scene.control.Pagination;
 import org.hibernate.SessionFactory;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -42,7 +43,7 @@ public abstract class Core {
     protected static final ObjectMapper jsonMapper = new ObjectMapper()
             .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
             .configure(DeserializationFeature.ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            //.setDateFormat(dateFormat);
+    //.setDateFormat(dateFormat);
 
     protected static final ModelMapper modelMapper = new ModelMapper();
 
@@ -72,7 +73,7 @@ public abstract class Core {
     public static final ThreadLocal<Long> dataTableDraw = new ThreadLocal<>();
     public static final ThreadLocal<String> shortDirection = new ThreadLocal<>();
     public static final ThreadLocal<String> shortColumnName = new ThreadLocal<>();
-
+    public static final ThreadLocal<Boolean> isDataTablePagination = new ThreadLocal<>();
 
 
     //public static final Map<String,SecurityResMessage> securityResponseCollection;
@@ -110,38 +111,44 @@ public abstract class Core {
     */
 
     public static <T> T processRequestMessage(RequestMessage requestMessage) {
-      return  processRequestMessage(requestMessage,null);
+        return processRequestMessage(requestMessage, null);
     }
 
     public static <T> T processRequestMessage(RequestMessage requestMessage, Class clazz) {
-        Object convertedObject=null;
-        Object requestData=null;
+        Object convertedObject = null;
+        Object requestData = null;
         Integer shortColumnIndex;
         String shortColumnName;
         String shortDirection;
 
         try {
-            if(requestMessage.data!=null && !ObjectUtils.isEmpty(requestMessage.data)) {
+            if (requestMessage.data != null && !ObjectUtils.isEmpty(requestMessage.data)) {
                 requestData = requestMessage.data;
             }
-            if(requestMessage.dataTableRequest!=null){
+            if (requestMessage.dataTableRequest != null && requestMessage.dataTableRequest.getLength()!=0) {
+                Core.isDataTablePagination.set(true);
                 Core.pageOffset.set(requestMessage.dataTableRequest.getStart());
                 Core.pageSize.set(requestMessage.dataTableRequest.getLength());
                 Core.dataTableDraw.set(requestMessage.dataTableRequest.getDraw());
+
 
                 shortDirection = requestMessage.dataTableRequest.getOrder().get(0).dir;
                 shortColumnIndex = requestMessage.dataTableRequest.getOrder().get(0).column;
                 shortColumnName = requestMessage.dataTableRequest.getColumns().get(shortColumnIndex).data;
 
-               Core.shortDirection.set(shortDirection);
-               Core.shortColumnName.set(shortColumnName);
+                if (shortDirection.equals("asc") || shortDirection.equals("desc"))
+                    Core.shortDirection.set(shortDirection);
 
-            }else {
+                if (!shortColumnName.equals("string"))
+                    Core.shortColumnName.set(shortColumnName);
+
+            } else {
+                Core.isDataTablePagination.set(false);
                 Core.pageOffset.set(requestMessage.pageOffset);
                 Core.pageSize.set(requestMessage.pageSize);
             }
 
-            if(clazz!=null)
+            if (clazz != null)
                 convertedObject = Core.jsonMapper.convertValue(requestData, clazz);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -150,24 +157,23 @@ public abstract class Core {
         return (T) convertedObject;
     }
 
-    public ResponseMessage buildResponseObject(Object data){
+    public ResponseMessage buildResponseObject(Object data) {
         DataTableResponse dataTableResponse = new DataTableResponse();
         ResponseMessage responseMessage = new ResponseMessage();
         responseMessage.data = data;
         responseMessage.totalRow = Core.totalRowCount.get();
-        responseMessage.token="token1122555";
-        responseMessage.httpStatus=HttpStatus.FOUND;
-        responseMessage.message="Successful";
+        responseMessage.token = "token1122555";
+        responseMessage.httpStatus = HttpStatus.FOUND;
+        responseMessage.message = "Successful";
 
-        List<Object> objectList = new ArrayList<>();
-        objectList.add(data);
 
-        responseMessage.dataTableResponse = dataTableResponse;
-        responseMessage.dataTableResponse.setData((List)data);
-        responseMessage.dataTableResponse.setRecordsTotal(Core.totalRowCount.get());
-        responseMessage.dataTableResponse.setRecordsFiltered(Core.totalRowCount.get());
-        responseMessage.dataTableResponse.setDraw(Core.dataTableDraw.get());
-
+        if(Core.isDataTablePagination.get()) {
+            responseMessage.dataTableResponse = dataTableResponse;
+            responseMessage.dataTableResponse.setData((List) data);
+            responseMessage.dataTableResponse.setRecordsTotal(Core.totalRowCount.get());
+            responseMessage.dataTableResponse.setRecordsFiltered(Core.totalRowCount.get());
+            responseMessage.dataTableResponse.setDraw(Core.dataTableDraw.get());
+        }
 
         return responseMessage;
     }
