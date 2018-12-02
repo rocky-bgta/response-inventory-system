@@ -121,7 +121,7 @@ public abstract class Core {
         String shortDirection;
 
         try {
-            if(requestMessage.data!=null) {
+            if(requestMessage.data!=null && !ObjectUtils.isEmpty(requestMessage.data)) {
                 requestData = requestMessage.data;
             }
             if(requestMessage.dataTableRequest!=null){
