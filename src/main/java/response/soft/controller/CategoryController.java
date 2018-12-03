@@ -14,7 +14,7 @@ import response.soft.services.CategoryService;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/category/")
+@RequestMapping("api/category")
 @Api(tags = "Category Api List")
 public class CategoryController {
 
@@ -38,7 +38,7 @@ public class CategoryController {
 
 
     @ApiOperation(value ="", response = Object.class)
-    @RequestMapping(value = "getAll", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/getAll", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseMessage getAll(@RequestBody RequestMessage requestMessage){
         ResponseMessage responseMessage;
         responseMessage = this.categoryService.getAllCategory(requestMessage);
@@ -54,7 +54,7 @@ public class CategoryController {
     }
 
     @ApiOperation(value ="", response = CategoryModel.class)
-    @RequestMapping(value = "save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseMessage> save(@RequestBody RequestMessage requestMessage) {
         ResponseMessage responseMessage;
         responseMessage = this.categoryService.saveCategory(requestMessage);
@@ -62,7 +62,7 @@ public class CategoryController {
     }
 
     @ApiOperation(value ="", response = CategoryModel.class)
-    @RequestMapping(value = "update", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseMessage> update(@RequestBody RequestMessage requestMessage) {
         ResponseMessage responseMessage;
         responseMessage = this.categoryService.updateCategory(requestMessage);
