@@ -201,6 +201,7 @@ public class Dao<T> extends BaseDao {
                 entity = list.get(0);
                 Core.totalRowCount.set(1L);
             }
+            session.getTransaction().commit();
             session.close();
         } catch (Exception ex) {
             ex.printStackTrace();
