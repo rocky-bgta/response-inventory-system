@@ -53,6 +53,7 @@ public class CategoryService extends BaseService<Category> {
             }
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
+            ex.printStackTrace();
             //this.rollBack();
             log.error("saveCategory -> save got exception");
         }

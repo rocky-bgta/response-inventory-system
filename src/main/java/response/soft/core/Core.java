@@ -181,9 +181,10 @@ public abstract class Core {
         responseMessage.message = "Successful";
 
 
-        if(Core.isDataTablePagination.get()!=null && responseMessage.totalRow>1) {
+
+        if(Core.isDataTablePagination.get()!=null) {
             responseMessage.dataTableResponse = dataTableResponse;
-            responseMessage.dataTableResponse.setData((List) data);
+            //responseMessage.dataTableResponse.setData((List) data);
             responseMessage.dataTableResponse.setRecordsTotal(Core.totalRowCount.get());
             responseMessage.dataTableResponse.setRecordsFiltered(Core.totalRowCount.get());
             responseMessage.dataTableResponse.setDraw(Core.dataTableDraw.get());
