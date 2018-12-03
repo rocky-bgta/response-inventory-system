@@ -26,6 +26,9 @@ public class Product extends BaseEntity {
     @Column(name = "category")
     private UUID category;
 
+    @Column(name = "brand")
+    private String brand;
+
     @Column(name = "model_no")
     private Double modelNo;
 
