@@ -416,8 +416,13 @@ public abstract class BaseService<T extends BaseEntity> extends Core {
         return numOfDeletedRows;
     }
 
-    public <M extends BaseModel> M getById(Object id) throws Exception {
+    /*public <M extends BaseModel> M getById(Object id) throws Exception {
         return getById(id,null);
+    }*/
+
+
+    public <M extends BaseModel> M getById(Object id) throws Exception {
+        return getById(id,SqlEnum.Status.Active.get());
     }
 
     public <M extends BaseModel> M getByIdActiveStatus(Object id) throws Exception {

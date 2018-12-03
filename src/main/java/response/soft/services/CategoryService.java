@@ -13,6 +13,7 @@ import response.soft.entities.Category;
 import response.soft.model.CategoryModel;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class CategoryService extends BaseService<Category> {
@@ -121,12 +122,12 @@ public class CategoryService extends BaseService<Category> {
         return responseMessage;
     }
 
-    public ResponseMessage getByCategoryId(RequestMessage requestMessage) {
+    public ResponseMessage getByCategoryId(UUID id) {
         ResponseMessage responseMessage;
         CategoryModel categoryModel;
 
         try {
-            categoryModel = processRequestMessage(requestMessage);
+            categoryModel=this.getById(id);
 
             responseMessage = buildResponseMessage(categoryModel);
 
@@ -141,6 +142,7 @@ public class CategoryService extends BaseService<Category> {
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
             //this.rollBack();
+            ex.printStackTrace();
             log.error("getByCategoryId -> got exception");
         }
 

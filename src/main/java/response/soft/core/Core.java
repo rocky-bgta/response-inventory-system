@@ -168,13 +168,20 @@ public abstract class Core {
         DataTableResponse dataTableResponse = new DataTableResponse();
         ResponseMessage responseMessage = new ResponseMessage();
         responseMessage.data = data;
-        responseMessage.totalRow = Core.totalRowCount.get();
+
+        if(Core.totalRowCount.get()!=null)
+            responseMessage.totalRow = Core.totalRowCount.get();
+        else {
+            if(!ObjectUtils.isEmpty(data))
+                responseMessage.totalRow=1L;
+        }
+
         responseMessage.token = "token"+UUID.randomUUID();
         responseMessage.httpStatus = HttpStatus.FOUND;
         responseMessage.message = "Successful";
 
 
-        if(Core.isDataTablePagination.get()) {
+        if(Core.isDataTablePagination.get()!=null && responseMessage.totalRow>1) {
             responseMessage.dataTableResponse = dataTableResponse;
             responseMessage.dataTableResponse.setData((List) data);
             responseMessage.dataTableResponse.setRecordsTotal(Core.totalRowCount.get());

@@ -199,6 +199,7 @@ public class Dao<T> extends BaseDao {
                 return null;
             }else {
                 entity = list.get(0);
+                Core.totalRowCount.set(1L);
             }
             session.close();
         } catch (Exception ex) {
