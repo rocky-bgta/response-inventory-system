@@ -29,10 +29,7 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.TimeUnit;
 
@@ -157,12 +154,22 @@ public abstract class Core {
         return (T) convertedObject;
     }
 
-    public ResponseMessage buildResponseObject(Object data) {
+    public ResponseMessage buildFailedResponseMessage() {
+        ResponseMessage responseMessage = new ResponseMessage();
+        responseMessage.data = null;
+        responseMessage.totalRow = 0l;
+        responseMessage.token = null;
+        responseMessage.httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+        responseMessage.message = "Failed";
+        return responseMessage;
+    }
+
+    public ResponseMessage buildResponseMessage(Object data) {
         DataTableResponse dataTableResponse = new DataTableResponse();
         ResponseMessage responseMessage = new ResponseMessage();
         responseMessage.data = data;
         responseMessage.totalRow = Core.totalRowCount.get();
-        responseMessage.token = "token1122555";
+        responseMessage.token = "token"+UUID.randomUUID();
         responseMessage.httpStatus = HttpStatus.FOUND;
         responseMessage.message = "Successful";
 

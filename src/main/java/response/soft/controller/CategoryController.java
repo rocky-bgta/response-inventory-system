@@ -53,7 +53,7 @@ public class CategoryController {
     @RequestMapping(value = "save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseMessage> save(@RequestBody RequestMessage requestMessage) {
         ResponseMessage responseMessage;
-        responseMessage = this.categoryService.save(requestMessage);
+        responseMessage = this.categoryService.saveCategory(requestMessage);
         if(responseMessage.data!=null)
            return new ResponseEntity<>(responseMessage, responseMessage.httpStatus);
         else

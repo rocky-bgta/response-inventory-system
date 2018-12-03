@@ -215,7 +215,6 @@ public class Dao<T> extends BaseDao {
         Object entity = null;
         StringBuilder query;
         String entityName;
-        //Boolean isPagination=false;
         EntityManager entityManager;
 
         try {
@@ -227,10 +226,10 @@ public class Dao<T> extends BaseDao {
             entityName = clazz.getName();
             entityName = StringUtils.substringAfterLast(entityName, ".").trim();
             query.append("SELECT t ")
-                    .append("FROM " + entityName + " t ");
+                    .append("FROM " + entityName + " t WHERE t.status="+SqlEnum.Status.Active.get());
 
             if(Core.shortColumnName.get()!=null && Core.shortColumnName.get()!="")
-                query.append("ORDER BY t."+ Core.shortColumnName.get() + " "+Core.shortDirection.get().toUpperCase());
+                query.append(" ORDER BY t."+ Core.shortColumnName.get() + " "+Core.shortDirection.get().toUpperCase());
 
             javax.persistence.Query q = entityManager.createQuery(query.toString());
 
@@ -531,9 +530,14 @@ public class Dao<T> extends BaseDao {
     }
 
     private Session getSession() {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
         SessionFactory sessionFactory;
         Session session;
 
+        sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
+        session = sessionFactory.openSession();
+
+        /*
         if(this.sessionFactory == null)
             sessionFactory = Core.sessionFactoryThreadLocal.get();
         else {
@@ -541,6 +545,7 @@ public class Dao<T> extends BaseDao {
             Core.sessionFactoryThreadLocal.set(sessionFactory);
         }
 
+        */
         session = sessionFactory.openSession();
         return session;
     }

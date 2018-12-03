@@ -1,19 +1,23 @@
 package response.soft.services;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import response.soft.constant.HttpConstant;
 import response.soft.core.BaseService;
 import response.soft.core.Core;
 import response.soft.core.RequestMessage;
 import response.soft.core.ResponseMessage;
-import response.soft.core.datatable.model.DataTableRequest;
 import response.soft.entities.Category;
 import response.soft.model.CategoryModel;
 
 import java.util.List;
 
 @Service
-public class CategoryService  extends BaseService<Category> {
+public class CategoryService extends BaseService<Category> {
+
+    private static final Logger log = LoggerFactory.getLogger(CategoryService.class);
 
     @Override
     protected void initEntityModel() {
@@ -23,12 +27,11 @@ public class CategoryService  extends BaseService<Category> {
         Core.runTimeModelType.set(CategoryModel.class);
     }
 
-
-    public ResponseMessage save(RequestMessage requestMessage){
-        ResponseMessage responseMessage = new ResponseMessage();
+    public ResponseMessage saveCategory(RequestMessage requestMessage) {
+        ResponseMessage responseMessage;// = new ResponseMessage();
         CategoryModel categoryModel;
         try {
-            categoryModel = Core.processRequestMessage(requestMessage,CategoryModel.class);
+            categoryModel = Core.processRequestMessage(requestMessage, CategoryModel.class);
 
             /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(categoryModel);
             for (ConstraintViolation<CountryModel> violation : violations) {
@@ -36,39 +39,121 @@ public class CategoryService  extends BaseService<Category> {
             }*/
 
             categoryModel = this.save(categoryModel);
+            responseMessage = this.buildResponseMessage(categoryModel);
 
-            responseMessage.data = categoryModel;
-            responseMessage.httpStatus=HttpStatus.CREATED;
-          /*  if(categoryModel != null)
-            {
-                responseMessage.responseCode = HttpConstant.SUCCESS_CODE;
-                responseMessage.message = MessageConstant.COUNTRY_SAVED_SUCCESSFULLY;
-                this.commit();
-            }else
-            {
-                responseMessage.responseCode = HttpConstant.FAILED_ERROR_CODE;
-                responseMessage.message = MessageConstant.COUNTRY_SAVED_FAILED;
-                this.rollBack();
-            }*/
-        }catch (Exception ex){
-            //responseMessage = this.getDefaultResponseMessage(requestMessage.requestObj, HttpConstant.INTERNAL_SERVER_ERROR, HttpConstant.UN_PROCESSABLE_REQUEST);
-
+            if (categoryModel != null) {
+                responseMessage.httpStatus = HttpStatus.CREATED;
+                responseMessage.message = "Category save successfully!";
+                //this.commit();
+            } else {
+                responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY;
+                responseMessage.message = "Failed to save category";
+                //this.rollBack();
+            }
+        } catch (Exception ex) {
+            responseMessage = this.buildFailedResponseMessage();
             //this.rollBack();
-            //log.error("CountryServiceManager -> save got exception");
+            log.error("saveCategory -> save got exception");
         }
         return responseMessage;
     }
 
-    public ResponseMessage getAllCategory(RequestMessage requestMessage){
-        ResponseMessage responseMessage =null;
-        List<CategoryModel> list;
+    public ResponseMessage updateCategory(RequestMessage requestMessage) {
+        ResponseMessage responseMessage;
+        CategoryModel categoryModel;
+        try {
+            categoryModel = Core.processRequestMessage(requestMessage, CategoryModel.class);
 
-        DataTableRequest dataTableRequest;
+            /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(categoryModel);
+            for (ConstraintViolation<CountryModel> violation : violations) {
+                log.error(violation.getMessage());
+            }*/
+
+            categoryModel = this.update(categoryModel);
+            responseMessage = this.buildResponseMessage(categoryModel);
+
+            if (categoryModel != null) {
+                responseMessage.httpStatus = HttpStatus.OK;
+                responseMessage.message = "Category update successfully!";
+                //this.commit();
+            } else {
+                responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY;
+                responseMessage.message = "Failed to update category";
+                //this.rollBack();
+            }
+        } catch (Exception ex) {
+            responseMessage = this.buildFailedResponseMessage();
+            //this.rollBack();
+            log.error("updateCategory -> got exception");
+        }
+        return responseMessage;
+    }
+
+
+    public ResponseMessage deleteCategory(RequestMessage requestMessage) {
+        ResponseMessage responseMessage;
+        CategoryModel categoryModel;
+        try {
+            categoryModel = Core.processRequestMessage(requestMessage, CategoryModel.class);
+
+            /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(categoryModel);
+            for (ConstraintViolation<CountryModel> violation : violations) {
+                log.error(violation.getMessage());
+            }*/
+
+            categoryModel = this.softDelete(categoryModel);
+            responseMessage = this.buildResponseMessage(categoryModel);
+
+            if (categoryModel != null) {
+                responseMessage.httpStatus = HttpStatus.OK;
+                responseMessage.message = "Category deleted successfully!";
+                //this.commit();
+            } else {
+                responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY;
+                responseMessage.message = "Failed to deleted category";
+                //this.rollBack();
+            }
+        } catch (Exception ex) {
+            responseMessage = this.buildFailedResponseMessage();
+            //this.rollBack();
+            log.error("deleteCategory -> got exception");
+        }
+        return responseMessage;
+    }
+
+    public ResponseMessage getByCategoryId(RequestMessage requestMessage) {
+        ResponseMessage responseMessage;
+        CategoryModel categoryModel;
 
         try {
-             Core.processRequestMessage(requestMessage);
-            //dataTableRequest = requestMessage.dataTableRequest;
+            categoryModel = processRequestMessage(requestMessage);
 
+            responseMessage = buildResponseMessage(categoryModel);
+
+            if (responseMessage.data != null) {
+                responseMessage.httpStatus = HttpStatus.FOUND;
+                responseMessage.message = "Get requested category successfully";
+            } else {
+                responseMessage.httpStatus = HttpStatus.NOT_FOUND;
+                responseMessage.message = "Failed to requested category";
+            }
+
+        } catch (Exception ex) {
+            responseMessage = this.buildFailedResponseMessage();
+            //this.rollBack();
+            log.error("getByCategoryId -> got exception");
+        }
+
+        return responseMessage;
+    }
+
+
+    public ResponseMessage getAllCategory(RequestMessage requestMessage) {
+        ResponseMessage responseMessage = null;
+        List<CategoryModel> list;
+
+        try {
+            Core.processRequestMessage(requestMessage);
 
             /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(categoryModel);
             for (ConstraintViolation<CountryModel> violation : violations) {
@@ -77,25 +162,21 @@ public class CategoryService  extends BaseService<Category> {
 
             list = this.getAll();
 
-            responseMessage = this.buildResponseObject(list);
-            //responseMessage.dataTableResponse.setDraw(responseMessage.dataTableResponse.getDraw());
+            responseMessage = this.buildResponseMessage(list);
 
-          /*  if(categoryModel != null)
-            {
-                responseMessage.responseCode = HttpConstant.SUCCESS_CODE;
-                responseMessage.message = MessageConstant.COUNTRY_SAVED_SUCCESSFULLY;
-                this.commit();
-            }else
-            {
-                responseMessage.responseCode = HttpConstant.FAILED_ERROR_CODE;
-                responseMessage.message = MessageConstant.COUNTRY_SAVED_FAILED;
-                this.rollBack();
-            }*/
-        }catch (Exception ex){
-            //responseMessage = this.getDefaultResponseMessage(requestMessage.requestObj, HttpConstant.INTERNAL_SERVER_ERROR, HttpConstant.UN_PROCESSABLE_REQUEST);
-
+            if (responseMessage.data != null) {
+                responseMessage.httpStatus = HttpStatus.FOUND;
+                responseMessage.message = "Get all category successfully";
+                //this.commit();
+            } else {
+                responseMessage.httpStatus = HttpStatus.NOT_FOUND;
+                responseMessage.message = "Failed to get category";
+                //this.rollBack();
+            }
+        } catch (Exception ex) {
+            responseMessage = this.buildFailedResponseMessage();
             //this.rollBack();
-            //log.error("CountryServiceManager -> save got exception");
+            log.error("getAllCategory -> save got exception");
         }
         return responseMessage;
     }
