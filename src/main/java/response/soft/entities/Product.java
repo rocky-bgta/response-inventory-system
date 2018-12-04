@@ -32,6 +32,9 @@ public class Product extends BaseEntity {
     @Column(name = "model_no")
     private Double modelNo;
 
+    @Column(name = "serial_no")
+    private Double serialNo;
+
     @Column(name = "price")
     private Double price;
 

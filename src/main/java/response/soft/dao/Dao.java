@@ -41,10 +41,9 @@ public class Dao<T> extends BaseDao {
     @Autowired
     EntityManagerFactory entityManagerFactory;
 
-    public Dao(){
+    public Dao() {
         super();
     }
-
 
 
     private static final Logger log = LoggerFactory.getLogger(Dao.class);
@@ -65,7 +64,7 @@ public class Dao<T> extends BaseDao {
             session.refresh(t);
 
             //================ code regarding history table======================
-            if(insertDataInHistory) {
+            if (insertDataInHistory) {
                 historyEntity = buildHistoryEntity(t, SqlEnum.QueryType.Insert.get());
                 session.save(historyEntity);
                 session.flush();
@@ -91,7 +90,7 @@ public class Dao<T> extends BaseDao {
             session.beginTransaction();
 
             //================ code regarding history table======================
-            if(insertDataInHistory) {
+            if (insertDataInHistory) {
                 // Find previous row's primary key before update
                 primaryKeyValue = this.getPrimaryFieldValue(t);
                 oldEntity = getById(primaryKeyValue);
@@ -166,7 +165,7 @@ public class Dao<T> extends BaseDao {
     }
 
     public T getById(Object id) throws HibernateException {
-        return getById(id,null);
+        return getById(id, null);
     }
 
     public T getById(Object id, Integer status) throws HibernateException {
@@ -184,9 +183,9 @@ public class Dao<T> extends BaseDao {
             query.append("SELECT t ")
                     .append("FROM " + entityName + " t ")
                     .append("WHERE ")
-                    .append("t."+primaryKeyField+" =:"+primaryKeyField);
+                    .append("t." + primaryKeyField + " =:" + primaryKeyField);
 
-            if(status != null)
+            if (status != null)
                 query.append(" AND t.status = " + Integer.parseInt(status.toString()));
 
 
@@ -197,7 +196,7 @@ public class Dao<T> extends BaseDao {
             List<T> list = q.getResultList();
             if (list == null || list.isEmpty()) {
                 return null;
-            }else {
+            } else {
                 entity = list.get(0);
                 Core.totalRowCount.set(1L);
             }
@@ -215,48 +214,57 @@ public class Dao<T> extends BaseDao {
         List<T> list = null;
 
         Object entity = null;
-        StringBuilder query;
+        StringBuilder queryBuilderString;
         String entityName;
-        EntityManager entityManager;
+        Long count;
+        //EntityManager entityManager;
 
         try {
-            entityManager = entityManagerFactory.createEntityManager();
-            entityManager.getTransaction().begin();
+            //entityManager = entityManagerFactory.createEntityManager();
+            Session session = getSession();
+            session.getTransaction().begin();
 
-            query = new StringBuilder();
+            queryBuilderString = new StringBuilder();
             Class clazz = Core.runTimeEntityType.get();
             entityName = clazz.getName();
             entityName = StringUtils.substringAfterLast(entityName, ".").trim();
-            query.append("SELECT t ")
-                    .append("FROM " + entityName + " t WHERE t.status="+SqlEnum.Status.Active.get());
+            queryBuilderString.append("SELECT t ")
+                    .append("FROM " + entityName + " t WHERE t.status=" + SqlEnum.Status.Active.get());
 
-            if(Core.shortColumnName.get()!=null && Core.shortColumnName.get()!="")
-                query.append(" ORDER BY t."+ Core.shortColumnName.get() + " "+Core.shortDirection.get().toUpperCase());
+            if (Core.shortColumnName.get() != null && Core.shortColumnName.get() != "")
+                queryBuilderString.append(" ORDER BY t." + Core.shortColumnName.get() + " " + Core.shortDirection.get().toUpperCase());
 
-            javax.persistence.Query q = entityManager.createQuery(query.toString());
+            Query q = session.createQuery(queryBuilderString.toString());
 
-            if(Core.pageOffset.get()!=0 && Core.pageOffset.get()!=null) {
+            if (Core.pageOffset.get() != 0 && Core.pageOffset.get() != null) {
                 q.setFirstResult(Core.pageOffset.get());
-                //isPagination=true;
             }
 
-            if(Core.pageSize.get()!=0 && Core.pageSize.get()!=null) {
+            if (Core.pageSize.get() != 0 && Core.pageSize.get() != null) {
                 q.setMaxResults(Core.pageSize.get());
-                //isPagination=true;
             }
 
-            //if(isPagination){
-                CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-                CriteriaQuery<Long> cq = cb.createQuery(Long.class);
-                cq.select(cb.count(cq.from(clazz)));
-                Long count= entityManager.createQuery(cq).getSingleResult();
-                Core.totalRowCount.set(count);
-            //}
+            queryBuilderString.setLength(0);
+            queryBuilderString.append("SELECT COUNT(*) FROM ");
+            queryBuilderString.append("" + entityName + " t");
+            queryBuilderString.append(" WHERE t.status=" + SqlEnum.Status.Active.get());
+
+            Query countQuery = session.createQuery(queryBuilderString.toString());
+
+            count = (Long) countQuery.getSingleResult();
+
+          /*
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+            cq.select(cb.count(cq.from(clazz)));
+            Long count = entityManager.createQuery(cq).getSingleResult();*/
+            Core.totalRowCount.set(count);
+
 
             list = q.getResultList();
 
-            entityManager.getTransaction().commit();
-            entityManager.close();
+            session.getTransaction().commit();
+            session.close();
             //this.sessionFactory.close();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -268,10 +276,10 @@ public class Dao<T> extends BaseDao {
 
     public Integer updateByConditions(String updateHql, String selectHql,
                                       Map<Object, Object> keyValueParisForUpdate,
-                                      Map<Object,Object> keyValuePairsForWhereCondition,
+                                      Map<Object, Object> keyValuePairsForWhereCondition,
                                       Boolean insertDataInHistory) throws Exception {
 
-        Integer numberOfUpdatedRows=0;
+        Integer numberOfUpdatedRows = 0;
         String key;
         Object value;
         List selectedUpdateRowList;
@@ -283,7 +291,7 @@ public class Dao<T> extends BaseDao {
             Query updateQuery = session.createQuery(updateHql);
 
             //================ code regarding history table======================
-            if(insertDataInHistory) {
+            if (insertDataInHistory) {
                 selectedUpdateRowList = getAllByConditions(selectHql, keyValuePairsForWhereCondition);
                 entityName = this.getEntityNameFromHql(updateHql);
                 // Insert data into history table
@@ -345,7 +353,7 @@ public class Dao<T> extends BaseDao {
         StringBuilder query;
         String entityName;
         String primaryKeyField;
-        Integer numOfDeletedRow=0;
+        Integer numOfDeletedRow = 0;
         try {
             Session session = getSession();
             primaryKeyField = this.getPrimaryKeyFieldName();
@@ -356,15 +364,15 @@ public class Dao<T> extends BaseDao {
             query.append("DELETE t ")
                     .append("FROM " + entityName + " t ")
                     .append("WHERE ")
-                    .append("t."+primaryKeyField+" =:"+primaryKeyField);
+                    .append("t." + primaryKeyField + " =:" + primaryKeyField);
 
             session.beginTransaction();
             Query q = session.createQuery(query.toString());
             q.setParameter(primaryKeyField, id);
 
             numOfDeletedRow = q.executeUpdate();
-            if(numOfDeletedRow>0)
-                isDeleted= true;
+            if (numOfDeletedRow > 0)
+                isDeleted = true;
 
             session.close();
         } catch (Exception ex) {
@@ -376,7 +384,7 @@ public class Dao<T> extends BaseDao {
     }
 
     public Integer deleteByConditions(String hql, Map<Object, Object> keyValueParis) throws HibernateException {
-        Integer numberOfDeletedRows=0;
+        Integer numberOfDeletedRows = 0;
         String key;
         Object value;
         try {
@@ -401,7 +409,7 @@ public class Dao<T> extends BaseDao {
         return numberOfDeletedRows;
     }
 
-    public <M> List<M> executeHqlQuery(String hql,Class<M> clazz, int queryType, Boolean insertDataInHistory) throws Exception {
+    public <M> List<M> executeHqlQuery(String hql, Class<M> clazz, int queryType, Boolean insertDataInHistory) throws Exception {
         List<Object[]> result;
         Integer numberOfUpdatedRow;
         List<M> convertedModels = new ArrayList<>();
@@ -416,30 +424,26 @@ public class Dao<T> extends BaseDao {
             session.beginTransaction();
             Query q = session.createQuery(hql);
 
-            if(SqlEnum.QueryType.Join.get()==queryType) {
+            if (SqlEnum.QueryType.Join.get() == queryType) {
                 result = q.getResultList();
-                if( result.size()>0) {
+                if (result.size() > 0) {
                     convertedModels = this.getObjectListFromObjectArray(result, clazz);
                 }
-            }
-            else if(SqlEnum.QueryType.Select.get()==queryType){
+            } else if (SqlEnum.QueryType.Select.get() == queryType) {
                 result = q.getResultList();
-                if( result.size()>0) {
+                if (result.size() > 0) {
                     convertedModels = (List<M>) result;
                 }
-            }
-            else if(SqlEnum.QueryType.GetOne.get()==queryType){
+            } else if (SqlEnum.QueryType.GetOne.get() == queryType) {
                 q.setMaxResults(1);
                 result = q.getResultList();
-                if( result.size()>0) {
+                if (result.size() > 0) {
                     convertedModels = (List<M>) result;
                 }
-            }
-
-            else if(SqlEnum.QueryType.Update.get()==queryType){
+            } else if (SqlEnum.QueryType.Update.get() == queryType) {
 
                 //================ code regarding history table======================
-                if(insertDataInHistory) {
+                if (insertDataInHistory) {
                     selectHql = this.buildSelectHql(hql);
                     selectQuery = session.createQuery(selectHql);
                     selectedUpdateRowList = selectQuery.getResultList();
@@ -453,9 +457,9 @@ public class Dao<T> extends BaseDao {
                 }
                 //===================================================================
 
-                numberOfUpdatedRow =  q.executeUpdate();
+                numberOfUpdatedRow = q.executeUpdate();
                 convertedModels = new ArrayList<>();
-                convertedModels.add((M)numberOfUpdatedRow);
+                convertedModels.add((M) numberOfUpdatedRow);
             }
             session.getTransaction().commit();
             session.close();
@@ -468,16 +472,16 @@ public class Dao<T> extends BaseDao {
     }
 
     public List<Object[]> executeNativeSqlQuery(String hql, int queryType) throws HibernateException {
-        List<Object[]> result= new ArrayList<>();
+        List<Object[]> result = new ArrayList<>();
         try {
             Session session = getSession();
             session.beginTransaction();
             NativeQuery query = session.createNativeQuery(hql);
-            if(SqlEnum.QueryType.Select.get()==queryType)
-                if(result.size()>0) {
+            if (SqlEnum.QueryType.Select.get() == queryType)
+                if (result.size() > 0) {
                     result = query.getResultList();
                 }
-            if(SqlEnum.QueryType.Update.get()==queryType)
+            if (SqlEnum.QueryType.Update.get() == queryType)
                 query.executeUpdate();
             session.getTransaction().commit();
             session.close();
@@ -489,7 +493,7 @@ public class Dao<T> extends BaseDao {
         return result;
     }
 
-    public Boolean isRowExist(List<Map<Object,Object>> keyValueWithTypeList, Class entityClass) throws Exception {
+    public Boolean isRowExist(List<Map<Object, Object>> keyValueWithTypeList, Class entityClass) throws Exception {
         Boolean isExist = false;
         String key = null;
         Object value = null;
@@ -497,14 +501,14 @@ public class Dao<T> extends BaseDao {
         String entityClassPath = entityClass.toString();
         String hql;
         Long count;
-        Map<Object,Object> keyValueParis = keyValueWithTypeList.get(0);
-        Map<Object,Object> typeMap = keyValueWithTypeList.get(1);
+        Map<Object, Object> keyValueParis = keyValueWithTypeList.get(0);
+        Map<Object, Object> typeMap = keyValueWithTypeList.get(1);
 
         entityClassPath = StringUtils.substringAfterLast(entityClassPath, "class").trim();
-        entityName = StringUtils.substringAfterLast(entityClassPath,".");
+        entityName = StringUtils.substringAfterLast(entityClassPath, ".");
 
         try {
-            hql = this.queryBuilder(keyValueParis, SqlEnum.QueryType.CountRow.get(),entityName);
+            hql = this.queryBuilder(keyValueParis, SqlEnum.QueryType.CountRow.get(), entityName);
 
             Session session = getSession();
             session.beginTransaction();
@@ -520,10 +524,10 @@ public class Dao<T> extends BaseDao {
             session.getTransaction().commit();
             session.close();
 
-            if(count!=null && count>0)
+            if (count != null && count > 0)
                 isExist = true;
 
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
             log.error("Exception from Dao isRowExist method");
             throw ex;
@@ -553,11 +557,11 @@ public class Dao<T> extends BaseDao {
     }
 
     private BaseHistoryEntity buildHistoryEntity(Object t, int QueryType) throws JsonProcessingException {
-        return buildHistoryEntity(t,QueryType, null);
+        return buildHistoryEntity(t, QueryType, null);
     }
 
     private BaseHistoryEntity buildHistoryEntity(Object entity, int QueryType, String entityName) throws JsonProcessingException {
-        String jsonString,entityClassPath;
+        String jsonString, entityClassPath;
         jsonString = Core.jsonMapper.writeValueAsString(entity);
         HistoryEntity = new History();
         HistoryEntity.setMessageId(Core.messageId.get());
@@ -567,11 +571,11 @@ public class Dao<T> extends BaseDao {
         entityClassPath = entity.getClass().toString();
 
 
-        if(entityName!=null){
-            entityClassPath = DbConstant.DEFAULT_DB_ENTITY_PATH + "."+entityName;
-        }else {
+        if (entityName != null) {
+            entityClassPath = DbConstant.DEFAULT_DB_ENTITY_PATH + "." + entityName;
+        } else {
             entityClassPath = StringUtils.substringAfterLast(entityClassPath, "class").trim();
-            entityName = StringUtils.substringAfterLast(entityClassPath,".");
+            entityName = StringUtils.substringAfterLast(entityClassPath, ".");
         }
         Core.HistoryEntity.setEntityClassPath(entityClassPath);
         Core.HistoryEntity.setEntityName(entityName);
