@@ -135,8 +135,8 @@ public abstract class BaseService<T extends BaseEntity> extends Core {
               //  t.setUpdatedBy(Core.userId.get());
             }
 
-            t.setCreatedDate(new Date());
-            t.setUpdatedDate(new Date());
+            //t.setCreatedDate(new Date());
+            //t.setUpdatedDate(new Date());
             // ================================================
 
 
@@ -175,8 +175,8 @@ public abstract class BaseService<T extends BaseEntity> extends Core {
                 //  t.setUpdatedBy(Core.userId.get());
             }
 
-            t.setCreatedDate(new Date());
-            t.setUpdatedDate(new Date());
+            //t.setCreatedDate(new Date());
+            //t.setUpdatedDate(new Date());
             // ================================================
 
 
@@ -227,7 +227,7 @@ public abstract class BaseService<T extends BaseEntity> extends Core {
                 t.setUpdatedBy(Core.userId.get());
             }
 
-            t.setUpdatedDate(new Date());
+            //t.setUpdatedDate(new Date());
             // ================================================
 /*
             if(Core.isCommonApi.get() || Core.commonDataBase.get())

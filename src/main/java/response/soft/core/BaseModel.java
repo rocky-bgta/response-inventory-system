@@ -23,7 +23,7 @@ public abstract class BaseModel implements Serializable {
     private String createdBy;
     @JsonIgnore
     private String updatedBy;
-    //@JsonIgnore
+    @JsonIgnore
     private Date createdDate;
     @JsonIgnore
     private Date updatedDate;

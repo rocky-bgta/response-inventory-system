@@ -42,9 +42,9 @@
             <column name="description" type="varchar(200)"></column>
             <column name="created_by" type="varchar(50)"></column>
             <column name="updated_by" type="varchar(50)"></column>
-            <column name="created_date" type="date"></column>
-            <column name="updated_date" type="date"></column>
-            <column name="status" type="Integer"></column>
+            <column name="created_date" type="datetime"></column>
+            <column name="updated_date" type="datetime"></column>
+            <column name="status" type="integer"></column>
         </createTable>
 
 
