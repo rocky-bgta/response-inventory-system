@@ -70,10 +70,10 @@ public class CategoryController {
     }
 
     @ApiOperation(value ="", response = CategoryModel.class)
-    @RequestMapping(value = "delete", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseMessage> delete(@RequestBody RequestMessage requestMessage) {
+    @RequestMapping(value = "{id}",method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ResponseMessage> delete(@PathVariable UUID id) {
         ResponseMessage responseMessage;
-        responseMessage = this.categoryService.deleteCategory(requestMessage);
+        responseMessage = this.categoryService.deleteCategory(id);
         return new ResponseEntity<>(responseMessage, responseMessage.httpStatus);
     }
 }

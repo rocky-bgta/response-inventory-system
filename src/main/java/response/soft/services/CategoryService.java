@@ -85,6 +85,7 @@ public class CategoryService extends BaseService<Category> {
             }
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
+            ex.printStackTrace();
             //this.rollBack();
             log.error("updateCategory -> got exception");
         }
@@ -92,19 +93,19 @@ public class CategoryService extends BaseService<Category> {
     }
 
 
-    public ResponseMessage deleteCategory(RequestMessage requestMessage) {
+    public ResponseMessage deleteCategory(UUID id) {
         ResponseMessage responseMessage;
         CategoryModel categoryModel;
         try {
-            categoryModel = Core.processRequestMessage(requestMessage, CategoryModel.class);
+            //categoryModel = Core.processRequestMessage(requestMessage, CategoryModel.class);
 
             /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(categoryModel);
             for (ConstraintViolation<CountryModel> violation : violations) {
                 log.error(violation.getMessage());
             }*/
-
+            categoryModel=this.getById(id);
             categoryModel = this.softDelete(categoryModel);
-            responseMessage = this.buildResponseMessage(categoryModel);
+            responseMessage = this.buildResponseMessage(null);
 
             if (categoryModel != null) {
                 responseMessage.httpStatus = HttpStatus.OK;
@@ -117,6 +118,7 @@ public class CategoryService extends BaseService<Category> {
             }
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
+            ex.printStackTrace();
             //this.rollBack();
             log.error("deleteCategory -> got exception");
         }
@@ -152,7 +154,7 @@ public class CategoryService extends BaseService<Category> {
 
 
     public ResponseMessage getAllCategory(RequestMessage requestMessage) {
-        ResponseMessage responseMessage = null;
+        ResponseMessage responseMessage;
         List<CategoryModel> list;
 
         try {

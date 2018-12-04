@@ -165,7 +165,7 @@ public abstract class Core {
     }
 
     public ResponseMessage buildResponseMessage(Object data) {
-        DataTableResponse dataTableResponse = new DataTableResponse();
+        DataTableResponse dataTableResponse;
         ResponseMessage responseMessage = new ResponseMessage();
         responseMessage.data = data;
 
@@ -183,6 +183,7 @@ public abstract class Core {
 
 
         if(Core.isDataTablePagination.get()!=null) {
+            dataTableResponse = new DataTableResponse();
             responseMessage.dataTableResponse = dataTableResponse;
             //responseMessage.dataTableResponse.setData((List) data);
             responseMessage.dataTableResponse.setRecordsTotal(Core.totalRowCount.get());
