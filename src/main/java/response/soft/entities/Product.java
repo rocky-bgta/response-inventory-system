@@ -1,7 +1,8 @@
-/*
+
 package response.soft.entities;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;
 import response.soft.core.BaseEntity;
 
@@ -11,6 +12,7 @@ import java.util.UUID;
 
 @Data
 @Entity
+@EqualsAndHashCode
 @Table(name = "product")
 public class Product extends BaseEntity {
     @Id
@@ -23,8 +25,8 @@ public class Product extends BaseEntity {
     @NotNull
     private String name;
 
-    @Column(name = "category")
-    private UUID category;
+    @Column(name = "category_id")
+    private UUID categoryId;
 
     @Column(name = "brand")
     private String brand;
@@ -45,8 +47,8 @@ public class Product extends BaseEntity {
     private String barcode;
 
     @Lob
-    @Column(name = "image_path")
-    private byte imagePath;
+    @Column(name = "image")
+    private byte[] image;
 
 }
-*/
+
