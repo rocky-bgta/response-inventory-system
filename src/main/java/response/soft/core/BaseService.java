@@ -245,6 +245,46 @@ public abstract class BaseService<T extends BaseEntity> extends Core {
         }
         return (M) model;
     }
+
+    public Integer deleteSoft(Object id) throws Exception {
+        initEntityModel();
+        Integer numberOfDeletedRow;
+       // Object model = null, entity = null;
+       // T t;
+        try {
+          //  t = (T) Core.modelMapper.map(m, Core.runTimeEntityType.get());
+
+            // ================================================
+
+            /*
+
+            t.setStatus(SqlEnum.Status.Deleted.get());
+            if(Core.userId.get()== null ||StringUtils.equals(Core.userId.get(),"") || StringUtils.equals(Core.userId.get(),"string")){
+                t.setUpdatedBy("System");
+            }else {
+                t.setUpdatedBy(Core.userId.get());
+            }
+            */
+
+            //t.setUpdatedDate(new Date());
+            // ================================================
+/*
+            if(Core.isCommonApi.get() || Core.commonDataBase.get())
+                insertDataInHistory=false;*/
+
+            numberOfDeletedRow= this.dao.deleteSoft(id,insertDataInHistory);
+           // model = Core.modelMapper.map(entity, Core.runTimeModelType.get());
+
+        } catch (Exception ex) {
+            log.error(ex.getMessage());
+            for(Throwable throwable: ex.getSuppressed()){
+                log.error("suppressed: " + throwable);
+            }
+            throw ex;
+        }
+        return numberOfDeletedRow;
+    }
+
     public <T extends BaseEntity, M extends BaseModel> M inActive(M m) throws Exception {
         initEntityModel();
         Object model = null, entity = null;

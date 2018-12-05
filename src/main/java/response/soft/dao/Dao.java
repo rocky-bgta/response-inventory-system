@@ -115,6 +115,72 @@ public class Dao<T> extends BaseDao {
         }
         return t;
     }
+
+
+
+    public Integer deleteSoft(Object id, Boolean insertDataInHistory) throws Exception {
+        BaseHistoryEntity historyEntity;
+        StringBuilder queryBuilderString;
+        String entityName,primaryKeyField;
+        List selectedUpdateRowList;
+        Query selectQuery,deleteUpdateQuery;
+        Integer numberOfUpdatedRows = 0;
+        try {
+            Session session = getSession();
+            session.beginTransaction();
+
+            primaryKeyField = this.getPrimaryKeyFieldName();
+            Class clazz = Core.runTimeEntityType.get();
+            entityName = clazz.getName();
+            entityName = StringUtils.substringAfterLast(entityName, ".").trim();
+
+
+            queryBuilderString = new StringBuilder();
+
+            queryBuilderString.append("SELECT t ")
+                    .append("FROM " + entityName + " t ")
+                    .append("WHERE ")
+                    .append("t." + primaryKeyField + " =:" + id);
+
+
+            //================ code regarding history table======================
+            if (insertDataInHistory) {
+                selectQuery = session.createQuery(queryBuilderString.toString());
+                selectedUpdateRowList = selectQuery.getResultList();
+                //entityName = this.getEntityNameFromHql(updateHql);
+                // Insert data into history table
+                historyEntity = buildHistoryEntity(selectedUpdateRowList,
+                        SqlEnum.QueryType.UpdateByConditions.get(),
+                        entityName);
+                session.save(historyEntity);
+                session.flush();
+            }
+            //===================================================================
+
+
+            queryBuilderString.setLength(0);
+            queryBuilderString.append("UPDATE ");
+            queryBuilderString.append("" + entityName + " t");
+            queryBuilderString.append(" SET t.status="+SqlEnum.Status.Deleted.get());
+            queryBuilderString.append(" AND t.updated_date="+new Date());
+            queryBuilderString.append(" AND t.updated_by="+Core.userId.get());
+            queryBuilderString.append(" WHERE t."+primaryKeyField+"="+id);
+
+            deleteUpdateQuery = session.createQuery(queryBuilderString.toString());
+            numberOfUpdatedRows = deleteUpdateQuery.executeUpdate();
+            // update row to main table
+            session.flush();
+            session.getTransaction().commit();
+            session.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            log.error("Exception from Dao update method");
+            throw ex;
+        }
+        return numberOfUpdatedRows;
+    }
+
+
 /*
     public T saveOrUpdate(T t) throws HibernateException, JsonProcessingException{
         BaseHistoryEntity historyEntity;
