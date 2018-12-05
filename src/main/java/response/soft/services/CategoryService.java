@@ -96,6 +96,7 @@ public class CategoryService extends BaseService<Category> {
     public ResponseMessage deleteCategory(UUID id) {
         ResponseMessage responseMessage;
         CategoryModel categoryModel;
+        Integer numberOfDeletedRow;
         try {
             //categoryModel = Core.processRequestMessage(requestMessage, CategoryModel.class);
 
@@ -104,8 +105,11 @@ public class CategoryService extends BaseService<Category> {
                 log.error(violation.getMessage());
             }*/
             categoryModel=this.getById(id);
-            categoryModel = this.softDelete(categoryModel);
-            responseMessage = this.buildResponseMessage(null);
+            //categoryModel = this.softDelete(categoryModel);
+
+            numberOfDeletedRow=this.deleteSoft(id);
+
+            responseMessage = this.buildResponseMessage(numberOfDeletedRow);
 
             if (categoryModel != null) {
                 responseMessage.httpStatus = HttpStatus.OK;

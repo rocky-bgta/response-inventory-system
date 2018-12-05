@@ -140,7 +140,7 @@ public class Dao<T> extends BaseDao {
             queryBuilderString.append("SELECT t ")
                     .append("FROM " + entityName + " t ")
                     .append("WHERE ")
-                    .append("t." + primaryKeyField + " =:" + id);
+                    .append("t." + primaryKeyField + " ='" + id+"'");
 
 
             //================ code regarding history table======================
@@ -162,9 +162,9 @@ public class Dao<T> extends BaseDao {
             queryBuilderString.append("UPDATE ");
             queryBuilderString.append("" + entityName + " t");
             queryBuilderString.append(" SET t.status="+SqlEnum.Status.Deleted.get());
-            queryBuilderString.append(" AND t.updated_date="+new Date());
-            queryBuilderString.append(" AND t.updated_by="+Core.userId.get());
-            queryBuilderString.append(" WHERE t."+primaryKeyField+"="+id);
+            queryBuilderString.append(" ,t.updatedDate='"+new Date()+"'");
+            queryBuilderString.append(" ,t.updatedBy="+Core.userId.get());
+            queryBuilderString.append(" WHERE t."+primaryKeyField+"='"+id+"'");
 
             deleteUpdateQuery = session.createQuery(queryBuilderString.toString());
             numberOfUpdatedRows = deleteUpdateQuery.executeUpdate();
