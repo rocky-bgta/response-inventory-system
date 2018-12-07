@@ -79,7 +79,7 @@ public class ProductController {
     public ResponseEntity<ResponseMessage> image() {
         ResponseMessage responseMessage;//= new ResponseMessage();
         //byte[] imageByte= Base64.encodeBase64(encodedImage);
-        responseMessage=this.productService.getByProductId(UUID.fromString("b0677fda-aee5-4a3d-bed0-b74912701017"));
+        responseMessage=this.productService.getByProductId(UUID.fromString("93919509-ff30-4b5f-ba2b-9230e2737593"));
         return new ResponseEntity<>(responseMessage, HttpStatus.CREATED);
     }
 

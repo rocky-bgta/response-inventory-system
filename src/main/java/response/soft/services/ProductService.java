@@ -12,6 +12,7 @@ import response.soft.core.ResponseMessage;
 import response.soft.entities.Product;
 import response.soft.model.ProductModel;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -43,6 +44,7 @@ public class ProductService extends BaseService<Product> {
             }*/
 
             productModel = this.save(productModel);
+            //productModel.setBase64ImageString(new String(productModel.getImage()));
             responseMessage = this.buildResponseMessage(productModel);
 
             if (productModel != null) {
@@ -165,7 +167,6 @@ public class ProductService extends BaseService<Product> {
     public ResponseMessage getAllProduct(RequestMessage requestMessage) {
         ResponseMessage responseMessage;
         List<ProductModel> list;
-
         try {
             Core.processRequestMessage(requestMessage);
 
