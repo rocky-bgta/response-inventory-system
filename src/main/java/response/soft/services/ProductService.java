@@ -67,19 +67,24 @@ public class ProductService extends BaseService<Product> {
 
     public ResponseMessage updateProduct(RequestMessage requestMessage) {
         ResponseMessage responseMessage;
-        ProductModel ProductModel;
+        ProductModel productModel;
+        byte[] imageByte;
         try {
-            ProductModel = Core.processRequestMessage(requestMessage, ProductModel.class);
+
 
             /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(ProductModel);
             for (ConstraintViolation<CountryModel> violation : violations) {
                 log.error(violation.getMessage());
             }*/
 
-            ProductModel = this.update(ProductModel);
-            responseMessage = this.buildResponseMessage(ProductModel);
+            productModel = Core.processRequestMessage(requestMessage, ProductModel.class);
+            imageByte= Base64.decodeBase64(productModel.getBase64ImageString());
+            productModel.setImage(imageByte);
 
-            if (ProductModel != null) {
+            productModel = this.update(productModel);
+            responseMessage = this.buildResponseMessage(productModel);
+
+            if (productModel != null) {
                 responseMessage.httpStatus = HttpStatus.OK;
                 responseMessage.message = "Product update successfully!";
                 //this.commit();
