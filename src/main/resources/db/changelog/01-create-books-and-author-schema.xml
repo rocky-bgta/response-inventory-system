@@ -57,14 +57,14 @@
                 <constraints nullable="false"/>
             </column>
             <column name="category_id" type="UUID">
-                <constraints nullable="false"/>
+                <!--<constraints nullable="false"/>-->
             </column>
 
             <column name="brand" type="varchar"></column>
             <column name="model_no" type="varchar"></column>
             <column name="serial_no" type="varchar"></column>
             <column name="price" type="double">
-                <constraints nullable="false"/>
+                <!--<constraints nullable="false"/>-->
             </column>
 
             <column name="description" type="varchar"></column>

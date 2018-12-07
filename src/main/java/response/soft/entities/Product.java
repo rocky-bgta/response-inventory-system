@@ -32,10 +32,10 @@ public class Product extends BaseEntity {
     private String brand;
 
     @Column(name = "model_no")
-    private Double modelNo;
+    private String modelNo;
 
     @Column(name = "serial_no")
-    private Double serialNo;
+    private String serialNo;
 
     @Column(name = "price")
     private Double price;
@@ -46,7 +46,6 @@ public class Product extends BaseEntity {
     @Column(name = "barcode")
     private String barcode;
 
-    @Lob
     @Column(name = "image")
     private byte[] image;
 

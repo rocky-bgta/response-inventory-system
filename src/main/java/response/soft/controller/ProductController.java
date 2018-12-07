@@ -2,28 +2,29 @@ package response.soft.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import response.soft.core.RequestMessage;
 import response.soft.core.ResponseMessage;
-import response.soft.model.CategoryModel;
+import response.soft.model.ProductModel;
 import response.soft.services.ProductService;
 
 import java.util.UUID;
 
 @RestController
 @RequestMapping("api/product")
-@Api(tags = "Category Api List")
+@Api(tags = "Product Api List")
 public class ProductController {
 
     @Autowired
     private ProductService productService;
 
     @ApiOperation(value ="", response = Object.class)
-    @RequestMapping(value = "/getAll", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/get-all", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseMessage getAll(@RequestBody RequestMessage requestMessage){
         ResponseMessage responseMessage;
         responseMessage = this.productService.getAllProduct(requestMessage);
@@ -38,7 +39,7 @@ public class ProductController {
         return responseMessage;
     }
 
-    @ApiOperation(value ="", response = CategoryModel.class)
+    @ApiOperation(value ="", response = ProductModel.class)
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseMessage> save(@RequestBody RequestMessage requestMessage) {
         ResponseMessage responseMessage;
@@ -46,7 +47,7 @@ public class ProductController {
         return new ResponseEntity<>(responseMessage, responseMessage.httpStatus);
     }
 
-    @ApiOperation(value ="", response = CategoryModel.class)
+    @ApiOperation(value ="", response = ProductModel.class)
     @RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseMessage> update(@RequestBody RequestMessage requestMessage) {
         ResponseMessage responseMessage;
@@ -54,12 +55,32 @@ public class ProductController {
         return new ResponseEntity<>(responseMessage, responseMessage.httpStatus);
     }
 
-    @ApiOperation(value ="", response = CategoryModel.class)
+    @ApiOperation(value ="", response = ProductModel.class)
     @RequestMapping(value = "{id}",method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseMessage> delete(@PathVariable UUID id) {
         ResponseMessage responseMessage;
         responseMessage = this.productService.deleteProduct(id);
         return new ResponseEntity<>(responseMessage, responseMessage.httpStatus);
+    }
+
+
+    @ApiOperation(value ="", response = ProductModel.class)
+    @RequestMapping(value = "/image",method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ResponseMessage> image(@RequestBody String encodedImage) {
+        ResponseMessage responseMessage= new ResponseMessage();
+        byte[] imageByte= Base64.decodeBase64(encodedImage);
+        this.productService.saveImage(imageByte);
+        return new ResponseEntity<>(responseMessage, HttpStatus.CREATED);
+    }
+
+
+    @ApiOperation(value ="", response = ProductModel.class)
+    @RequestMapping(value = "/imageGet",method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ResponseMessage> image() {
+        ResponseMessage responseMessage;//= new ResponseMessage();
+        //byte[] imageByte= Base64.encodeBase64(encodedImage);
+        responseMessage=this.productService.getByProductId(UUID.fromString("b0677fda-aee5-4a3d-bed0-b74912701017"));
+        return new ResponseEntity<>(responseMessage, HttpStatus.CREATED);
     }
 
    /* *//*

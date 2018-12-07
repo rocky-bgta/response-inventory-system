@@ -1,5 +1,6 @@
 package response.soft.services;
 
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -30,8 +31,11 @@ public class ProductService extends BaseService<Product> {
     public ResponseMessage saveProduct(RequestMessage requestMessage) {
         ResponseMessage responseMessage;// = new ResponseMessage();
         ProductModel productModel;
+        byte[] imageByte;
         try {
             productModel = Core.processRequestMessage(requestMessage, ProductModel.class);
+            imageByte= Base64.decodeBase64(productModel.getBase64ImageString());
+            productModel.setImage(imageByte);
 
             /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(productModel);
             for (ConstraintViolation<CountryModel> violation : violations) {
@@ -131,9 +135,11 @@ public class ProductService extends BaseService<Product> {
     public ResponseMessage getByProductId(UUID id) {
         ResponseMessage responseMessage;
         ProductModel productModel;
+        //String base64textString[];
 
         try {
             productModel=this.getById(id);
+            //productModel.setImage(Base64.decodeBase64(productModel.getImage()));
 
             responseMessage = buildResponseMessage(productModel);
 
@@ -188,5 +194,19 @@ public class ProductService extends BaseService<Product> {
             log.error("getAllProduct -> save got exception");
         }
         return responseMessage;
+    }
+
+    public void saveImage(byte[] image){
+        ProductModel productModel = new ProductModel();
+        productModel.setName("Name");
+        productModel.setImage(image);
+
+        try {
+            this.save(productModel);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
     }
 }
