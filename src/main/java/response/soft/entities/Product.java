@@ -13,7 +13,8 @@ import java.util.UUID;
 @Data
 @Entity
 @EqualsAndHashCode
-@Table(name = "product")
+@Table(name = "product",uniqueConstraints=
+@UniqueConstraint(columnNames={"name", "category_id", "model_no", "brand", "barcode"}))
 public class Product extends BaseEntity {
     @Id
     @GeneratedValue(generator = "uuid2")
@@ -26,16 +27,21 @@ public class Product extends BaseEntity {
     private String name;
 
     @Column(name = "category_id")
+    @NotNull
     private UUID categoryId;
 
     @Column(name = "brand")
+    @NotNull
     private String brand;
 
     @Column(name = "model_no")
+    @NotNull
     private String modelNo;
 
+   /*
     @Column(name = "serial_no")
     private String serialNo;
+    */
 
     @Column(name = "price")
     private Double price;
@@ -44,6 +50,7 @@ public class Product extends BaseEntity {
     private String description;
 
     @Column(name = "barcode")
+    @NotNull
     private String barcode;
 
     @Column(name = "image")

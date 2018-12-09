@@ -31,13 +31,14 @@
             </column>
         </createTable>
 
-        <createTable tableName="category"
-                     remarks="A table to contain all the category">
+
+
+        <createTable tableName="category" remarks="A table to contain all the category">
             <column name="id" type="UUID">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="name" type="varchar(100)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" unique="true"/>
             </column>
             <column name="description" type="varchar(200)"></column>
             <column name="created_by" type="varchar(50)"></column>
@@ -57,18 +58,24 @@
                 <constraints nullable="false"/>
             </column>
             <column name="category_id" type="UUID">
-                <!--<constraints nullable="false"/>-->
+                <constraints nullable="false"/>
             </column>
 
-            <column name="brand" type="varchar"></column>
-            <column name="model_no" type="varchar"></column>
-            <column name="serial_no" type="varchar"></column>
+            <column name="brand" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="model_no" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <!--<column name="serial_no" type="varchar"></column>-->
             <column name="price" type="double">
-                <!--<constraints nullable="false"/>-->
+                <constraints nullable="false"/>
             </column>
 
             <column name="description" type="varchar"></column>
-            <column name="barcode" type="varchar"></column>
+            <column name="barcode" type="varchar">
+                <constraints nullable="false"/>
+            </column>
             <column name="image" type="binary"></column>
 
             <column name="created_by" type="varchar"></column>
@@ -78,6 +85,11 @@
             <column name="status" type="integer"></column>
         </createTable>
 
+
+        <addUniqueConstraint columnNames="name,category_id,model_no,brand"
+                             constraintName="unique by name, category_id, model_no, barcode and brand"
+                             schemaName="inventory"
+                             tableName="product"/>
 
         <!--<addForeignKeyConstraint baseTableName="books" baseColumnNames="author"-->
         <!--constraintName="author_fk"-->
