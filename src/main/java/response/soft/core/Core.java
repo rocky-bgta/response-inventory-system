@@ -155,12 +155,15 @@ public abstract class Core {
     }
 
     public ResponseMessage buildFailedResponseMessage() {
+        return this.buildFailedResponseMessage(null);
+    }
+    public ResponseMessage buildFailedResponseMessage(String message) {
         ResponseMessage responseMessage = new ResponseMessage();
         responseMessage.data = null;
         responseMessage.totalRow = 0l;
         responseMessage.token = null;
         responseMessage.httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-        responseMessage.message = "Failed";
+        responseMessage.message = message;
         return responseMessage;
     }
 

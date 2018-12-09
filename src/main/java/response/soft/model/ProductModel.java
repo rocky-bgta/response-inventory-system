@@ -20,7 +20,7 @@ public class ProductModel extends BaseModel {
     private UUID categoryId;
     private String brand;
     private String modelNo;
-    private String serialNo;
+    //private String serialNo;
     private Double price;
     private String description;
     private String barcode;
