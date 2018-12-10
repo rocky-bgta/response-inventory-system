@@ -13,7 +13,7 @@ import java.util.UUID;
 @Data
 @Entity
 @EqualsAndHashCode
-@Table(name = "file-upload")
+@Table(name = "file_upload")
 public class FileUpload extends BaseEntity {
     @Id
     @GeneratedValue(generator = "uuid2")
