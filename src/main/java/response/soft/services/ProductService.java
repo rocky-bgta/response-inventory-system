@@ -42,7 +42,7 @@ public class ProductService extends BaseService<Product> {
             if(productModel!=null && !ObjectUtils.isEmpty(productModel)){
                 searchDuplicateProductModel = new ProductModel();
                 searchDuplicateProductModel.setName(productModel.getName());
-                searchDuplicateProductModel.setCategoryId(productModel.getCategoryId());
+                //searchDuplicateProductModel.setCategoryId(productModel.getCategoryId());
                 searchDuplicateProductModel.setBrand(productModel.getBrand());
                 searchDuplicateProductModel.setModelNo(productModel.getModelNo());
                 searchDuplicateProductModel.setBarcode(productModel.getBarcode());
