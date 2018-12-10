@@ -209,14 +209,21 @@ public class Dao<T> extends BaseDao {
         List<T> list = null;
         String key;
         Object value;
+        Boolean likeQuery=false;
         try {
             Session session = getSession();
             session.beginTransaction();
             Query q = session.createQuery(hql);
+            likeQuery= StringUtils.contains(hql,"LIKE");
             for (Map.Entry<Object, Object> entry : keyValueParis.entrySet()) {
                 key = entry.getKey().toString();
                 value = entry.getValue();
-                q.setParameter(key, value);
+                if(likeQuery) {
+                    q.setParameter(key, "'%" + value + "%'");
+                }
+                else{
+                    q.setParameter(key,value);
+                }
             }
             list = q.getResultList();
 
