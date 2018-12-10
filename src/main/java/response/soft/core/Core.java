@@ -349,11 +349,17 @@ public abstract class Core {
 
             query = new StringBuilder();
 
-            if (SqlEnum.QueryType.Select.get() == queryType) {
+            if (SqlEnum.QueryType.Select.get() == queryType || SqlEnum.QueryType.LikeOrSearch.get()==queryType) {
                 query.append("SELECT t ")
                         .append("FROM " + entityName + " t ")
                         .append(" WHERE ");
-                query = this.criteriaBuilder(keyValueParisForWhereCondition, query, SqlEnum.QueryType.Select.get());
+
+                // Select query with and condition
+                if(SqlEnum.QueryType.Select.get() == queryType)
+                    query = this.criteriaBuilder(keyValueParisForWhereCondition, query, SqlEnum.QueryType.Select.get());
+                // Select query with or and like condition
+                if(SqlEnum.QueryType.LikeOrSearch.get() == queryType)
+                    query = this.criteriaBuilder(keyValueParisForWhereCondition, query, SqlEnum.QueryType.LikeOrSearch.get());
             }
 
             if (SqlEnum.QueryType.Delete.get() == queryType) {
@@ -395,9 +401,17 @@ public abstract class Core {
         try {
             List<String> criteria = new ArrayList<String>();
 
-            for (Map.Entry<Object, Object> entry : keyValueParis.entrySet()) {
-                key = entry.getKey().toString();
-                criteria.add("t." + key + " = :" + key + queryType);
+            if(SqlEnum.QueryType.LikeOrSearch.get()==queryType){
+                for (Map.Entry<Object, Object> entry : keyValueParis.entrySet()) {
+                    key = entry.getKey().toString();
+                    criteria.add("t." + key + " LIKE '% :" + key + queryType+"%'");
+                }
+            }else {
+
+                for (Map.Entry<Object, Object> entry : keyValueParis.entrySet()) {
+                    key = entry.getKey().toString();
+                    criteria.add("t." + key + " = :" + key + queryType);
+                }
             }
 
             if (criteria.size() == 0) {
@@ -409,6 +423,8 @@ public abstract class Core {
                         query.append(" AND ");
                     if (queryType == SqlEnum.QueryType.Update.get())
                         query.append(" , ");
+                    if(queryType==SqlEnum.QueryType.LikeOrSearch.get())
+                        query.append(" OR ");
                 }
                 query.append(criteria.get(i));
             }

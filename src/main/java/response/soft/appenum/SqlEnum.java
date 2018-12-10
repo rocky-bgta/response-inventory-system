@@ -30,7 +30,8 @@ public class SqlEnum {
         Raw(6),
         UpdateByConditions(7),
         CountRow(8),
-        GetOne(9);
+        GetOne(9),
+        LikeOrSearch(10);
 
         private int queryType;
 

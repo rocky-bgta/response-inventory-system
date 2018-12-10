@@ -47,7 +47,7 @@ public class ProductService extends BaseService<Product> {
                 searchDuplicateProductModel.setModelNo(productModel.getModelNo());
                 searchDuplicateProductModel.setBarcode(productModel.getBarcode());
 
-                foundDuplicateProduct= this.getAllByConditionWithActive(searchDuplicateProductModel);
+                foundDuplicateProduct= this.getAllByLikeORCondition(searchDuplicateProductModel);
                 if(foundDuplicateProduct.size()!=0){
                    responseMessage = this.buildResponseMessage();
                    responseMessage.httpStatus= HttpStatus.CONFLICT.value();

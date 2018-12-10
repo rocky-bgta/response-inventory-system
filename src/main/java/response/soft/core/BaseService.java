@@ -118,6 +118,39 @@ public abstract class BaseService<T extends BaseEntity> extends Core {
         return modelList;
     }
 
+    //type                return type
+    public <M extends BaseModel> List<M> getAllByLikeORCondition(M whereCondition) throws Exception {
+        initEntityModel();
+        Map<Object, Object> keyValueParis;
+        List<T> entityList;
+        List modelList = new ArrayList();
+        Object model;
+        String hql;
+        Integer queryType = SqlEnum.QueryType.LikeOrSearch.get();
+        try {
+            //whereCondition.setStatus(SqlEnum.Status.Active.get());
+            hql = this.queryBuilder(whereCondition,queryType);
+            keyValueParis = Core.getKeyValuePairFromObject(whereCondition,queryType);
+            entityList = this.dao.getAllByConditions(hql, keyValueParis);
+            if (entityList.size() > 0) {
+                modelList = new ArrayList<>();
+                for (T entity : entityList) {
+                    model = Core.modelMapper.map(entity, Core.runTimeModelType.get());
+                    modelList.add(model);
+                }
+            }
+        } catch (Exception ex) {
+            log.error(ex.getMessage());
+            for(Throwable throwable: ex.getSuppressed()){
+                log.error("suppressed: " + throwable);
+            }
+            throw ex;
+        }
+        return modelList;
+    }
+
+
+
     public <T extends BaseEntity, M extends BaseModel> M save(M m) throws Exception {
         initEntityModel();
         Object model = null, entity = null;
