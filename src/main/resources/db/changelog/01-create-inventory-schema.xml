@@ -48,6 +48,22 @@
             <column name="status" type="integer"></column>
         </createTable>
 
+        <createTable tableName="brand"
+                     remarks="A table to contain all the brand">
+            <column name="id" type="UUID">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="varchar(200)"></column>
+            <column name="created_by" type="varchar(50)"></column>
+            <column name="updated_by" type="varchar(50)"></column>
+            <column name="created_date" type="datetime"></column>
+            <column name="updated_date" type="datetime"></column>
+            <column name="status" type="integer"></column>
+        </createTable>
+
 
         <createTable tableName="product"
                      remarks="A table to contain all the product">
