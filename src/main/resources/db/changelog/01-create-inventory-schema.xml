@@ -111,5 +111,32 @@
         <!--constraintName="author_fk"-->
         <!--referencedTableName="authors" referencedColumnNames="id"/>-->
 
+        <createTable tableName="file_upload"
+                     remarks="A table to contain all the Uploaded File">
+            <column name="id" type="UUID">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="file" type="binary">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="size_in_kb" type="integer">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_by" type="varchar"></column>
+            <column name="updated_by" type="varchar"></column>
+            <column name="created_date" type="datetime"></column>
+            <column name="updated_date" type="datetime"></column>
+            <column name="status" type="integer"></column>
+        </createTable>
+
+
     </changeSet>
 </databaseChangeLog>
