@@ -3,7 +3,6 @@ package response.soft.Utils;
 //import com.nybsys.tillboxweb.dbConfig.PersistenceConfig;
 
 
-
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
@@ -12,7 +11,6 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import response.soft.constant.DbConstant;
@@ -135,6 +133,8 @@ public final class AppUtils {
                     //result = "'" + inputValue + "'";
                     result = (String) inputValue;
                     break;
+                case "java.util.UUID":
+                    result = UUID.fromString(inputValue.toString());
                 default:
                     break;
             }
