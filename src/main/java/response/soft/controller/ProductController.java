@@ -44,7 +44,7 @@ public class ProductController {
     public ResponseEntity<ResponseMessage> save(@RequestBody RequestMessage requestMessage) {
         ResponseMessage responseMessage;
         responseMessage = this.productService.saveProduct(requestMessage);
-        return new ResponseEntity<>(responseMessage, responseMessage.httpStatus);
+        return new ResponseEntity<>(responseMessage, HttpStatus.OK);
     }
 
     @ApiOperation(value ="", response = ProductModel.class)
@@ -52,7 +52,7 @@ public class ProductController {
     public ResponseEntity<ResponseMessage> update(@RequestBody RequestMessage requestMessage) {
         ResponseMessage responseMessage;
         responseMessage = this.productService.updateProduct(requestMessage);
-        return new ResponseEntity<>(responseMessage, responseMessage.httpStatus);
+        return new ResponseEntity<>(responseMessage, HttpStatus.OK);
     }
 
     @ApiOperation(value ="", response = ProductModel.class)
@@ -60,7 +60,7 @@ public class ProductController {
     public ResponseEntity<ResponseMessage> delete(@PathVariable UUID id) {
         ResponseMessage responseMessage;
         responseMessage = this.productService.deleteProduct(id);
-        return new ResponseEntity<>(responseMessage, responseMessage.httpStatus);
+        return new ResponseEntity<>(responseMessage, HttpStatus.OK);
     }
 
 
@@ -70,7 +70,7 @@ public class ProductController {
         ResponseMessage responseMessage= new ResponseMessage();
         byte[] imageByte= Base64.decodeBase64(encodedImage);
         this.productService.saveImage(imageByte);
-        return new ResponseEntity<>(responseMessage, HttpStatus.CREATED);
+        return new ResponseEntity<>(responseMessage, HttpStatus.OK);
     }
 
 
@@ -80,7 +80,7 @@ public class ProductController {
         ResponseMessage responseMessage;//= new ResponseMessage();
         //byte[] imageByte= Base64.encodeBase64(encodedImage);
         responseMessage=this.productService.getByProductId(UUID.fromString("93919509-ff30-4b5f-ba2b-9230e2737593"));
-        return new ResponseEntity<>(responseMessage, HttpStatus.CREATED);
+        return new ResponseEntity<>(responseMessage, HttpStatus.OK);
     }
 
    /* *//*

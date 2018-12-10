@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import response.soft.core.BaseService;
 import response.soft.core.Core;
 import response.soft.core.RequestMessage;
@@ -12,7 +13,6 @@ import response.soft.core.ResponseMessage;
 import response.soft.entities.Product;
 import response.soft.model.ProductModel;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,8 +33,30 @@ public class ProductService extends BaseService<Product> {
         ResponseMessage responseMessage;// = new ResponseMessage();
         ProductModel productModel;
         byte[] imageByte;
+        ProductModel searchDuplicateProductModel;
+        List<ProductModel> foundDuplicateProduct;
         try {
             productModel = Core.processRequestMessage(requestMessage, ProductModel.class);
+            // "name", "category_id", "model_no", "brand", "barcode"
+            // search for duplicate product
+            if(productModel!=null && !ObjectUtils.isEmpty(productModel)){
+                searchDuplicateProductModel = new ProductModel();
+                searchDuplicateProductModel.setName(productModel.getName());
+                searchDuplicateProductModel.setCategoryId(productModel.getCategoryId());
+                searchDuplicateProductModel.setBrand(productModel.getBrand());
+                searchDuplicateProductModel.setModelNo(productModel.getModelNo());
+                searchDuplicateProductModel.setBarcode(productModel.getBarcode());
+
+                foundDuplicateProduct= this.getAllByConditionWithActive(searchDuplicateProductModel);
+                if(foundDuplicateProduct.size()!=0){
+                   responseMessage = this.buildResponseMessage();
+                   responseMessage.httpStatus= HttpStatus.CONFLICT.value();
+                   responseMessage.message="Duplicate product found";
+                   return responseMessage;
+                }
+            }
+
+
             imageByte= Base64.decodeBase64(productModel.getBase64ImageString());
             productModel.setImage(imageByte);
 
@@ -48,11 +70,11 @@ public class ProductService extends BaseService<Product> {
             responseMessage = this.buildResponseMessage(productModel);
 
             if (productModel != null) {
-                responseMessage.httpStatus = HttpStatus.CREATED;
+                responseMessage.httpStatus = HttpStatus.CREATED.value();
                 responseMessage.message = "Product save successfully!";
                 //this.commit();
             } else {
-                responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY;
+                responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY.value();
                 responseMessage.message = "Failed to save Product";
                 //this.rollBack();
             }
@@ -77,6 +99,8 @@ public class ProductService extends BaseService<Product> {
                 log.error(violation.getMessage());
             }*/
 
+
+
             productModel = Core.processRequestMessage(requestMessage, ProductModel.class);
             imageByte= Base64.decodeBase64(productModel.getBase64ImageString());
             productModel.setImage(imageByte);
@@ -85,11 +109,11 @@ public class ProductService extends BaseService<Product> {
             responseMessage = this.buildResponseMessage(productModel);
 
             if (productModel != null) {
-                responseMessage.httpStatus = HttpStatus.OK;
+                responseMessage.httpStatus = HttpStatus.OK.value();
                 responseMessage.message = "Product update successfully!";
                 //this.commit();
             } else {
-                responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY;
+                responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY.value();
                 responseMessage.message = "Failed to update Product";
                 //this.rollBack();
             }
@@ -122,11 +146,11 @@ public class ProductService extends BaseService<Product> {
             responseMessage = this.buildResponseMessage(numberOfDeletedRow);
 
             if (productModel != null) {
-                responseMessage.httpStatus = HttpStatus.OK;
+                responseMessage.httpStatus = HttpStatus.OK.value();
                 responseMessage.message = "Product deleted successfully!";
                 //this.commit();
             } else {
-                responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY;
+                responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY.value();
                 responseMessage.message = "Failed to deleted Product";
                 //this.rollBack();
             }
@@ -151,10 +175,10 @@ public class ProductService extends BaseService<Product> {
             responseMessage = buildResponseMessage(productModel);
 
             if (responseMessage.data != null) {
-                responseMessage.httpStatus = HttpStatus.FOUND;
+                responseMessage.httpStatus = HttpStatus.FOUND.value();
                 responseMessage.message = "Get requested Product successfully";
             } else {
-                responseMessage.httpStatus = HttpStatus.NOT_FOUND;
+                responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
                 responseMessage.message = "Failed to requested Product";
             }
 
@@ -185,11 +209,11 @@ public class ProductService extends BaseService<Product> {
             responseMessage = this.buildResponseMessage(list);
 
             if (responseMessage.data != null) {
-                responseMessage.httpStatus = HttpStatus.FOUND;
+                responseMessage.httpStatus = HttpStatus.FOUND.value();
                 responseMessage.message = "Get all Product successfully";
                 //this.commit();
             } else {
-                responseMessage.httpStatus = HttpStatus.NOT_FOUND;
+                responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
                 responseMessage.message = "Failed to get Product";
                 //this.rollBack();
             }

@@ -162,36 +162,47 @@ public abstract class Core {
         responseMessage.data = null;
         responseMessage.totalRow = 0l;
         responseMessage.token = null;
-        responseMessage.httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+        responseMessage.httpStatus = HttpStatus.INTERNAL_SERVER_ERROR.value();
         responseMessage.message = message;
         return responseMessage;
+    }
+
+    public ResponseMessage buildResponseMessage() {
+        return buildResponseMessage(null);
     }
 
     public ResponseMessage buildResponseMessage(Object data) {
         DataTableResponse dataTableResponse;
         ResponseMessage responseMessage = new ResponseMessage();
-        responseMessage.data = data;
 
-        if(Core.totalRowCount.get()!=null)
-            responseMessage.totalRow = Core.totalRowCount.get();
-        else {
-            if(!ObjectUtils.isEmpty(data))
-                responseMessage.totalRow=1L;
-        }
+        if(data!=null) {
+            responseMessage.data = data;
 
-        responseMessage.token = "token"+UUID.randomUUID();
-        responseMessage.httpStatus = HttpStatus.FOUND;
-        responseMessage.message = "Successful";
+            if (Core.totalRowCount.get() != null)
+                responseMessage.totalRow = Core.totalRowCount.get();
+            else {
+                if (!ObjectUtils.isEmpty(data))
+                    responseMessage.totalRow = 1L;
+            }
+
+            responseMessage.token = "token" + UUID.randomUUID();
+            responseMessage.httpStatus = HttpStatus.FOUND.value();
+            responseMessage.message = "Successful";
 
 
+            if (Core.isDataTablePagination.get() != null) {
+                dataTableResponse = new DataTableResponse();
+                responseMessage.dataTableResponse = dataTableResponse;
+                //responseMessage.dataTableResponse.setData((List) data);
+                responseMessage.dataTableResponse.setRecordsTotal(Core.totalRowCount.get());
+                responseMessage.dataTableResponse.setRecordsFiltered(Core.totalRowCount.get());
+                responseMessage.dataTableResponse.setDraw(Core.dataTableDraw.get());
+            }
+        }else {
+            responseMessage.token = "token" + UUID.randomUUID();
+            responseMessage.httpStatus = HttpStatus.CONFLICT.value();
+            responseMessage.message = "Failed";
 
-        if(Core.isDataTablePagination.get()!=null) {
-            dataTableResponse = new DataTableResponse();
-            responseMessage.dataTableResponse = dataTableResponse;
-            //responseMessage.dataTableResponse.setData((List) data);
-            responseMessage.dataTableResponse.setRecordsTotal(Core.totalRowCount.get());
-            responseMessage.dataTableResponse.setRecordsFiltered(Core.totalRowCount.get());
-            responseMessage.dataTableResponse.setDraw(Core.dataTableDraw.get());
         }
 
         return responseMessage;

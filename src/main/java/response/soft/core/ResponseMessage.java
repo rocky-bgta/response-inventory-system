@@ -8,14 +8,13 @@
  */
 package response.soft.core;
 
-import org.springframework.http.HttpStatus;
 import response.soft.core.datatable.model.DataTableResponse;
 
 public class ResponseMessage {
 
     public String token;
     public Object data;
-    public HttpStatus httpStatus;
+    public Integer httpStatus;
     public String message;
 
 

@@ -3,6 +3,7 @@ package response.soft.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -58,7 +59,7 @@ public class CategoryController {
     public ResponseEntity<ResponseMessage> save(@RequestBody RequestMessage requestMessage) {
         ResponseMessage responseMessage;
         responseMessage = this.categoryService.saveCategory(requestMessage);
-        return new ResponseEntity<>(responseMessage, responseMessage.httpStatus);
+        return new ResponseEntity<>(responseMessage, HttpStatus.OK);
     }
 
     @ApiOperation(value ="", response = CategoryModel.class)
@@ -66,14 +67,15 @@ public class CategoryController {
     public ResponseEntity<ResponseMessage> update(@RequestBody RequestMessage requestMessage) {
         ResponseMessage responseMessage;
         responseMessage = this.categoryService.updateCategory(requestMessage);
-        return new ResponseEntity<>(responseMessage, responseMessage.httpStatus);
+        return new ResponseEntity<>(responseMessage, HttpStatus.OK);
     }
 
     @ApiOperation(value ="", response = CategoryModel.class)
     @RequestMapping(value = "{id}",method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    //@ResponseStatus(HttpStatus.OK)
     public ResponseEntity<ResponseMessage> delete(@PathVariable UUID id) {
         ResponseMessage responseMessage;
         responseMessage = this.categoryService.deleteCategory(id);
-        return new ResponseEntity<>(responseMessage, responseMessage.httpStatus);
+        return new ResponseEntity(responseMessage,HttpStatus.OK);
     }
 }

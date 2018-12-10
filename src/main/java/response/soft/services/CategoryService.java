@@ -43,11 +43,11 @@ public class CategoryService extends BaseService<Category> {
             responseMessage = this.buildResponseMessage(categoryModel);
 
             if (categoryModel != null) {
-                responseMessage.httpStatus = HttpStatus.CREATED;
+                responseMessage.httpStatus = HttpStatus.CREATED.value();
                 responseMessage.message = "Category save successfully!";
                 //this.commit();
             } else {
-                responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY;
+                responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY.value();
                 responseMessage.message = "Failed to save category";
                 //this.rollBack();
             }
@@ -75,11 +75,11 @@ public class CategoryService extends BaseService<Category> {
             responseMessage = this.buildResponseMessage(categoryModel);
 
             if (categoryModel != null) {
-                responseMessage.httpStatus = HttpStatus.OK;
+                responseMessage.httpStatus = HttpStatus.OK.value();
                 responseMessage.message = "Category update successfully!";
                 //this.commit();
             } else {
-                responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY;
+                responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY.value();
                 responseMessage.message = "Failed to update category";
                 //this.rollBack();
             }
@@ -112,11 +112,11 @@ public class CategoryService extends BaseService<Category> {
             responseMessage = this.buildResponseMessage(numberOfDeletedRow);
 
             if (categoryModel != null) {
-                responseMessage.httpStatus = HttpStatus.OK;
+                responseMessage.httpStatus = HttpStatus.OK.value();
                 responseMessage.message = "Category deleted successfully!";
                 //this.commit();
             } else {
-                responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY;
+                responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY.value();
                 responseMessage.message = "Failed to deleted category";
                 //this.rollBack();
             }
@@ -139,10 +139,10 @@ public class CategoryService extends BaseService<Category> {
             responseMessage = buildResponseMessage(categoryModel);
 
             if (responseMessage.data != null) {
-                responseMessage.httpStatus = HttpStatus.FOUND;
+                responseMessage.httpStatus = HttpStatus.FOUND.value();
                 responseMessage.message = "Get requested category successfully";
             } else {
-                responseMessage.httpStatus = HttpStatus.NOT_FOUND;
+                responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
                 responseMessage.message = "Failed to requested category";
             }
 
@@ -174,11 +174,11 @@ public class CategoryService extends BaseService<Category> {
             responseMessage = this.buildResponseMessage(list);
 
             if (responseMessage.data != null) {
-                responseMessage.httpStatus = HttpStatus.FOUND;
+                responseMessage.httpStatus = HttpStatus.FOUND.value();
                 responseMessage.message = "Get all category successfully";
                 //this.commit();
             } else {
-                responseMessage.httpStatus = HttpStatus.NOT_FOUND;
+                responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
                 responseMessage.message = "Failed to get category";
                 //this.rollBack();
             }
