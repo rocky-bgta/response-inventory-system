@@ -9,5 +9,7 @@
   <include file="changelog/01-create-inventory-schema.xml" relativeToChangelogFile="true"/>
   <include file="changelog/02-insert-data-authors.xml" relativeToChangelogFile="true"/>
   <include file="changelog/02-insert-data-books.xml" relativeToChangelogFile="true"/>
+    <include file="changelog/category.cvs" relativeToChangelogFile="true"/>
+
 
 </databaseChangeLog>
