@@ -24,7 +24,7 @@ public class ProductController {
     private ProductService productService;
 
     @ApiOperation(value ="", response = Object.class)
-    @RequestMapping(value = "/get-all", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseMessage getAll(@RequestBody RequestMessage requestMessage){
         ResponseMessage responseMessage;
         responseMessage = this.productService.getAllProduct(requestMessage);

@@ -39,7 +39,7 @@ public class CategoryController {
 
 
     @ApiOperation(value ="", response = Object.class)
-    @RequestMapping(value = "/getAll", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseMessage getAll(@RequestBody RequestMessage requestMessage){
         ResponseMessage responseMessage;
         responseMessage = this.categoryService.getAllCategory(requestMessage);
