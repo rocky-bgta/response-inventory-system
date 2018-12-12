@@ -168,7 +168,8 @@ public abstract class BaseDao extends Core {
                 for (int i = 0; i < subToken.length; i++) {
                     fieldName = fields[i].getName();
                     Type type = fields[i].getType();
-                    fieldValue = AppUtils.castValue(type.toString(),subToken[i]);
+                    //fieldValue=StringUtils.substring(subToken[i], 1, subToken[i].length() - 1);
+                    fieldValue = AppUtils.castValue(StringUtils.remove(type.toString(),"class ").trim(),subToken[i]);
                     temJson += "\"" + fieldName+ "\":"+fieldValue +",";
                 }
                 temJson = temJson.substring(0,temJson.length()-1);
