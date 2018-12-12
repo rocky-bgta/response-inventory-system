@@ -6,8 +6,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
-
+import response.soft.utils.AppUtils;
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -166,7 +167,8 @@ public abstract class BaseDao extends Core {
                 String subToken[] = keyValue.split(":");
                 for (int i = 0; i < subToken.length; i++) {
                     fieldName = fields[i].getName();
-                    fieldValue = subToken[i];
+                    Type type = fields[i].getType();
+                    fieldValue = AppUtils.castValue(type.toString(),subToken[i]);
                     temJson += "\"" + fieldName+ "\":"+fieldValue +",";
                 }
                 temJson = temJson.substring(0,temJson.length()-1);

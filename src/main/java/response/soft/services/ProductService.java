@@ -1,15 +1,18 @@
 package response.soft.services;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import response.soft.appenum.SqlEnum;
 import response.soft.core.BaseService;
 import response.soft.core.Core;
 import response.soft.core.RequestMessage;
 import response.soft.core.ResponseMessage;
+import response.soft.core.datatable.model.DataTableRequest;
 import response.soft.entities.Product;
 import response.soft.model.ProductModel;
 
@@ -39,7 +42,7 @@ public class ProductService extends BaseService<Product> {
             productModel = Core.processRequestMessage(requestMessage, ProductModel.class);
             // "name", "category_id", "model_no", "brand", "barcode"
             // search for duplicate product
-            if(productModel!=null && !ObjectUtils.isEmpty(productModel)){
+            if (productModel != null && !ObjectUtils.isEmpty(productModel)) {
                 searchDuplicateProductModel = new ProductModel();
                 searchDuplicateProductModel.setName(productModel.getName());
                 //searchDuplicateProductModel.setCategoryId(productModel.getCategoryId());
@@ -47,17 +50,17 @@ public class ProductService extends BaseService<Product> {
                 searchDuplicateProductModel.setModelNo(productModel.getModelNo());
                 searchDuplicateProductModel.setBarcode(productModel.getBarcode());
 
-                foundDuplicateProduct= this.getAllByConditionWithActive(searchDuplicateProductModel);
-                if(foundDuplicateProduct.size()!=0){
-                   responseMessage = this.buildResponseMessage();
-                   responseMessage.httpStatus= HttpStatus.CONFLICT.value();
-                   responseMessage.message="Duplicate product found";
-                   return responseMessage;
+                foundDuplicateProduct = this.getAllByConditionWithActive(searchDuplicateProductModel);
+                if (foundDuplicateProduct.size() != 0) {
+                    responseMessage = this.buildResponseMessage();
+                    responseMessage.httpStatus = HttpStatus.CONFLICT.value();
+                    responseMessage.message = "Duplicate product found";
+                    return responseMessage;
                 }
             }
 
 
-            if(productModel.getBase64ImageString()!=null && productModel.getBase64ImageString().length()>0) {
+            if (productModel.getBase64ImageString() != null && productModel.getBase64ImageString().length() > 0) {
                 imageByte = Base64.decodeBase64(productModel.getBase64ImageString());
                 productModel.setImage(imageByte);
             }
@@ -102,13 +105,11 @@ public class ProductService extends BaseService<Product> {
             }*/
 
 
-
             productModel = Core.processRequestMessage(requestMessage, ProductModel.class);
-            if(productModel.getBase64ImageString()!=null) {
+            if (productModel.getBase64ImageString() != null) {
                 imageByte = Base64.decodeBase64(productModel.getBase64ImageString());
                 productModel.setImage(imageByte);
-            }
-            else {
+            } else {
                 productModel.setImage(null);
             }
 
@@ -145,10 +146,10 @@ public class ProductService extends BaseService<Product> {
             for (ConstraintViolation<CountryModel> violation : violations) {
                 log.error(violation.getMessage());
             }*/
-            productModel=this.getById(id);
+            productModel = this.getById(id);
             //ProductModel = this.softDelete(ProductModel);
 
-            numberOfDeletedRow=this.deleteSoft(id);
+            numberOfDeletedRow = this.deleteSoft(id);
 
             responseMessage = this.buildResponseMessage(numberOfDeletedRow);
 
@@ -176,7 +177,7 @@ public class ProductService extends BaseService<Product> {
         //String base64textString[];
 
         try {
-            productModel=this.getById(id);
+            productModel = this.getById(id);
             //productModel.setImage(Base64.decodeBase64(productModel.getImage()));
 
             responseMessage = buildResponseMessage(productModel);
@@ -203,15 +204,51 @@ public class ProductService extends BaseService<Product> {
     public ResponseMessage getAllProduct(RequestMessage requestMessage) {
         ResponseMessage responseMessage;
         List<ProductModel> list;
+        DataTableRequest dataTableRequest;
+        StringBuilder queryBuilderString = null;
+        String searchKey;
         try {
             Core.processRequestMessage(requestMessage);
+            dataTableRequest = requestMessage.dataTableRequest;
+            searchKey = dataTableRequest.search.value;
+
+
+            if (dataTableRequest != null && !StringUtils.isEmpty(searchKey)) {
+                //implement full-text search
+                queryBuilderString = new StringBuilder();
+                queryBuilderString.append("SELECT p.id, ")
+                        .append("p.name, ")
+                        .append("c.id, ")
+                        .append("p.brand, ")
+                        .append("p.modelNo, ")
+                        .append("p.price, ")
+                        .append("p.description, ")
+                        .append("p.barcode, ")
+                        .append("p.image ")
+                        .append("FROM Product p ")
+                        .append("LEFT JOIN Category c ON p.categoryId = c.id  ")
+                        .append("WHERE ")
+                        .append("(p.name LIKE '%" + searchKey + "%' ")
+                        .append("OR c.name LIKE '%" + searchKey + "%' ")
+                        .append("OR p.brand LIKE '%" + searchKey + "%' ")
+                        .append("OR p.modelNo LIKE '%" + searchKey + "%' ")
+                        .append("OR CAST(p.price AS string) LIKE '%" + searchKey + "%' ")
+                        .append("OR p.description LIKE '%" + searchKey + "%') ")
+                        .append("AND p.status="+SqlEnum.Status.Active.get());
+
+                list = this.executeHqlQuery(queryBuilderString.toString(), ProductModel.class, SqlEnum.QueryType.Join.get());
+
+            } else {
+                list = this.getAll();
+            }
+
+
 
             /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(ProductModel);
             for (ConstraintViolation<CountryModel> violation : violations) {
                 log.error(violation.getMessage());
             }*/
 
-            list = this.getAll();
 
             responseMessage = this.buildResponseMessage(list);
 
@@ -233,17 +270,14 @@ public class ProductService extends BaseService<Product> {
         return responseMessage;
     }
 
-    public void saveImage(byte[] image){
+    /*public void saveImage(byte[] image) {
         ProductModel productModel = new ProductModel();
         productModel.setName("Name");
         productModel.setImage(image);
-
         try {
             this.save(productModel);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
-    }
+    }*/
 }

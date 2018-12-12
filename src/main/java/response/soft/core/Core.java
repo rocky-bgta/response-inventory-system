@@ -11,7 +11,7 @@ package response.soft.core;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import javafx.scene.control.Pagination;
+
 import org.hibernate.SessionFactory;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -23,6 +23,7 @@ import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 import response.soft.appenum.SqlEnum;
 import response.soft.core.datatable.model.DataTableResponse;
+import response.soft.utils.AppUtils;
 
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -122,16 +123,16 @@ public abstract class Core {
             if (requestMessage.data != null && !ObjectUtils.isEmpty(requestMessage.data)) {
                 requestData = requestMessage.data;
             }
-            if (requestMessage.dataTableRequest != null && requestMessage.dataTableRequest.getLength()!=0) {
+            if (requestMessage.dataTableRequest != null && requestMessage.dataTableRequest.length!=0) {
                 Core.isDataTablePagination.set(true);
-                Core.pageOffset.set(requestMessage.dataTableRequest.getStart());
-                Core.pageSize.set(requestMessage.dataTableRequest.getLength());
-                Core.dataTableDraw.set(requestMessage.dataTableRequest.getDraw());
+                Core.pageOffset.set(requestMessage.dataTableRequest.start);
+                Core.pageSize.set(requestMessage.dataTableRequest.length);
+                Core.dataTableDraw.set(requestMessage.dataTableRequest.draw);
 
 
-                shortDirection = requestMessage.dataTableRequest.getOrder().get(0).dir;
-                shortColumnIndex = requestMessage.dataTableRequest.getOrder().get(0).column;
-                shortColumnName = requestMessage.dataTableRequest.getColumns().get(shortColumnIndex).data;
+                shortDirection = requestMessage.dataTableRequest.order.get(0).dir;
+                shortColumnIndex = requestMessage.dataTableRequest.order.get(0).column;
+                shortColumnName = requestMessage.dataTableRequest.columns.get(shortColumnIndex).data;
 
                 if (shortDirection.equals("asc") || shortDirection.equals("desc"))
                     Core.shortDirection.set(shortDirection);
@@ -194,9 +195,9 @@ public abstract class Core {
                 dataTableResponse = new DataTableResponse();
                 responseMessage.dataTableResponse = dataTableResponse;
                 //responseMessage.dataTableResponse.setData((List) data);
-                responseMessage.dataTableResponse.setRecordsTotal(Core.totalRowCount.get());
-                responseMessage.dataTableResponse.setRecordsFiltered(Core.totalRowCount.get());
-                responseMessage.dataTableResponse.setDraw(Core.dataTableDraw.get());
+                responseMessage.dataTableResponse.recordsTotal=(Core.totalRowCount.get());
+                responseMessage.dataTableResponse.recordsFiltered=(Core.totalRowCount.get());
+                responseMessage.dataTableResponse.draw=(Core.dataTableDraw.get());
             }
         }else {
             responseMessage.token = "token" + UUID.randomUUID();
@@ -285,9 +286,9 @@ public abstract class Core {
                 // condition5 = !StringUtils.startsWithIgnoreCase(field.getName().toString(), "updated");
                 if (condition3 && condition2) {
                     if (queryType != null)
-                        keyValue.put(field.getName().toString() + queryType, response.soft.Utils.AppUtils.castValue(type, field.get(obj)));
+                        keyValue.put(field.getName().toString() + queryType, AppUtils.castValue(type, field.get(obj)));
                     else
-                        keyValue.put(field.getName().toString(), response.soft.Utils.AppUtils.castValue(type, field.get(obj)));
+                        keyValue.put(field.getName().toString(), AppUtils.castValue(type, field.get(obj)));
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();

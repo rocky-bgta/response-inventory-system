@@ -63,7 +63,7 @@ public class ProductController {
         return new ResponseEntity<>(responseMessage, HttpStatus.OK);
     }
 
-
+/*
     @ApiOperation(value ="", response = ProductModel.class)
     @RequestMapping(value = "/image",method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseMessage> image(@RequestBody String encodedImage) {
@@ -71,9 +71,9 @@ public class ProductController {
         byte[] imageByte= Base64.decodeBase64(encodedImage);
         this.productService.saveImage(imageByte);
         return new ResponseEntity<>(responseMessage, HttpStatus.OK);
-    }
+    }*/
 
-
+/*
     @ApiOperation(value ="", response = ProductModel.class)
     @RequestMapping(value = "/imageGet",method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseMessage> image() {
@@ -82,6 +82,8 @@ public class ProductController {
         responseMessage=this.productService.getByProductId(UUID.fromString("93919509-ff30-4b5f-ba2b-9230e2737593"));
         return new ResponseEntity<>(responseMessage, HttpStatus.OK);
     }
+    */
+
 
    /* *//*
      * MultipartFile Upload

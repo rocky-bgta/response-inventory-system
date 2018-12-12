@@ -19,6 +19,8 @@ import response.soft.core.BaseDao;
 import response.soft.core.BaseHistoryEntity;
 import response.soft.core.Core;
 import response.soft.core.History;
+import response.soft.entities.Product;
+import response.soft.model.ProductModel;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -483,7 +485,7 @@ public class Dao<T> extends BaseDao {
     }
 
     public <M> List<M> executeHqlQuery(String hql, Class<M> clazz, int queryType, Boolean insertDataInHistory) throws Exception {
-        List<Object[]> result;
+        List<Object[]> result=null;
         Integer numberOfUpdatedRow;
         List<M> convertedModels = new ArrayList<>();
         String selectHql;
@@ -497,11 +499,22 @@ public class Dao<T> extends BaseDao {
             session.beginTransaction();
             Query q = session.createQuery(hql);
 
+            /*
+            if (Core.pageOffset.get() != 0 && Core.pageOffset.get() != null) {
+                q.setFirstResult(Core.pageOffset.get());
+            }
+
+            if (Core.pageSize.get() != 0 && Core.pageSize.get() != null) {
+                q.setMaxResults(Core.pageSize.get());
+            }*/
+
             if (SqlEnum.QueryType.Join.get() == queryType) {
                 result = q.getResultList();
+
                 if (result.size() > 0) {
                     convertedModels = this.getObjectListFromObjectArray(result, clazz);
                 }
+
             } else if (SqlEnum.QueryType.Select.get() == queryType) {
                 result = q.getResultList();
                 if (result.size() > 0) {
@@ -529,7 +542,8 @@ public class Dao<T> extends BaseDao {
                     session.flush();
                 }
                 //===================================================================
-
+                if(result!=null)
+                    Core.totalRowCount.set((long)result.size());
                 numberOfUpdatedRow = q.executeUpdate();
                 convertedModels = new ArrayList<>();
                 convertedModels.add((M) numberOfUpdatedRow);

@@ -1,4 +1,4 @@
-package response.soft.Utils;
+package response.soft.utils;
 
 //import com.nybsys.tillboxweb.dbConfig.PersistenceConfig;
 
@@ -34,7 +34,7 @@ public final class AppUtils {
 
     //@Autowired
     //public static JavaMailSender emailSender;
-    private static final Logger log = LoggerFactory.getLogger(response.soft.Utils.AppUtils.class);
+    private static final Logger log = LoggerFactory.getLogger(AppUtils.class);
     private static final JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
     private static final Properties props = mailSender.getJavaMailProperties();
 

@@ -1,15 +1,13 @@
 package response.soft.core.datatable.model;
 
-import lombok.Data;
-
 import java.util.List;
 
-@Data
+
 public class DataTableRequest {
-    private Long draw;
-    private Integer length;
-    private Integer start;
-    private DataTableSearch search;
-    private List<DataTableOrder> order;
-    private List<DataTableColumns> columns;
+    public Long draw;
+    public Integer length;
+    public Integer start;
+    public DataTableSearch search;
+    public List<DataTableOrder> order;
+    public List<DataTableColumns> columns;
 }
