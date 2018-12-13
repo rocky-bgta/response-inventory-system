@@ -92,7 +92,7 @@
             <column name="barcode" type="varchar">
                 <constraints nullable="false"/>
             </column>
-            <column name="image" type="binary"></column>
+            <column name="image" type="text"></column>
 
             <column name="created_by" type="varchar"></column>
             <column name="updated_by" type="varchar"></column>

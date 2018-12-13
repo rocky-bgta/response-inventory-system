@@ -59,11 +59,11 @@ public class ProductService extends BaseService<Product> {
                 }
             }
 
-
+/*
             if (productModel.getBase64ImageString() != null && productModel.getBase64ImageString().length() > 0) {
                 imageByte = Base64.decodeBase64(productModel.getBase64ImageString());
                 productModel.setImage(imageByte);
-            }
+            }*/
 
             /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(productModel);
             for (ConstraintViolation<CountryModel> violation : violations) {
@@ -106,12 +106,12 @@ public class ProductService extends BaseService<Product> {
 
 
             productModel = Core.processRequestMessage(requestMessage, ProductModel.class);
-            if (productModel.getBase64ImageString() != null) {
+            /*if (productModel.getBase64ImageString() != null) {
                 imageByte = Base64.decodeBase64(productModel.getBase64ImageString());
                 productModel.setImage(imageByte);
             } else {
                 productModel.setImage(null);
-            }
+            }*/
 
             productModel = this.update(productModel);
             responseMessage = this.buildResponseMessage(productModel);

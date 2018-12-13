@@ -4,6 +4,7 @@ package response.soft.entities;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 import response.soft.core.BaseEntity;
 
 import javax.persistence.*;
@@ -54,7 +55,8 @@ public class Product extends BaseEntity {
     private String barcode;
 
     @Column(name = "image")
-    private byte[] image;
+    @Type(type="text")
+    private String image;
 
 }
 
