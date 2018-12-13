@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import response.soft.appenum.SqlEnum;
 import response.soft.dao.Dao;
 
@@ -17,6 +18,7 @@ import java.util.Map;
 
 @SuppressWarnings("ALL")
 @Service
+@Transactional
 public abstract class BaseService<T extends BaseEntity> extends Core {
 
     private static final Logger log = LoggerFactory.getLogger(BaseService.class);

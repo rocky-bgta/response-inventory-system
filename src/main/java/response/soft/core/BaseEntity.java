@@ -18,6 +18,9 @@ import java.util.Date;
 @EntityListeners(AuditingEntityListener.class)
 public abstract class BaseEntity implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
+
     @Column(name = "created_by")
     private String createdBy;
 
