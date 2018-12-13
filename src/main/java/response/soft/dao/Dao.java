@@ -380,6 +380,7 @@ public class Dao<T> extends BaseDao {
             Long count = entityManager.createQuery(cq).getSingleResult();*/
             Core.totalRowCount.set(count);
 
+            Core.recordsFilteredCount.set(count);
 
             list = q.getResultList();
 
