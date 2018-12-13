@@ -212,6 +212,7 @@ public class ProductService extends BaseService<Product> {
             dataTableRequest = requestMessage.dataTableRequest;
             searchKey = dataTableRequest.search.value;
 
+            searchKey = searchKey.trim().toLowerCase();
 
             if (dataTableRequest != null && !StringUtils.isEmpty(searchKey)) {
                 //implement full-text search
@@ -228,12 +229,14 @@ public class ProductService extends BaseService<Product> {
                         .append("FROM Product p ")
                         .append("LEFT JOIN Category c ON p.categoryId = c.id  ")
                         .append("WHERE ")
-                        .append("(p.name LIKE '%" + searchKey + "%' ")
-                        .append("OR c.name LIKE '%" + searchKey + "%' ")
-                        .append("OR p.brand LIKE '%" + searchKey + "%' ")
-                        .append("OR p.modelNo LIKE '%" + searchKey + "%' ")
-                        //.append("OR CAST(p.price AS string) LIKE '%" + searchKey + "%' ")
-                        .append("OR p.description LIKE '%" + searchKey + "%') ")
+                        .append("( ")
+                        .append("lower(p.name) LIKE '%" + searchKey + "%' ")
+                        .append("OR lower(c.name) LIKE '%" + searchKey + "%' ")
+                        .append("OR lower(p.brand) LIKE '%" + searchKey + "%' ")
+                        .append("OR lower(p.modelNo) LIKE '%" + searchKey + "%' ")
+                        .append("OR CAST(p.price AS string) LIKE '%" + searchKey + "%' ")
+                        .append("OR lower(p.description) LIKE '%" + searchKey + "%' ")
+                        .append(") ")
                         .append("AND p.status="+SqlEnum.Status.Active.get());
 
                 list = this.executeHqlQuery(queryBuilderString.toString(), ProductModel.class, SqlEnum.QueryType.Join.get());
