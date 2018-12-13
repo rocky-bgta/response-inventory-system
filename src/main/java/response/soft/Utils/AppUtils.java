@@ -109,6 +109,7 @@ public final class AppUtils {
 
     public static <T extends Object> T castValue(String type, Object inputValue) {
         Object result = null;
+        String id; //UUID
         try {
             switch (type) {
                 case "java.lang.Integer":
@@ -134,7 +135,9 @@ public final class AppUtils {
                     result = (String) inputValue;
                     break;
                 case "java.util.UUID":
-                    result = UUID.fromString(inputValue.toString());
+                    id = new String((String) inputValue);
+                    id =  id.substring(1, id.length()-1);
+                    result = UUID.fromString(id);
                 default:
                     break;
             }

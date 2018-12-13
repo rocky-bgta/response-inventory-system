@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import response.soft.utils.AppUtils;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -175,7 +176,8 @@ public abstract class BaseDao extends Core {
                 temJson = temJson.substring(0,temJson.length()-1);
                 buildJson += "{"+temJson+"}";
                 model = clazz.newInstance();
-                model =(M) Core.jsonMapper.readValue(buildJson, model.getClass());
+                //model =(M) Core.jsonMapper.readValue(buildJson, model.getClass());
+                model =(M) Core.gson.fromJson(buildJson, model.getClass());
                 convertedModels.add(model);
                 temJson="";
                 buildJson="";

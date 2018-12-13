@@ -223,8 +223,8 @@ public class ProductService extends BaseService<Product> {
                         .append("p.modelNo, ")
                         .append("p.price, ")
                         .append("p.description, ")
-                        .append("p.barcode ")
-                        //.append("p.image ")
+                        .append("p.barcode, ")
+                        .append("p.image ")
                         .append("FROM Product p ")
                         .append("LEFT JOIN Category c ON p.categoryId = c.id  ")
                         .append("WHERE ")
@@ -232,7 +232,7 @@ public class ProductService extends BaseService<Product> {
                         .append("OR c.name LIKE '%" + searchKey + "%' ")
                         .append("OR p.brand LIKE '%" + searchKey + "%' ")
                         .append("OR p.modelNo LIKE '%" + searchKey + "%' ")
-                        .append("OR CAST(p.price AS string) LIKE '%" + searchKey + "%' ")
+                        //.append("OR CAST(p.price AS string) LIKE '%" + searchKey + "%' ")
                         .append("OR p.description LIKE '%" + searchKey + "%') ")
                         .append("AND p.status="+SqlEnum.Status.Active.get());
 

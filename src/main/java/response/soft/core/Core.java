@@ -12,6 +12,8 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.hibernate.SessionFactory;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -44,6 +46,8 @@ public abstract class Core {
     //.setDateFormat(dateFormat);
 
     protected static final ModelMapper modelMapper = new ModelMapper();
+    private static GsonBuilder builder = new GsonBuilder();
+    public static final Gson gson = builder.create();
 
     public static final ThreadLocal<Class> runTimeModelType = new ThreadLocal<>();
     public static final ThreadLocal<Class> runTimeEntityType = new ThreadLocal<>();
