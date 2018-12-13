@@ -72,6 +72,8 @@ public abstract class Core {
     public static final ThreadLocal<Integer> pageOffset = new ThreadLocal<>();
     public static final ThreadLocal<Integer> pageSize = new ThreadLocal<>();
     public static final ThreadLocal<Long> totalRowCount = new ThreadLocal<>();
+    public static final ThreadLocal<Long> recordsFilteredCount = new ThreadLocal<>();
+
     public static final ThreadLocal<Long> dataTableDraw = new ThreadLocal<>();
     public static final ThreadLocal<String> shortDirection = new ThreadLocal<>();
     public static final ThreadLocal<String> shortColumnName = new ThreadLocal<>();
@@ -200,7 +202,7 @@ public abstract class Core {
                 responseMessage.dataTableResponse = dataTableResponse;
                 //responseMessage.dataTableResponse.setData((List) data);
                 responseMessage.dataTableResponse.recordsTotal=(Core.totalRowCount.get());
-                responseMessage.dataTableResponse.recordsFiltered=(Core.totalRowCount.get());
+                responseMessage.dataTableResponse.recordsFiltered=(Core.recordsFilteredCount.get());
                 responseMessage.dataTableResponse.draw=(Core.dataTableDraw.get());
             }
         }else {

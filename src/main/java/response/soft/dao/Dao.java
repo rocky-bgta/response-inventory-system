@@ -285,6 +285,51 @@ public class Dao<T> extends BaseDao {
         return (T) entity;
     }
 
+
+    public Long setTotalActiveRecordCount(Class clazz){
+        StringBuilder queryBuilderString;
+        Long totalRowCont;
+        String entityName;
+        Session session=null;
+        try {
+            queryBuilderString = new StringBuilder();
+
+            //Class clazz = Core.runTimeEntityType.get();
+            entityName = clazz.getName();
+            entityName = StringUtils.substringAfterLast(entityName, ".").trim();
+
+            session = getSession();
+            //session.getTransaction().begin();
+
+            entityName = StringUtils.replace(entityName,"Model","");
+
+            queryBuilderString.append("SELECT COUNT(*) FROM ");
+            queryBuilderString.append("" + entityName + " t");
+            queryBuilderString.append(" WHERE t.status=" + SqlEnum.Status.Active.get());
+
+            Query countQuery = session.createQuery(queryBuilderString.toString());
+
+            totalRowCont = (Long) countQuery.getSingleResult();
+
+
+            Core.totalRowCount.set(totalRowCont);
+            //session.getTransaction().commit();
+            session.close();
+
+        }catch (Exception ex){
+            ex.printStackTrace();
+            log.error("Exception from Dao totalActiveRecord method");
+            throw ex;
+        }finally {
+            if (session!=null && session.isOpen())
+                session.close();
+        }
+
+        return totalRowCont;
+    }
+
+
+
     public List<T> getAll() throws HibernateException {
         List<T> list = null;
 
@@ -515,6 +560,7 @@ public class Dao<T> extends BaseDao {
                     convertedModels = this.getObjectListFromObjectArray(result, clazz);
                 }
 
+
             } else if (SqlEnum.QueryType.Select.get() == queryType) {
                 result = q.getResultList();
                 if (result.size() > 0) {
@@ -542,12 +588,19 @@ public class Dao<T> extends BaseDao {
                     session.flush();
                 }
                 //===================================================================
-                if(result!=null)
-                    Core.totalRowCount.set((long)result.size());
                 numberOfUpdatedRow = q.executeUpdate();
                 convertedModels = new ArrayList<>();
                 convertedModels.add((M) numberOfUpdatedRow);
             }
+
+            //========== set search count for data table =======================
+            if(result!=null && (SqlEnum.QueryType.Join.get()==queryType || SqlEnum.QueryType.Select.get()==queryType))
+                Core.recordsFilteredCount.set((long) result.size());
+
+            this.setTotalActiveRecordCount(clazz);
+            //========== set search count for data table =======================
+
+
             session.getTransaction().commit();
             session.close();
         } catch (Exception ex) {
