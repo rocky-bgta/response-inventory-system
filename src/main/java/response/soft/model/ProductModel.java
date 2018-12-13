@@ -5,13 +5,15 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import response.soft.core.BaseModel;
 
+import java.util.UUID;
+
 @Data
 @EqualsAndHashCode
 public class ProductModel extends BaseModel {
 
-    private String id;
+    private UUID id;
     private String name;
-    private String categoryId;
+    private UUID categoryId;
     private String brand;
     private String modelNo;
     //private String serialNo;
