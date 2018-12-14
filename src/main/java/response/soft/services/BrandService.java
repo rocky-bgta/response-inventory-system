@@ -51,7 +51,7 @@ public class BrandService extends BaseService<Brand> {
                 //this.rollBack();
             }
         } catch (Exception ex) {
-            responseMessage = this.buildFailedResponseMessage();
+            responseMessage = this.buildFailedResponseMessage("Internal server error");
             ex.printStackTrace();
             //this.rollBack();
             log.error("saveBrand -> save got exception");

@@ -170,7 +170,10 @@ public abstract class Core {
         responseMessage.totalRow = 0l;
         responseMessage.token = null;
         responseMessage.httpStatus = HttpStatus.INTERNAL_SERVER_ERROR.value();
-        responseMessage.message = message;
+        if(message!=null)
+            responseMessage.message = message;
+        else
+            responseMessage.message = "Internal server error!!!";
         return responseMessage;
     }
 

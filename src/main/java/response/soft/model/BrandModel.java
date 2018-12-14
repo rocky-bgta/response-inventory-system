@@ -5,7 +5,6 @@ import lombok.EqualsAndHashCode;
 import response.soft.core.BaseModel;
 
 import java.util.UUID;
-
 @Data
 @EqualsAndHashCode
 public class BrandModel extends BaseModel {
