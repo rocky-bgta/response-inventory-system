@@ -163,16 +163,17 @@ public class VendorService extends BaseService<Vendor> {
         ResponseMessage responseMessage;
         List<VendorModel> list;
         DataTableRequest dataTableRequest;
-        String searchKey;
+        String searchKey=null;
         //VendorModel brandSearchModel;
         StringBuilder queryBuilderString;
         try {
             Core.processRequestMessage(requestMessage);
 
             dataTableRequest = requestMessage.dataTableRequest;
-            searchKey = dataTableRequest.search.value;
-
-            searchKey = searchKey.trim().toLowerCase();
+            if(dataTableRequest!=null) {
+                searchKey = dataTableRequest.search.value;
+                searchKey = searchKey.trim().toLowerCase();
+            }
 
             /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(categoryModel);
             for (ConstraintViolation<CountryModel> violation : violations) {
@@ -186,14 +187,23 @@ public class VendorService extends BaseService<Vendor> {
             if (dataTableRequest != null && !StringUtils.isEmpty(searchKey)) {
 
                 queryBuilderString = new StringBuilder();
-                queryBuilderString.append("SELECT b.id, ")
-                        .append("b.name, ")
-                        .append("b.description ")
-                        .append("FROM Vendor b ")
+                queryBuilderString.append("SELECT v.id, ")
+                        .append("v.name, ")
+                        .append("v.phoneNo, ")
+                        .append("v.email, ")
+                        .append("v.address, ")
+                        .append("v.description ")
+                        .append("FROM Vendor v ")
                         .append("WHERE ")
-                        .append("lower(b.name) LIKE '%" + searchKey + "%' ")
-                        .append("OR lower(b.description) LIKE '%" + searchKey + "%' ")
-                        .append("AND b.status="+SqlEnum.Status.Active.get());
+                        .append("( ")
+                        .append("lower(v.name) LIKE '%" + searchKey + "%' ")
+                        .append("OR lower(v.phoneNo) LIKE '%" + searchKey + "%' ")
+                        .append("OR lower(v.email) LIKE '%" + searchKey + "%' ")
+                        .append("OR lower(v.address) LIKE '%" + searchKey + "%' ")
+                        .append("OR lower(v.description) LIKE '%" + searchKey + "%' ")
+                        .append("OR lower(v.description) LIKE '%" + searchKey + "%' ")
+                        .append(") ")
+                        .append("AND v.status="+SqlEnum.Status.Active.get());
 
                 list = this.executeHqlQuery(queryBuilderString.toString(),VendorModel.class,SqlEnum.QueryType.Join.get());
                 //============ full text search ===========================================
@@ -204,7 +214,7 @@ public class VendorService extends BaseService<Vendor> {
             responseMessage = this.buildResponseMessage(list);
 
             if (responseMessage.data != null) {
-                responseMessage.httpStatus = HttpStatus.FOUND.value();
+                responseMessage.httpStatus = HttpStatus.OK.value();
                 responseMessage.message = "Get all vendor successfully";
                 //this.commit();
             } else {
