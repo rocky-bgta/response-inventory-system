@@ -11,169 +11,168 @@ import response.soft.core.Core;
 import response.soft.core.RequestMessage;
 import response.soft.core.ResponseMessage;
 import response.soft.core.datatable.model.DataTableRequest;
-import response.soft.entities.Brand;
-import response.soft.model.BrandModel;
+import response.soft.entities.Vendor;
+import response.soft.model.VendorModel;
 
 import java.util.List;
 import java.util.UUID;
 
 @Service
-public class BrandService extends BaseService<Brand> {
+public class VendorService extends BaseService<Vendor> {
 
-    private static final Logger log = LoggerFactory.getLogger(BrandService.class);
+    private static final Logger log = LoggerFactory.getLogger(VendorService.class);
 
     @Override
     protected void initEntityModel() {
         Core.runTimeModelType.remove();
         Core.runTimeEntityType.remove();
-        Core.runTimeEntityType.set(Brand.class);
-        Core.runTimeModelType.set(BrandModel.class);
+        Core.runTimeEntityType.set(Vendor.class);
+        Core.runTimeModelType.set(VendorModel.class);
     }
 
-    public ResponseMessage saveBrand(RequestMessage requestMessage) {
+    public ResponseMessage saveVendor(RequestMessage requestMessage) {
         ResponseMessage responseMessage;
-        BrandModel brandModel;
+        VendorModel vendorModel;
         try {
-            brandModel = Core.processRequestMessage(requestMessage, BrandModel.class);
+            vendorModel = Core.processRequestMessage(requestMessage, VendorModel.class);
 
             /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(categoryModel);
             for (ConstraintViolation<CountryModel> violation : violations) {
                 log.error(violation.getMessage());
             }*/
 
-            brandModel = this.save(brandModel);
-            responseMessage = this.buildResponseMessage(brandModel);
+            vendorModel = this.save(vendorModel);
+            responseMessage = this.buildResponseMessage(vendorModel);
 
-            if (brandModel != null) {
+            if (vendorModel != null) {
                 responseMessage.httpStatus = HttpStatus.CREATED.value();
-                responseMessage.message = "Brand save successfully!";
+                responseMessage.message = "Vendor save successfully!";
                 //this.commit();
             } else {
                 responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY.value();
-                responseMessage.message = "Failed to save category";
+                responseMessage.message = "Failed to save vendor";
                 //this.rollBack();
             }
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage("Internal server error");
             ex.printStackTrace();
             //this.rollBack();
-            log.error("saveBrand -> save got exception");
+            log.error("saveVendor -> save got exception");
         }
         return responseMessage;
     }
 
-    public ResponseMessage updateBrand(RequestMessage requestMessage) {
+    public ResponseMessage updateVendor(RequestMessage requestMessage) {
         ResponseMessage responseMessage;
-        BrandModel brandModel;
+        VendorModel vendorModel;
         try {
-            brandModel = Core.processRequestMessage(requestMessage, BrandModel.class);
+            vendorModel = Core.processRequestMessage(requestMessage, VendorModel.class);
 
             /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(categoryModel);
             for (ConstraintViolation<CountryModel> violation : violations) {
                 log.error(violation.getMessage());
             }*/
 
-            brandModel = this.update(brandModel);
-            responseMessage = this.buildResponseMessage(brandModel);
+            vendorModel = this.update(vendorModel);
+            responseMessage = this.buildResponseMessage(vendorModel);
 
-            if (brandModel != null) {
+            if (vendorModel != null) {
                 responseMessage.httpStatus = HttpStatus.OK.value();
-                responseMessage.message = "Brand update successfully!";
+                responseMessage.message = "Vendor update successfully!";
                 //this.commit();
             } else {
                 responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY.value();
-                responseMessage.message = "Failed to update category";
+                responseMessage.message = "Failed to update vendor";
                 //this.rollBack();
             }
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
             ex.printStackTrace();
             //this.rollBack();
-            log.error("updateBrand -> got exception");
+            log.error("updateVendor -> got exception");
         }
         return responseMessage;
     }
 
 
-    public ResponseMessage deleteBrand(UUID id) {
+    public ResponseMessage deleteVendor(UUID id) {
         ResponseMessage responseMessage;
-        BrandModel brandModel;
+        VendorModel vendorModel;
         Integer numberOfDeletedRow;
         try {
-            //categoryModel = Core.processRequestMessage(requestMessage, BrandModel.class);
+            //categoryModel = Core.processRequestMessage(requestMessage, VendorModel.class);
 
             /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(categoryModel);
             for (ConstraintViolation<CountryModel> violation : violations) {
                 log.error(violation.getMessage());
             }*/
-            brandModel=this.getById(id);
+            vendorModel=this.getById(id);
             //categoryModel = this.softDelete(categoryModel);
 
             numberOfDeletedRow=this.deleteSoft(id);
 
             responseMessage = this.buildResponseMessage(numberOfDeletedRow);
 
-            if (brandModel != null) {
+            if (vendorModel != null) {
                 responseMessage.httpStatus = HttpStatus.OK.value();
-                responseMessage.message = "Brand deleted successfully!";
+                responseMessage.message = "Vendor deleted successfully!";
                 //this.commit();
             } else {
                 responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY.value();
-                responseMessage.message = "Failed to deleted category";
+                responseMessage.message = "Failed to deleted vendor";
                 //this.rollBack();
             }
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
             ex.printStackTrace();
             //this.rollBack();
-            log.error("deleteBrand -> got exception");
+            log.error("deleteVendor -> got exception");
         }
         return responseMessage;
     }
 
-    public ResponseMessage getByBrandId(UUID id) {
+    public ResponseMessage getByVendorId(UUID id) {
         ResponseMessage responseMessage;
-        BrandModel brandModel;
+        VendorModel vendorModel;
 
         try {
-            brandModel=this.getById(id);
+            vendorModel=this.getById(id);
 
-            responseMessage = buildResponseMessage(brandModel);
+            responseMessage = buildResponseMessage(vendorModel);
 
             if (responseMessage.data != null) {
                 responseMessage.httpStatus = HttpStatus.FOUND.value();
-                responseMessage.message = "Get requested brand successfully";
+                responseMessage.message = "Get requested vendor successfully";
             } else {
                 responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
-                responseMessage.message = "Failed to requested category";
+                responseMessage.message = "Failed to requested vendor";
             }
 
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
             //this.rollBack();
             ex.printStackTrace();
-            log.error("getByBrandId -> got exception");
+            log.error("getByVendorId -> got exception");
         }
 
         return responseMessage;
     }
 
 
-    public ResponseMessage getAllBrand(RequestMessage requestMessage) {
+    public ResponseMessage getAllVendor(RequestMessage requestMessage) {
         ResponseMessage responseMessage;
-        List<BrandModel> list;
+        List<VendorModel> list;
         DataTableRequest dataTableRequest;
-        String searchKey=null;
-        //BrandModel brandSearchModel;
+        String searchKey;
+        //VendorModel brandSearchModel;
         StringBuilder queryBuilderString;
         try {
             Core.processRequestMessage(requestMessage);
 
             dataTableRequest = requestMessage.dataTableRequest;
-            if(dataTableRequest!=null) {
-                searchKey = dataTableRequest.search.value;
-                searchKey = searchKey.trim().toLowerCase();
-            }
+            searchKey = dataTableRequest.search.value;
+
+            searchKey = searchKey.trim().toLowerCase();
 
             /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(categoryModel);
             for (ConstraintViolation<CountryModel> violation : violations) {
@@ -190,13 +189,13 @@ public class BrandService extends BaseService<Brand> {
                 queryBuilderString.append("SELECT b.id, ")
                         .append("b.name, ")
                         .append("b.description ")
-                        .append("FROM Brand b ")
+                        .append("FROM Vendor b ")
                         .append("WHERE ")
                         .append("lower(b.name) LIKE '%" + searchKey + "%' ")
                         .append("OR lower(b.description) LIKE '%" + searchKey + "%' ")
                         .append("AND b.status="+SqlEnum.Status.Active.get());
 
-                list = this.executeHqlQuery(queryBuilderString.toString(),BrandModel.class,SqlEnum.QueryType.Join.get());
+                list = this.executeHqlQuery(queryBuilderString.toString(),VendorModel.class,SqlEnum.QueryType.Join.get());
                 //============ full text search ===========================================
             }else {
                 list = this.getAll();
@@ -206,18 +205,18 @@ public class BrandService extends BaseService<Brand> {
 
             if (responseMessage.data != null) {
                 responseMessage.httpStatus = HttpStatus.FOUND.value();
-                responseMessage.message = "Get all brand successfully";
+                responseMessage.message = "Get all vendor successfully";
                 //this.commit();
             } else {
                 responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
-                responseMessage.message = "Failed to get category";
+                responseMessage.message = "Failed to get vendor";
                 //this.rollBack();
             }
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
             ex.printStackTrace();
             //this.rollBack();
-            log.error("getAllBrand -> save got exception");
+            log.error("getAllVendor -> save got exception");
         }
         return responseMessage;
     }

@@ -1,7 +1,6 @@
 package response.soft.services;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -35,7 +34,7 @@ public class ProductService extends BaseService<Product> {
     public ResponseMessage saveProduct(RequestMessage requestMessage) {
         ResponseMessage responseMessage;// = new ResponseMessage();
         ProductModel productModel;
-        byte[] imageByte;
+        //byte[] imageByte;
         ProductModel searchDuplicateProductModel;
         List<ProductModel> foundDuplicateProduct;
         try {
@@ -45,8 +44,8 @@ public class ProductService extends BaseService<Product> {
             if (productModel != null && !ObjectUtils.isEmpty(productModel)) {
                 searchDuplicateProductModel = new ProductModel();
                 searchDuplicateProductModel.setName(productModel.getName());
-                //searchDuplicateProductModel.setCategoryId(productModel.getCategoryId());
-                searchDuplicateProductModel.setBrand(productModel.getBrand());
+                searchDuplicateProductModel.setCategoryId(productModel.getCategoryId());
+                searchDuplicateProductModel.setBrandId(productModel.getBrandId());
                 searchDuplicateProductModel.setModelNo(productModel.getModelNo());
                 searchDuplicateProductModel.setBarcode(productModel.getBarcode());
 
@@ -205,14 +204,16 @@ public class ProductService extends BaseService<Product> {
         ResponseMessage responseMessage;
         List<ProductModel> list;
         DataTableRequest dataTableRequest;
-        StringBuilder queryBuilderString = null;
-        String searchKey;
+        StringBuilder queryBuilderString;
+        String searchKey=null;
         try {
             Core.processRequestMessage(requestMessage);
             dataTableRequest = requestMessage.dataTableRequest;
-            searchKey = dataTableRequest.search.value;
 
-            searchKey = searchKey.trim().toLowerCase();
+            if(dataTableRequest!=null) {
+                searchKey = dataTableRequest.search.value;
+                searchKey = searchKey.trim().toLowerCase();
+            }
 
             if (dataTableRequest != null && !StringUtils.isEmpty(searchKey)) {
                 //implement full-text search

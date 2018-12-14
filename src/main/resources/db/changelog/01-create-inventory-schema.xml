@@ -77,7 +77,7 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="brand" type="varchar">
+            <column name="brand_id" type="UUID">
                 <constraints nullable="false"/>
             </column>
             <column name="model_no" type="varchar">
@@ -102,8 +102,8 @@
         </createTable>
 
 
-        <addUniqueConstraint columnNames="name,category_id,model_no,brand"
-                             constraintName="unique by name, category_id, model_no, barcode and brand"
+        <addUniqueConstraint columnNames="name,category_id,model_no,brand_id"
+                             constraintName="unique by name, category_id, model_no, barcode and brand_id"
                              schemaName="inventory"
                              tableName="product"/>
 

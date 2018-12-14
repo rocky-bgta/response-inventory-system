@@ -15,7 +15,7 @@ import java.util.UUID;
 @Entity
 @EqualsAndHashCode
 @Table(name = "product",uniqueConstraints=
-@UniqueConstraint(columnNames={"name", "category_id", "model_no", "brand", "barcode"}))
+@UniqueConstraint(columnNames={"name", "category_id", "model_no", "brand_id", "barcode"}))
 public class Product extends BaseEntity {
     @Id
     @GeneratedValue(generator = "uuid2")
@@ -31,9 +31,9 @@ public class Product extends BaseEntity {
     @NotNull
     private UUID categoryId;
 
-    @Column(name = "brand")
+    @Column(name = "brand_id")
     @NotNull
-    private String brand;
+    private UUID brandId;
 
     @Column(name = "model_no")
     @NotNull
