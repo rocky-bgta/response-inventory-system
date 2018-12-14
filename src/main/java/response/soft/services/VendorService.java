@@ -141,7 +141,7 @@ public class VendorService extends BaseService<Vendor> {
             responseMessage = buildResponseMessage(vendorModel);
 
             if (responseMessage.data != null) {
-                responseMessage.httpStatus = HttpStatus.FOUND.value();
+                responseMessage.httpStatus = HttpStatus.OK.value();
                 responseMessage.message = "Get requested vendor successfully";
             } else {
                 responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
