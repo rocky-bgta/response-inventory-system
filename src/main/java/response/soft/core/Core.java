@@ -414,7 +414,7 @@ public abstract class Core {
             if(SqlEnum.QueryType.LikeOrSearch.get()==queryType){
                 for (Map.Entry<Object, Object> entry : keyValueParis.entrySet()) {
                     key = entry.getKey().toString();
-                    criteria.add("t." + key + " LIKE :" + key + queryType);
+                    criteria.add("lower(t." + key + ") LIKE :" + key + queryType);
                 }
             }else {
 

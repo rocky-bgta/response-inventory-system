@@ -1,13 +1,16 @@
 package response.soft.services;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import response.soft.appenum.SqlEnum;
 import response.soft.core.BaseService;
 import response.soft.core.Core;
 import response.soft.core.RequestMessage;
 import response.soft.core.ResponseMessage;
+import response.soft.core.datatable.model.DataTableRequest;
 import response.soft.entities.Brand;
 import response.soft.model.BrandModel;
 
@@ -159,16 +162,47 @@ public class BrandService extends BaseService<Brand> {
     public ResponseMessage getAllBrand(RequestMessage requestMessage) {
         ResponseMessage responseMessage;
         List<BrandModel> list;
-
+        DataTableRequest dataTableRequest;
+        String searchKey;
+        BrandModel brandSearchModel;
+        StringBuilder queryBuilderString = null;
         try {
             Core.processRequestMessage(requestMessage);
+
+            dataTableRequest = requestMessage.dataTableRequest;
+            searchKey = dataTableRequest.search.value;
+
+            searchKey = searchKey.trim().toLowerCase();
 
             /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(categoryModel);
             for (ConstraintViolation<CountryModel> violation : violations) {
                 log.error(violation.getMessage());
             }*/
 
-            list = this.getAll();
+
+
+            //
+
+            if (dataTableRequest != null && !StringUtils.isEmpty(searchKey)) {
+
+                queryBuilderString = new StringBuilder();
+                queryBuilderString.append("SELECT b.id, ")
+                        .append("b.name, ")
+                        .append("b.description ")
+                        .append("FROM Brand b ")
+                        .append("WHERE ")
+                        .append("lower(b.name) LIKE '%" + searchKey + "%' ")
+                        .append("OR lower(b.description) LIKE '%" + searchKey + "%' ")
+                        .append("AND b.status="+SqlEnum.Status.Active.get());
+
+
+               /* brandSearchModel = new BrandModel();
+                brandSearchModel.setName(searchKey);
+                brandSearchModel.setDescription(searchKey);*/
+                list = this.executeHqlQuery(queryBuilderString.toString(),BrandModel.class,SqlEnum.QueryType.Join.get());
+            }else {
+                list = this.getAll();
+            }
 
             responseMessage = this.buildResponseMessage(list);
 

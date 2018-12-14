@@ -9,7 +9,6 @@
 package response.soft.core;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -20,7 +19,8 @@ import java.util.Date;
 @EqualsAndHashCode
 public abstract class BaseModel implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+
+   // private static final long serialVersionUID = 1L;
 
     @JsonIgnore
     private String createdBy;

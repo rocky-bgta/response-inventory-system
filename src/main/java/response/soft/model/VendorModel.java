@@ -5,15 +5,14 @@ import lombok.EqualsAndHashCode;
 import response.soft.core.BaseModel;
 
 import java.util.UUID;
+
 @Data
 @EqualsAndHashCode
-public class BrandModel extends BaseModel {
+public class VendorModel extends BaseModel {
     private UUID id;
     private String name;
+    private String phoneNo;
+    private String email;
+    private String address;
     private String description;
-
-   /* public BrandModel(){
-        this.name = " ";
-        this.description= " ";
-    }*/
 }
