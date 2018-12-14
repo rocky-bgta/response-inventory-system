@@ -164,8 +164,8 @@ public class BrandService extends BaseService<Brand> {
         List<BrandModel> list;
         DataTableRequest dataTableRequest;
         String searchKey;
-        BrandModel brandSearchModel;
-        StringBuilder queryBuilderString = null;
+        //BrandModel brandSearchModel;
+        StringBuilder queryBuilderString;
         try {
             Core.processRequestMessage(requestMessage);
 
@@ -181,7 +181,7 @@ public class BrandService extends BaseService<Brand> {
 
 
 
-            //
+            //============ full text search ===========================================
 
             if (dataTableRequest != null && !StringUtils.isEmpty(searchKey)) {
 
@@ -195,11 +195,8 @@ public class BrandService extends BaseService<Brand> {
                         .append("OR lower(b.description) LIKE '%" + searchKey + "%' ")
                         .append("AND b.status="+SqlEnum.Status.Active.get());
 
-
-               /* brandSearchModel = new BrandModel();
-                brandSearchModel.setName(searchKey);
-                brandSearchModel.setDescription(searchKey);*/
                 list = this.executeHqlQuery(queryBuilderString.toString(),BrandModel.class,SqlEnum.QueryType.Join.get());
+                //============ full text search ===========================================
             }else {
                 list = this.getAll();
             }
