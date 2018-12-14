@@ -135,9 +135,13 @@ public final class AppUtils {
                     result = (String) inputValue;
                     break;
                 case "java.util.UUID":
-                    id = new String((String) inputValue);
-                    id =  id.substring(1, id.length()-1);
-                    result = UUID.fromString(id);
+                    if(inputValue instanceof UUID){
+                        result = inputValue;
+                    }else {
+                        id = new String((String) inputValue);
+                        id = id.substring(1, id.length() - 1);
+                        result = UUID.fromString(id);
+                    }
                 default:
                     break;
             }
