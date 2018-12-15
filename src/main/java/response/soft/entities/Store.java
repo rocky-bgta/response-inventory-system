@@ -24,7 +24,7 @@ public class Store extends BaseEntity {
     @Column(name = "id", nullable = false)
     private UUID id;
 
-    @Column(name = "name")
+    @Column(name = "name",unique = true)
     @NotNull
     private String name;
 
@@ -32,13 +32,16 @@ public class Store extends BaseEntity {
     @NotNull
     private String owner;
 
-    @Column(name = "address")
-    @NotNull
-    private String address;
+    @Column(name = "phone_no")
+    private String phoneNo;
 
     @Column(name = "email")
     private String email;
 
-    @Column(name = "description")
-    private String description;
+    @Column(name = "address")
+    @NotNull
+    private String address;
+
+    @Column(name = "comment")
+    private String comment;
 }

@@ -8,6 +8,7 @@ import org.hibernate.annotations.GenericGenerator;
 import response.soft.core.BaseEntity;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
@@ -33,6 +34,7 @@ public class Vendor extends BaseEntity {
     private String phoneNo;
 
     @Column(name = "email")
+    @Email
     private String email;
 
     @Column(name = "address")

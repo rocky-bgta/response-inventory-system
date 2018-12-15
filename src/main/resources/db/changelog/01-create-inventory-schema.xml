@@ -31,7 +31,30 @@
             </column>
         </createTable>
 
+        <createTable tableName="file_upload" remarks="A table to contain all the Uploaded File">
+            <column name="id" type="UUID">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="file" type="binary">
+                <constraints nullable="false"/>
+            </column>
 
+            <column name="size_in_kb" type="integer">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_by" type="varchar"></column>
+            <column name="updated_by" type="varchar"></column>
+            <column name="created_date" type="datetime"></column>
+            <column name="updated_date" type="datetime"></column>
+            <column name="status" type="integer"></column>
+        </createTable>
 
         <createTable tableName="category" remarks="A table to contain all the category">
             <column name="id" type="UUID">
@@ -48,8 +71,7 @@
             <column name="status" type="integer"></column>
         </createTable>
 
-        <createTable tableName="brand"
-                     remarks="A table to contain all the brand">
+        <createTable tableName="brand" remarks="A table to contain all the brand">
             <column name="id" type="UUID">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
@@ -64,9 +86,35 @@
             <column name="status" type="integer"></column>
         </createTable>
 
+        <createTable tableName="vendor" remarks="A table to contain all the vendor">
+            <column name="id" type="UUID">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="phone_no" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="varchar">
+                <constraints nullable="true"/>
+            </column>
 
-        <createTable tableName="product"
-                     remarks="A table to contain all the product">
+            <column name="address" type="varchar">
+                <constraints nullable="true"/>
+            </column>
+            <column name="description" type="varchar">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="created_by" type="varchar"></column>
+            <column name="updated_by" type="varchar"></column>
+            <column name="created_date" type="datetime"></column>
+            <column name="updated_date" type="datetime"></column>
+            <column name="status" type="integer"></column>
+        </createTable>
+
+        <createTable tableName="product" remarks="A table to contain all the product">
             <column name="id" type="UUID">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
@@ -100,34 +148,34 @@
             <column name="updated_date" type="datetime"></column>
             <column name="status" type="integer"></column>
         </createTable>
-
-
         <addUniqueConstraint columnNames="name,category_id,model_no,brand_id"
                              constraintName="unique by name, category_id, model_no, barcode and brand_id"
                              schemaName="inventory"
                              tableName="product"/>
 
-        <!--<addForeignKeyConstraint baseTableName="books" baseColumnNames="author"-->
-        <!--constraintName="author_fk"-->
-        <!--referencedTableName="authors" referencedColumnNames="id"/>-->
 
-        <createTable tableName="file_upload"
-                     remarks="A table to contain all the Uploaded File">
+        <createTable tableName="store" remarks="A table to contain all the store">
             <column name="id" type="UUID">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="name" type="varchar">
                 <constraints nullable="false"/>
             </column>
-            <column name="type" type="varchar">
+            <column name="owner" type="varchar">
                 <constraints nullable="false"/>
             </column>
-            <column name="file" type="binary">
-                <constraints nullable="false"/>
+            <column name="phone_no" type="varchar">
+                <constraints nullable="true"/>
+            </column>
+            <column name="email" type="varchar">
+                <constraints nullable="true"/>
             </column>
 
-            <column name="size_in_kb" type="integer">
-                <constraints nullable="false"/>
+            <column name="address" type="varchar">
+                <constraints nullable="true"/>
+            </column>
+            <column name="comment" type="varchar">
+                <constraints nullable="true"/>
             </column>
 
             <column name="created_by" type="varchar"></column>
@@ -136,6 +184,21 @@
             <column name="updated_date" type="datetime"></column>
             <column name="status" type="integer"></column>
         </createTable>
+        <addUniqueConstraint columnNames="name"
+                             constraintName="unique store name"
+                             schemaName="inventory"
+                             tableName="store"/>
+
+
+
+
+
+
+
+        <!--<addForeignKeyConstraint baseTableName="books" baseColumnNames="author"-->
+        <!--constraintName="author_fk"-->
+        <!--referencedTableName="authors" referencedColumnNames="id"/>-->
+
 
 
     </changeSet>
