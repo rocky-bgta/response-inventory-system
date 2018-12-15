@@ -199,11 +199,11 @@
         <!--constraintName="author_fk"-->
         <!--referencedTableName="authors" referencedColumnNames="id"/>-->
 
-     <!--
-        <loadData
-                file="db/changelog/seed/category.csv"
-                separator=","
-                quotchar='"'
+
+     <!--   <loadData
+                file="db/changelog/seed/category.sql"
+                separator=""
+                quotchar=','
                 tableName="category">
             <column name="id" type="STRING"></column>
             <column name="name" type="STRING"></column>
@@ -214,6 +214,14 @@
             <column name="updated_date" type="DATETIME"></column>
             <column name="status" type="NUMERIC"></column>
         </loadData>-->
+
+        <sqlFile
+                 encoding="utf8"
+                 endDelimiter="\nGO"
+                 path="seed/category.sql"
+                 relativeToChangelogFile="true"
+                 splitStatements="true"
+                 stripComments="true"/>
 
     </changeSet>
 </databaseChangeLog>
