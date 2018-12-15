@@ -199,7 +199,21 @@
         <!--constraintName="author_fk"-->
         <!--referencedTableName="authors" referencedColumnNames="id"/>-->
 
-
+     <!--
+        <loadData
+                file="db/changelog/seed/category.csv"
+                separator=","
+                quotchar='"'
+                tableName="category">
+            <column name="id" type="STRING"></column>
+            <column name="name" type="STRING"></column>
+            <column name="description" type="STRING"></column>
+            <column name="created_by" type="STRING"></column>
+            <column name="updated_by" type="STRING"></column>
+            <column name="created_date" type="DATETIME"></column>
+            <column name="updated_date" type="DATETIME"></column>
+            <column name="status" type="NUMERIC"></column>
+        </loadData>-->
 
     </changeSet>
 </databaseChangeLog>
