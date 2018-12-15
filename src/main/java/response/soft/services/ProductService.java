@@ -223,7 +223,7 @@ public class ProductService extends BaseService<Product> {
                         .append("c.id, ")
                         .append("p.brandId, ")
                         .append("p.modelNo, ")
-                        .append("p.price, ")
+                        .append("CAST(p.price AS string), ")
                         .append("p.description, ")
                         .append("p.barcode, ")
                         .append("p.image ")

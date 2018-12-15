@@ -214,14 +214,13 @@ public class VendorService extends BaseService<Vendor> {
             responseMessage = this.buildResponseMessage(list);
 
             if (responseMessage.data != null) {
-                responseMessage.httpStatus = HttpStatus.OK.value();
                 responseMessage.message = "Get all vendor successfully";
                 //this.commit();
             } else {
-                responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
                 responseMessage.message = "Failed to get vendor";
                 //this.rollBack();
             }
+            responseMessage.httpStatus = HttpStatus.OK.value();
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
             ex.printStackTrace();
