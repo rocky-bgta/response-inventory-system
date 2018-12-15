@@ -116,6 +116,11 @@ public final class AppUtils {
                     result = Integer.parseInt(inputValue.toString());
                     break;
                 case "java.lang.Double":
+                    String doubleString=inputValue.toString();
+                    if(StringUtils.contains(doubleString,"\"")){
+                        doubleString = StringUtils.remove(doubleString,"\"");
+                        inputValue = doubleString;
+                    }
                     result = Double.parseDouble(inputValue.toString());
                     break;
                 case "java.lang.Float":

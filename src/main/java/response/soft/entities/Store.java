@@ -16,8 +16,8 @@ import java.util.UUID;
 @EqualsAndHashCode
 @DynamicInsert
 @DynamicUpdate
-@Table(name = "vendor")
-public class Vendor extends BaseEntity {
+@Table(name = "store")
+public class Store extends BaseEntity {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
@@ -28,15 +28,16 @@ public class Vendor extends BaseEntity {
     @NotNull
     private String name;
 
-    @Column(name = "phone_no")
+    @Column(name = "owner")
     @NotNull
-    private String phoneNo;
+    private String owner;
+
+    @Column(name = "address")
+    @NotNull
+    private String address;
 
     @Column(name = "email")
     private String email;
-
-    @Column(name = "address")
-    private String address;
 
     @Column(name = "description")
     private String description;

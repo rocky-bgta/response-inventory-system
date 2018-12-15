@@ -3,6 +3,8 @@ package response.soft.entities;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import response.soft.core.BaseEntity;
@@ -14,6 +16,8 @@ import java.util.UUID;
 @Data
 @Entity
 @EqualsAndHashCode
+@DynamicInsert
+@DynamicUpdate
 @Table(name = "product",uniqueConstraints=
 @UniqueConstraint(columnNames={"name", "category_id", "model_no", "brand_id", "barcode"}))
 public class Product extends BaseEntity {
