@@ -2,7 +2,6 @@ package response.soft.dao;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -19,14 +18,9 @@ import response.soft.core.BaseDao;
 import response.soft.core.BaseHistoryEntity;
 import response.soft.core.Core;
 import response.soft.core.History;
-import response.soft.entities.Product;
-import response.soft.model.ProductModel;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -165,7 +159,8 @@ public class Dao<T> extends BaseDao {
             queryBuilderString.append("" + entityName + " t");
             queryBuilderString.append(" SET t.status="+SqlEnum.Status.Deleted.get());
             queryBuilderString.append(" ,t.updatedDate='"+new Date()+"'");
-            queryBuilderString.append(" ,t.updatedBy="+Core.userId.get());
+            //queryBuilderString.append(" ,t.updatedBy="+Core.userId.get());
+            queryBuilderString.append(" ,t.updatedBy='System'");
             queryBuilderString.append(" WHERE t."+primaryKeyField+"='"+id+"'");
 
             deleteUpdateQuery = session.createQuery(queryBuilderString.toString());
