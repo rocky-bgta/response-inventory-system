@@ -6,10 +6,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import response.soft.appenum.SqlEnum;
 import response.soft.core.BaseService;
 import response.soft.core.Core;
 import response.soft.core.RequestMessage;
 import response.soft.core.ResponseMessage;
+import response.soft.core.datatable.model.DataTableRequest;
 import response.soft.entities.Category;
 import response.soft.model.CategoryModel;
 
@@ -188,7 +190,7 @@ public class CategoryService extends BaseService<Category> {
         CategoryModel categoryModel;
 
         try {
-            categoryModel=this.getById(id);
+            categoryModel=this.getByIdActiveStatus(id);
 
             responseMessage = buildResponseMessage(categoryModel);
 
@@ -215,6 +217,11 @@ public class CategoryService extends BaseService<Category> {
         ResponseMessage responseMessage;
         List<CategoryModel> list;
 
+        DataTableRequest dataTableRequest;
+        String searchKey=null;
+        //BrandModel brandSearchModel;
+        StringBuilder queryBuilderString;
+
         try {
             Core.processRequestMessage(requestMessage);
 
@@ -223,7 +230,31 @@ public class CategoryService extends BaseService<Category> {
                 log.error(violation.getMessage());
             }*/
 
-            list = this.getAll();
+            dataTableRequest = requestMessage.dataTableRequest;
+            if(dataTableRequest!=null) {
+                searchKey = dataTableRequest.search.value;
+                searchKey = searchKey.trim().toLowerCase();
+            }
+
+            //============ full text search ===========================================
+
+            if (dataTableRequest != null && !StringUtils.isEmpty(searchKey)) {
+
+                queryBuilderString = new StringBuilder();
+                queryBuilderString.append("SELECT c.id, ")
+                        .append("c.name, ")
+                        .append("c.description ")
+                        .append("FROM Category c ")
+                        .append("WHERE ")
+                        .append("lower(c.name) LIKE '%" + searchKey + "%' ")
+                        .append("OR lower(c.description) LIKE '%" + searchKey + "%' ")
+                        .append("AND c.status="+SqlEnum.Status.Active.get());
+
+                list = this.executeHqlQuery(queryBuilderString.toString(),CategoryModel.class,SqlEnum.QueryType.Join.get());
+                //============ full text search ===========================================
+            }else {
+                list = this.getAll();
+            }
 
             responseMessage = this.buildResponseMessage(list);
 
