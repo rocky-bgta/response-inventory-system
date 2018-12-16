@@ -104,11 +104,15 @@ public class StoreService extends BaseService<Store> {
 
             responseMessage = this.buildResponseMessage(storeModel);
 
+            // retrieved old store to update created and created date.
+            oldStore = this.getByIdActiveStatus(storeModel.getId());
+
+
             storeSearchCondition = new StoreModel();
             storeSearchCondition.setName(storeModel.getName());
             storeModelList = this.getAllByConditionWithActive(storeSearchCondition);
             if (storeModelList.size() == 0) {
-                storeModel = this.update(storeModel);
+                storeModel = this.update(storeModel,oldStore);
                 if (storeModel != null) {
                     responseMessage.message = "Store update successfully!";
                     responseMessage.httpStatus = HttpStatus.OK.value();

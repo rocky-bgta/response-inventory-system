@@ -102,13 +102,13 @@ public class VendorService extends BaseService<Vendor> {
 
             responseMessage = this.buildResponseMessage(vendorModel);
 
+            // retrieved old vendor to update created and created date.
             oldVendor = this.getByIdActiveStatus(vendorModel.getId());
 
 
 
             vendorSearchCondition = new VendorModel();
             vendorSearchCondition.setName(vendorModel.getName());
-            //vendorSearchCondition.setId(vendorModel.getId());
             vendorModelList = this.getAllByConditionWithActive(vendorSearchCondition);
             if (vendorModelList.size() == 0) {
                 vendorModel = this.update(vendorModel,oldVendor);
