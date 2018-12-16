@@ -8,6 +8,7 @@
  */
 package response.soft.core;
 
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -46,7 +47,8 @@ public abstract class Core {
     private static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     protected static final ObjectMapper jsonMapper = new ObjectMapper()
             .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
-            .configure(DeserializationFeature.ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            .configure(DeserializationFeature.ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT.FAIL_ON_UNKNOWN_PROPERTIES, false)
+            .configure(JsonGenerator.Feature.WRITE_NUMBERS_AS_STRINGS,true);
     //.setDateFormat(dateFormat);
 
     protected static final ModelMapper modelMapper = new ModelMapper();
@@ -133,6 +135,7 @@ public abstract class Core {
         String buildJson = "";
 
         try {
+            //jsonObject = Core.gson.toJson(m);
             jsonObject = Core.jsonMapper.writeValueAsString(m);
             jsonObject = org.apache.commons.lang3.StringUtils.replace(jsonObject, "{", "");
             jsonObject = org.apache.commons.lang3.StringUtils.replace(jsonObject, "}", "");

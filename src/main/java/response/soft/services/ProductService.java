@@ -69,6 +69,7 @@ public class ProductService extends BaseService<Product> {
                 log.error(violation.getMessage());
             }*/
 
+            productModel = Core.getTrimmedModel(productModel);
             productModel = this.save(productModel);
             //productModel.setBase64ImageString(new String(productModel.getImage()));
             responseMessage = this.buildResponseMessage(productModel);
