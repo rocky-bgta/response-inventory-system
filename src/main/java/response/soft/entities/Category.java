@@ -24,7 +24,7 @@ public class Category extends BaseEntity {
     @Column(name = "id", nullable = false)
     private UUID id;
 
-    @Column(name = "name",unique=true)
+    @Column(name = "name", unique=true)
     @NotNull
     private String name;
 

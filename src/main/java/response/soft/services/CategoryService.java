@@ -1,10 +1,11 @@
 package response.soft.services;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import response.soft.constant.HttpConstant;
+import org.springframework.util.ObjectUtils;
 import response.soft.core.BaseService;
 import response.soft.core.Core;
 import response.soft.core.RequestMessage;
@@ -28,6 +29,25 @@ public class CategoryService extends BaseService<Category> {
         Core.runTimeModelType.set(CategoryModel.class);
     }
 
+    private ResponseMessage checkDuplicateCategory(CategoryModel categoryModel) throws Exception {
+        ResponseMessage responseMessage;
+        CategoryModel searchDuplicateCategoryModel;
+        List<CategoryModel> foundDuplicateCategory;
+        searchDuplicateCategoryModel = new CategoryModel();
+        searchDuplicateCategoryModel.setName(categoryModel.getName());
+        foundDuplicateCategory = this.getAllByConditionWithActive(searchDuplicateCategoryModel);
+        if (foundDuplicateCategory.size() != 0) {
+            responseMessage = this.buildResponseMessage();
+            responseMessage.httpStatus = HttpStatus.CONFLICT.value();
+            responseMessage.message = "Same Category Name already exist";
+            return responseMessage;
+        } else {
+            return null;
+        }
+    }
+
+
+
     public ResponseMessage saveCategory(RequestMessage requestMessage) {
         ResponseMessage responseMessage;// = new ResponseMessage();
         CategoryModel categoryModel;
@@ -38,6 +58,13 @@ public class CategoryService extends BaseService<Category> {
             for (ConstraintViolation<CountryModel> violation : violations) {
                 log.error(violation.getMessage());
             }*/
+
+            // search for duplicate product
+            if (categoryModel != null && !ObjectUtils.isEmpty(categoryModel)) {
+                responseMessage = this.checkDuplicateCategory(categoryModel);
+                if (responseMessage != null)
+                    return responseMessage;
+            }
 
             categoryModel = this.save(categoryModel);
             responseMessage = this.buildResponseMessage(categoryModel);
@@ -62,7 +89,8 @@ public class CategoryService extends BaseService<Category> {
 
     public ResponseMessage updateCategory(RequestMessage requestMessage) {
         ResponseMessage responseMessage;
-        CategoryModel categoryModel;
+        CategoryModel categoryModel, categorySearchCondition,oldCategory;
+        List<CategoryModel> categoryModelList;
         try {
             categoryModel = Core.processRequestMessage(requestMessage, CategoryModel.class);
 
@@ -74,14 +102,40 @@ public class CategoryService extends BaseService<Category> {
             categoryModel = this.update(categoryModel);
             responseMessage = this.buildResponseMessage(categoryModel);
 
-            if (categoryModel != null) {
-                responseMessage.httpStatus = HttpStatus.OK.value();
-                responseMessage.message = "Category update successfully!";
-                //this.commit();
-            } else {
-                responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY.value();
-                responseMessage.message = "Failed to update category";
-                //this.rollBack();
+
+            // retrieved old vendor to update created and created date.
+            oldCategory = this.getByIdActiveStatus(categoryModel.getId());
+
+
+
+            categorySearchCondition = new CategoryModel();
+            categorySearchCondition.setName(categoryModel.getName());
+            categoryModelList = this.getAllByConditionWithActive(categorySearchCondition);
+            if (categoryModelList.size() == 0) {
+                categoryModel = this.update(categoryModel,oldCategory);
+                if (categoryModel != null) {
+                    responseMessage.message = "Category update successfully!";
+                    responseMessage.httpStatus = HttpStatus.OK.value();
+                    return responseMessage;
+                    //this.commit();
+                }
+            }
+
+
+            if(categoryModelList.size()>0){
+                if(StringUtils.equals(categoryModelList.get(0).getName(), categoryModel.getName())){
+                    oldCategory = categoryModelList.get(0);
+                    categoryModel = this.update(categoryModel,oldCategory);
+                    if (categoryModel != null) {
+                        responseMessage.message = "Category update successfully!";
+                        responseMessage.httpStatus = HttpStatus.OK.value();
+                        //this.commit();
+                    }
+                }else {
+                    responseMessage.httpStatus = HttpStatus.CONFLICT.value();
+                    responseMessage.message = "Same Category Name already exist";
+                    //this.rollBack();
+                }
             }
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
