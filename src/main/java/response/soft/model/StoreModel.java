@@ -12,7 +12,8 @@ public class StoreModel extends BaseModel {
     private UUID id;
     private String name;
     private String owner;
+    private String phoneNo;
     private String address;
     private String email;
-    private String description;
+    private String comment;
 }

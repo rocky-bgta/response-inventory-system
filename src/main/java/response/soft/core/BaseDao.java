@@ -145,6 +145,9 @@ public abstract class BaseDao extends Core {
 
     }
 
+
+
+
     public <M> List<M> getObjectListFromObjectArray(List<Object[]> objectList, Class<M> clazz) throws Exception{
         List<M> convertedModels = new ArrayList<>();
         M model;
@@ -209,6 +212,9 @@ public abstract class BaseDao extends Core {
         }
         return convertedModels;
     }
+
+
+
 
     protected String buildSelectHql(String hql){
         String entityName, whereConditionString, allies="", selectQuery = null, lowerCaseQueryString;

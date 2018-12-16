@@ -32,19 +32,20 @@ public class StoreService extends BaseService<Store> {
 
     public ResponseMessage saveStore(RequestMessage requestMessage) {
         ResponseMessage responseMessage;
-        StoreModel vendorModel;
+        StoreModel storeModel;
         try {
-            vendorModel = Core.processRequestMessage(requestMessage, StoreModel.class);
+            storeModel = Core.processRequestMessage(requestMessage, StoreModel.class);
 
             /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(categoryModel);
             for (ConstraintViolation<CountryModel> violation : violations) {
                 log.error(violation.getMessage());
             }*/
 
-            vendorModel = this.save(vendorModel);
-            responseMessage = this.buildResponseMessage(vendorModel);
+            storeModel = Core.getTrimmedModel(storeModel);
+            storeModel = this.save(storeModel);
+            responseMessage = this.buildResponseMessage(storeModel);
 
-            if (vendorModel != null) {
+            if (storeModel != null) {
                 responseMessage.httpStatus = HttpStatus.CREATED.value();
                 responseMessage.message = "Store save successfully!";
                 //this.commit();
@@ -64,19 +65,19 @@ public class StoreService extends BaseService<Store> {
 
     public ResponseMessage updateStore(RequestMessage requestMessage) {
         ResponseMessage responseMessage;
-        StoreModel vendorModel;
+        StoreModel storeModel;
         try {
-            vendorModel = Core.processRequestMessage(requestMessage, StoreModel.class);
+            storeModel = Core.processRequestMessage(requestMessage, StoreModel.class);
 
             /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(categoryModel);
             for (ConstraintViolation<CountryModel> violation : violations) {
                 log.error(violation.getMessage());
             }*/
 
-            vendorModel = this.update(vendorModel);
-            responseMessage = this.buildResponseMessage(vendorModel);
+            storeModel = this.update(storeModel);
+            responseMessage = this.buildResponseMessage(storeModel);
 
-            if (vendorModel != null) {
+            if (storeModel != null) {
                 responseMessage.message = "Store update successfully!";
                 //this.commit();
             } else {
@@ -96,7 +97,7 @@ public class StoreService extends BaseService<Store> {
 
     public ResponseMessage deleteStore(UUID id) {
         ResponseMessage responseMessage;
-        StoreModel vendorModel;
+        StoreModel storeModel;
         Integer numberOfDeletedRow;
         try {
             //categoryModel = Core.processRequestMessage(requestMessage, StoreModel.class);
@@ -105,14 +106,14 @@ public class StoreService extends BaseService<Store> {
             for (ConstraintViolation<CountryModel> violation : violations) {
                 log.error(violation.getMessage());
             }*/
-            vendorModel=this.getById(id);
+            storeModel=this.getById(id);
             //categoryModel = this.softDelete(categoryModel);
 
             numberOfDeletedRow=this.deleteSoft(id);
 
             responseMessage = this.buildResponseMessage(numberOfDeletedRow);
 
-            if (vendorModel != null) {
+            if (storeModel != null) {
                 responseMessage.message = "Store deleted successfully!";
                 //this.commit();
             } else {

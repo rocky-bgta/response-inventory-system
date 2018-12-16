@@ -152,6 +152,15 @@
             <artifactId>spring-boot-devtools</artifactId>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-entitymanager -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>3.3.2.GA</version>
+            <type>pom</type>
+        </dependency>
+
+
     </dependencies>
 
     <build>

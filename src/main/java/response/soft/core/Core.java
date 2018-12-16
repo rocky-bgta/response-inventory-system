@@ -30,11 +30,15 @@ import response.soft.utils.AppUtils;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
+
 
 @Component
 public abstract class Core {
@@ -113,6 +117,64 @@ public abstract class Core {
             applicationContext.refresh();
     }
     */
+
+
+    public static <M> M getTrimmedModel(M m) throws Exception {
+        Class clazz = m.getClass();
+        Field[] fields = clazz.getDeclaredFields();
+        String fieldName;
+        Type type;
+        Object fieldValue;
+        M model;
+        String jsonObject;
+        Pattern pattern;
+
+        String temJson = "";
+        String buildJson = "";
+
+        try {
+            jsonObject = Core.jsonMapper.writeValueAsString(m);
+            jsonObject = org.apache.commons.lang3.StringUtils.replace(jsonObject, "{", "");
+            jsonObject = org.apache.commons.lang3.StringUtils.replace(jsonObject, "}", "");
+            jsonObject = org.apache.commons.lang3.StringUtils.replace(jsonObject,"null","\"\"");
+            jsonObject = jsonObject.substring(1, jsonObject.length() - 1);
+
+            pattern = Pattern.compile("\",\"");
+            String[] token = pattern.split(jsonObject);
+            int i=0;
+            for(String item: token){
+
+                String propertyName = org.apache.commons.lang3.StringUtils.substringBefore(item,":");
+                propertyName = org.apache.commons.lang3.StringUtils.remove(propertyName,"\"");
+                String propertyValue = org.apache.commons.lang3.StringUtils.substringAfter(item,":").trim();
+
+                propertyValue=org.apache.commons.lang3.StringUtils.remove(propertyValue,"\"");
+                if(!org.apache.commons.lang3.StringUtils.isEmpty(propertyValue)){
+                    propertyValue = "\"" + propertyValue + "\"";
+                    fieldName = fields[i].getName();
+                    type = fields[i].getType();
+                    fieldValue = AppUtils.castValue(org.apache.commons.lang3.StringUtils.remove(type.toString(),"class ").trim(), propertyValue);
+                    temJson += "\"" + fieldName+ "\":"+fieldValue +",";
+                }
+                if(org.apache.commons.lang3.StringUtils.equalsIgnoreCase(fields[i].getName(),propertyName))
+                    i++;
+            }
+                temJson = temJson.substring(0,temJson.length()-1);
+                buildJson += "{"+temJson+"}";
+                model = (M)clazz.newInstance();
+                model = (M) Core.gson.fromJson(buildJson, model.getClass());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+        return model;
+    }
+
+
+
+
+
+
 
     public static <T> T processRequestMessage(RequestMessage requestMessage) {
         return processRequestMessage(requestMessage, null);

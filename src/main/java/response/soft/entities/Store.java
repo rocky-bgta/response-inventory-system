@@ -16,12 +16,13 @@ import java.util.UUID;
 @EqualsAndHashCode
 @DynamicInsert
 @DynamicUpdate
-@Table(name = "store")
+@Table(name = "store",uniqueConstraints=
+@UniqueConstraint(columnNames={"name", "status"}))
 public class Store extends BaseEntity {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(name = "id", nullable = false)
+    @Column(name = "id", unique = true, nullable = false)
     private UUID id;
 
     @Column(name = "name",unique = true)
