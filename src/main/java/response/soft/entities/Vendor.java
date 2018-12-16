@@ -17,7 +17,8 @@ import java.util.UUID;
 @EqualsAndHashCode
 @DynamicInsert
 @DynamicUpdate
-@Table(name = "vendor")
+@Table(name = "vendor",uniqueConstraints=
+@UniqueConstraint(columnNames={"name", "status"}))
 public class Vendor extends BaseEntity {
     @Id
     @GeneratedValue(generator = "uuid2")

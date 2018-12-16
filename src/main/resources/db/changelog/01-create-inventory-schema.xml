@@ -86,34 +86,6 @@
             <column name="status" type="integer"></column>
         </createTable>
 
-        <createTable tableName="vendor" remarks="A table to contain all the vendor">
-            <column name="id" type="UUID">
-                <constraints nullable="false" primaryKey="true"/>
-            </column>
-            <column name="name" type="varchar">
-                <constraints nullable="false"/>
-            </column>
-            <column name="phone_no" type="varchar">
-                <constraints nullable="false"/>
-            </column>
-            <column name="email" type="varchar">
-                <constraints nullable="true"/>
-            </column>
-
-            <column name="address" type="varchar">
-                <constraints nullable="true"/>
-            </column>
-            <column name="description" type="varchar">
-                <constraints nullable="true"/>
-            </column>
-
-            <column name="created_by" type="varchar"></column>
-            <column name="updated_by" type="varchar"></column>
-            <column name="created_date" type="datetime"></column>
-            <column name="updated_date" type="datetime"></column>
-            <column name="status" type="integer"></column>
-        </createTable>
-
         <createTable tableName="product" remarks="A table to contain all the product">
             <column name="id" type="UUID">
                 <constraints nullable="false" primaryKey="true"/>
@@ -188,6 +160,42 @@
                              constraintName="unique store name and status"
                              schemaName="inventory"
                              tableName="store"/>
+
+
+        <createTable tableName="vendor" remarks="A table to contain all the vendor">
+            <column name="id" type="UUID">
+                <constraints nullable="false" unique="true" primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="owner" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="phone_no" type="varchar">
+                <constraints nullable="true"/>
+            </column>
+            <column name="email" type="varchar">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="address" type="varchar">
+                <constraints nullable="true"/>
+            </column>
+            <column name="comment" type="varchar">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="created_by" type="varchar"></column>
+            <column name="updated_by" type="varchar"></column>
+            <column name="created_date" type="datetime"></column>
+            <column name="updated_date" type="datetime"></column>
+            <column name="status" type="integer"></column>
+        </createTable>
+        <addUniqueConstraint columnNames="name, status"
+                             constraintName="unique vendor name and status"
+                             schemaName="inventory"
+                             tableName="vendor"/>
 
 
 

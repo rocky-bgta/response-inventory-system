@@ -68,6 +68,7 @@ public class StoreService extends BaseService<Store> {
                 if (responseMessage != null)
                     return responseMessage;
             }
+
             storeModel = this.save(storeModel);
             responseMessage = this.buildResponseMessage(storeModel);
 

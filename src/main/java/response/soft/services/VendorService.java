@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import response.soft.appenum.SqlEnum;
 import response.soft.core.BaseService;
 import response.soft.core.Core;
@@ -30,6 +31,23 @@ public class VendorService extends BaseService<Vendor> {
         Core.runTimeModelType.set(VendorModel.class);
     }
 
+    private ResponseMessage checkDuplicateStore(VendorModel vendorModel) throws Exception {
+        ResponseMessage responseMessage;
+        VendorModel searchDuplicateVendorModel;
+        List<VendorModel> foundDuplicateVendor;
+        searchDuplicateVendorModel = new VendorModel();
+        searchDuplicateVendorModel.setName(vendorModel.getName());
+        foundDuplicateVendor = this.getAllByConditionWithActive(searchDuplicateVendorModel);
+        if (foundDuplicateVendor.size() != 0) {
+            responseMessage = this.buildResponseMessage();
+            responseMessage.httpStatus = HttpStatus.CONFLICT.value();
+            responseMessage.message = "Same Vendor name already exist";
+            return responseMessage;
+        } else {
+            return null;
+        }
+    }
+
     public ResponseMessage saveVendor(RequestMessage requestMessage) {
         ResponseMessage responseMessage;
         VendorModel vendorModel;
@@ -40,6 +58,14 @@ public class VendorService extends BaseService<Vendor> {
             for (ConstraintViolation<CountryModel> violation : violations) {
                 log.error(violation.getMessage());
             }*/
+
+            // search for duplicate product
+            if (vendorModel != null && !ObjectUtils.isEmpty(vendorModel)) {
+                responseMessage = this.checkDuplicateStore(vendorModel);
+                if (responseMessage != null)
+                    return responseMessage;
+            }
+
 
             vendorModel = this.save(vendorModel);
             responseMessage = this.buildResponseMessage(vendorModel);
@@ -64,7 +90,8 @@ public class VendorService extends BaseService<Vendor> {
 
     public ResponseMessage updateVendor(RequestMessage requestMessage) {
         ResponseMessage responseMessage;
-        VendorModel vendorModel;
+        VendorModel vendorModel, vendorSearchCondition,oldVendor;
+        List<VendorModel> vendorModelList;
         try {
             vendorModel = Core.processRequestMessage(requestMessage, VendorModel.class);
 
@@ -73,18 +100,40 @@ public class VendorService extends BaseService<Vendor> {
                 log.error(violation.getMessage());
             }*/
 
-            vendorModel = this.update(vendorModel);
             responseMessage = this.buildResponseMessage(vendorModel);
 
-            if (vendorModel != null) {
-                responseMessage.httpStatus = HttpStatus.OK.value();
-                responseMessage.message = "Vendor update successfully!";
-                //this.commit();
-            } else {
-                responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY.value();
-                responseMessage.message = "Failed to update vendor";
-                //this.rollBack();
+
+
+            vendorSearchCondition = new VendorModel();
+            vendorSearchCondition.setName(vendorModel.getName());
+            vendorModelList = this.getAllByConditionWithActive(vendorSearchCondition);
+            if (vendorModelList.size() == 0) {
+                vendorModel = this.update(vendorModel);
+                if (vendorModel != null) {
+                    responseMessage.message = "Vendor update successfully!";
+                    responseMessage.httpStatus = HttpStatus.OK.value();
+                    return responseMessage;
+                    //this.commit();
+                }
             }
+
+
+            if(vendorModelList.size()>0){
+                if(StringUtils.equals(vendorModelList.get(0).getName(), vendorModel.getName())){
+                    oldVendor = vendorModelList.get(0);
+                    vendorModel = this.update(vendorModel,oldVendor);
+                    if (vendorModel != null) {
+                        responseMessage.message = "Vendor update successfully!";
+                        responseMessage.httpStatus = HttpStatus.OK.value();
+                        //this.commit();
+                    }
+                }else {
+                    responseMessage.httpStatus = HttpStatus.CONFLICT.value();
+                    responseMessage.message = "Same Vendor name already exist";
+                    //this.rollBack();
+                }
+            }
+
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
             ex.printStackTrace();
@@ -136,7 +185,7 @@ public class VendorService extends BaseService<Vendor> {
         VendorModel vendorModel;
 
         try {
-            vendorModel=this.getById(id);
+            vendorModel=this.getByIdActiveStatus(id);
 
             responseMessage = buildResponseMessage(vendorModel);
 
