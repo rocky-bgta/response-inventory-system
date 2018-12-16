@@ -106,6 +106,7 @@ public class ProductService extends BaseService<Product> {
 
 
             productModel = Core.processRequestMessage(requestMessage, ProductModel.class);
+            productModel = Core.getTrimmedModel(productModel);
             /*if (productModel.getBase64ImageString() != null) {
                 imageByte = Base64.decodeBase64(productModel.getBase64ImageString());
                 productModel.setImage(imageByte);
