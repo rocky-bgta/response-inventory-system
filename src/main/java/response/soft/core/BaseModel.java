@@ -30,6 +30,6 @@ public abstract class BaseModel implements Serializable {
     private Date createdDate;
     @JsonIgnore
     private Date updatedDate;
-    //@JsonIgnore
+    @JsonIgnore
     private Integer status;
 }

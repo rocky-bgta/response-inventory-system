@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import response.soft.appenum.SqlEnum;
 import response.soft.core.BaseService;
 import response.soft.core.Core;
@@ -33,15 +34,33 @@ public class StoreService extends BaseService<Store> {
     public ResponseMessage saveStore(RequestMessage requestMessage) {
         ResponseMessage responseMessage;
         StoreModel storeModel;
+        StoreModel searchDuplicateStoreModel;
+        List<StoreModel> foundDuplicateStore;
+
         try {
             storeModel = Core.processRequestMessage(requestMessage, StoreModel.class);
+            storeModel = Core.getTrimmedModel(storeModel);
 
             /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(categoryModel);
             for (ConstraintViolation<CountryModel> violation : violations) {
                 log.error(violation.getMessage());
             }*/
 
-            storeModel = Core.getTrimmedModel(storeModel);
+
+            // search for duplicate product
+            if (storeModel != null && !ObjectUtils.isEmpty(storeModel)) {
+                searchDuplicateStoreModel = new StoreModel();
+                searchDuplicateStoreModel.setName(storeModel.getName());
+                foundDuplicateStore = this.getAllByConditionWithActive(searchDuplicateStoreModel);
+                if (foundDuplicateStore.size() != 0) {
+                    responseMessage = this.buildResponseMessage();
+                    responseMessage.httpStatus = HttpStatus.CONFLICT.value();
+                    responseMessage.message = "Same Store name already exist";
+                    return responseMessage;
+                }
+            }
+
+            //storeModel = Core.getTrimmedModel(storeModel);
             storeModel = this.save(storeModel);
             responseMessage = this.buildResponseMessage(storeModel);
 
@@ -73,8 +92,9 @@ public class StoreService extends BaseService<Store> {
             for (ConstraintViolation<CountryModel> violation : violations) {
                 log.error(violation.getMessage());
             }*/
-
+            storeModel = Core.getTrimmedModel(storeModel);
             storeModel = this.update(storeModel);
+
             responseMessage = this.buildResponseMessage(storeModel);
 
             if (storeModel != null) {

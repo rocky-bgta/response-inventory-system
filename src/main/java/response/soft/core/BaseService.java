@@ -373,6 +373,7 @@ public abstract class BaseService<T extends BaseEntity> extends Core {
 
           /*  if(Core.isCommonApi.get() || Core.commonDataBase.get())
                 insertDataInHistory=false;*/
+            t.setStatus(SqlEnum.Status.Active.get());
 
             entity = this.dao.update(t,insertDataInHistory);
             model = Core.modelMapper.map(entity, Core.runTimeModelType.get());
