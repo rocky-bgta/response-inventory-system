@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import response.soft.appenum.SqlEnum;
 import response.soft.core.BaseService;
 import response.soft.core.Core;
@@ -30,16 +31,43 @@ public class BrandService extends BaseService<Brand> {
         Core.runTimeModelType.set(BrandModel.class);
     }
 
+
+    private ResponseMessage checkDuplicateBrand(BrandModel brandModel) throws Exception {
+        ResponseMessage responseMessage;
+        BrandModel searchDuplicateBrandModel;
+        List<BrandModel> foundDuplicateBrand;
+        searchDuplicateBrandModel = new BrandModel();
+        searchDuplicateBrandModel.setName(brandModel.getName());
+        foundDuplicateBrand = this.getAllByConditionWithActive(searchDuplicateBrandModel);
+        if (foundDuplicateBrand.size() != 0) {
+            responseMessage = this.buildResponseMessage();
+            responseMessage.httpStatus = HttpStatus.CONFLICT.value();
+            responseMessage.message = "Same Brand Name already exist";
+            return responseMessage;
+        } else {
+            return null;
+        }
+    }
+
     public ResponseMessage saveBrand(RequestMessage requestMessage) {
         ResponseMessage responseMessage;
         BrandModel brandModel;
         try {
             brandModel = Core.processRequestMessage(requestMessage, BrandModel.class);
 
-            /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(categoryModel);
+            /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(brandModel);
             for (ConstraintViolation<CountryModel> violation : violations) {
                 log.error(violation.getMessage());
             }*/
+
+
+            // search for duplicate brand
+            if (brandModel != null && !ObjectUtils.isEmpty(brandModel)) {
+                responseMessage = this.checkDuplicateBrand(brandModel);
+                if (responseMessage != null)
+                    return responseMessage;
+            }
+
 
             brandModel = this.save(brandModel);
             responseMessage = this.buildResponseMessage(brandModel);
@@ -64,27 +92,53 @@ public class BrandService extends BaseService<Brand> {
 
     public ResponseMessage updateBrand(RequestMessage requestMessage) {
         ResponseMessage responseMessage;
-        BrandModel brandModel;
+        BrandModel brandModel,brandSearchCondition,oldBrandModel;
+        List<BrandModel> brandModelList;
         try {
             brandModel = Core.processRequestMessage(requestMessage, BrandModel.class);
 
-            /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(categoryModel);
+            /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(brandModel);
             for (ConstraintViolation<CountryModel> violation : violations) {
                 log.error(violation.getMessage());
             }*/
 
-            brandModel = this.update(brandModel);
             responseMessage = this.buildResponseMessage(brandModel);
 
-            if (brandModel != null) {
-                responseMessage.httpStatus = HttpStatus.OK.value();
-                responseMessage.message = "Brand update successfully!";
-                //this.commit();
-            } else {
-                responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY.value();
-                responseMessage.message = "Failed to update category";
-                //this.rollBack();
+            // retrieved old brand Model to update created and created date.
+            oldBrandModel = this.getByIdActiveStatus(brandModel.getId());
+
+
+
+            brandSearchCondition = new BrandModel();
+            brandSearchCondition.setName(brandModel.getName());
+            brandModelList = this.getAllByConditionWithActive(brandSearchCondition);
+            if (brandModelList.size() == 0) {
+                brandModel = this.update(brandModel,oldBrandModel);
+                if (brandModel != null) {
+                    responseMessage.message = "Brand updated successfully!";
+                    responseMessage.httpStatus = HttpStatus.OK.value();
+                    return responseMessage;
+                    //this.commit();
+                }
             }
+
+            if(brandModelList.size()>0){
+                if(StringUtils.equals(brandModelList.get(0).getName(), brandModel.getName())){
+                    oldBrandModel = brandModelList.get(0);
+                    brandModel = this.update(brandModel,oldBrandModel);
+                    if (brandModel != null) {
+                        responseMessage.message = "Brand updated successfully!";
+                        responseMessage.httpStatus = HttpStatus.OK.value();
+                        //this.commit();
+                    }
+                }else {
+                    responseMessage.httpStatus = HttpStatus.CONFLICT.value();
+                    responseMessage.message = "Same Brand Name already exist";
+                    //this.rollBack();
+                }
+            }
+
+
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
             ex.printStackTrace();
@@ -100,14 +154,14 @@ public class BrandService extends BaseService<Brand> {
         BrandModel brandModel;
         Integer numberOfDeletedRow;
         try {
-            //categoryModel = Core.processRequestMessage(requestMessage, BrandModel.class);
+            //brandModel = Core.processRequestMessage(requestMessage, BrandModel.class);
 
-            /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(categoryModel);
+            /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(brandModel);
             for (ConstraintViolation<CountryModel> violation : violations) {
                 log.error(violation.getMessage());
             }*/
             brandModel=this.getById(id);
-            //categoryModel = this.softDelete(categoryModel);
+            //brandModel = this.softDelete(brandModel);
 
             numberOfDeletedRow=this.deleteSoft(id);
 
@@ -175,7 +229,7 @@ public class BrandService extends BaseService<Brand> {
                 searchKey = searchKey.trim().toLowerCase();
             }
 
-            /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(categoryModel);
+            /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(brandModel);
             for (ConstraintViolation<CountryModel> violation : violations) {
                 log.error(violation.getMessage());
             }*/

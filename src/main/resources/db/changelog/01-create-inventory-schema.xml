@@ -236,5 +236,13 @@
                 splitStatements="true"
                 stripComments="true"/>
 
+        <sqlFile
+                encoding="utf8"
+                endDelimiter="\nGO"
+                path="seed/brand.sql"
+                relativeToChangelogFile="true"
+                splitStatements="true"
+                stripComments="true"/>
+
     </changeSet>
 </databaseChangeLog>

@@ -101,7 +101,6 @@ public class CategoryService extends BaseService<Category> {
                 log.error(violation.getMessage());
             }*/
 
-            categoryModel = this.update(categoryModel);
             responseMessage = this.buildResponseMessage(categoryModel);
 
 
