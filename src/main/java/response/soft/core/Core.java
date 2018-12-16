@@ -147,8 +147,8 @@ public abstract class Core {
             int i=0;
             for(String item: token){
 
-                String propertyName = org.apache.commons.lang3.StringUtils.substringBefore(item,":");
-                propertyName = org.apache.commons.lang3.StringUtils.remove(propertyName,"\"");
+                //String propertyName = org.apache.commons.lang3.StringUtils.substringBefore(item,":");
+                //propertyName = org.apache.commons.lang3.StringUtils.remove(propertyName,"\"");
                 String propertyValue = org.apache.commons.lang3.StringUtils.substringAfter(item,":").trim();
 
                 propertyValue=org.apache.commons.lang3.StringUtils.remove(propertyValue,"\"");
@@ -159,7 +159,7 @@ public abstract class Core {
                     fieldValue = AppUtils.castValue(org.apache.commons.lang3.StringUtils.remove(type.toString(),"class ").trim(), propertyValue);
                     temJson += "\"" + fieldName+ "\":"+fieldValue +",";
                 }
-                if(org.apache.commons.lang3.StringUtils.equalsIgnoreCase(fields[i].getName(),propertyName))
+                //if(org.apache.commons.lang3.StringUtils.equalsIgnoreCase(fields[i].getName(),propertyName))
                     i++;
             }
                 temJson = temJson.substring(0,temJson.length()-1);
@@ -168,6 +168,7 @@ public abstract class Core {
                 model = (M) Core.gson.fromJson(buildJson, model.getClass());
         } catch (Exception e) {
             e.printStackTrace();
+            log.error("getTrimmedModel -> got exception",e.getCause());
             throw e;
         }
         return model;
@@ -179,12 +180,13 @@ public abstract class Core {
 
 
 
-    public static <T> T processRequestMessage(RequestMessage requestMessage) {
+    public static <T> T processRequestMessage(RequestMessage requestMessage) throws Exception {
         return processRequestMessage(requestMessage, null);
     }
 
-    public static <T> T processRequestMessage(RequestMessage requestMessage, Class clazz) {
+    public static <T> T processRequestMessage(RequestMessage requestMessage, Class clazz) throws Exception {
         Object convertedObject = null;
+        Object trimmedObject = null;
         Object requestData = null;
         Integer shortColumnIndex;
         String shortColumnName;
@@ -217,13 +219,16 @@ public abstract class Core {
                 Core.pageSize.set(requestMessage.pageSize);
             }
 
-            if (clazz != null)
+            if (clazz != null) {
                 convertedObject = Core.jsonMapper.convertValue(requestData, clazz);
+                trimmedObject = Core.getTrimmedModel(convertedObject);
+            }
+
         } catch (Exception ex) {
             ex.printStackTrace();
             throw ex;
         }
-        return (T) convertedObject;
+        return (T) trimmedObject;
     }
 
     public ResponseMessage buildFailedResponseMessage() {

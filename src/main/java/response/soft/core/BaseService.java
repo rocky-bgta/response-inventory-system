@@ -354,6 +354,12 @@ public abstract class BaseService<T extends BaseEntity> extends Core {
         return (M) model;
     }
 
+    public <T extends BaseEntity, M extends BaseModel> M update(M newModel, M oldModel) throws Exception {
+        newModel.setCreatedBy(oldModel.getCreatedBy());
+        newModel.setCreatedDate(oldModel.getCreatedDate());
+        return this.update(newModel);
+    }
+
     public <T extends BaseEntity, M extends BaseModel> M update(M m) throws Exception {
         initEntityModel();
         Object model = null, entity = null;
@@ -368,7 +374,7 @@ public abstract class BaseService<T extends BaseEntity> extends Core {
                 t.setUpdatedBy(Core.userId.get());
             }
 
-            t.setUpdatedDate(new Date());
+            //t.setUpdatedDate(new Date());
             // ================================================
 
           /*  if(Core.isCommonApi.get() || Core.commonDataBase.get())
