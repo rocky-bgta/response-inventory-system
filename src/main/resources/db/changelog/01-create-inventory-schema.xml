@@ -164,16 +164,13 @@
 
         <createTable tableName="vendor" remarks="A table to contain all the vendor">
             <column name="id" type="UUID">
-                <constraints nullable="false" unique="true" primaryKey="true"/>
+                <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="name" type="varchar">
                 <constraints nullable="false"/>
             </column>
-            <column name="owner" type="varchar">
-                <constraints nullable="false"/>
-            </column>
             <column name="phone_no" type="varchar">
-                <constraints nullable="true"/>
+                <constraints nullable="false"/>
             </column>
             <column name="email" type="varchar">
                 <constraints nullable="true"/>
@@ -182,7 +179,7 @@
             <column name="address" type="varchar">
                 <constraints nullable="true"/>
             </column>
-            <column name="comment" type="varchar">
+            <column name="description" type="varchar">
                 <constraints nullable="true"/>
             </column>
 

@@ -102,13 +102,16 @@ public class VendorService extends BaseService<Vendor> {
 
             responseMessage = this.buildResponseMessage(vendorModel);
 
+            oldVendor = this.getByIdActiveStatus(vendorModel.getId());
+
 
 
             vendorSearchCondition = new VendorModel();
             vendorSearchCondition.setName(vendorModel.getName());
+            //vendorSearchCondition.setId(vendorModel.getId());
             vendorModelList = this.getAllByConditionWithActive(vendorSearchCondition);
             if (vendorModelList.size() == 0) {
-                vendorModel = this.update(vendorModel);
+                vendorModel = this.update(vendorModel,oldVendor);
                 if (vendorModel != null) {
                     responseMessage.message = "Vendor update successfully!";
                     responseMessage.httpStatus = HttpStatus.OK.value();
