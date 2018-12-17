@@ -34,6 +34,9 @@ public class Vendor extends BaseEntity {
     @NotNull
     private String phoneNo;
 
+    @Column(name = "bank_ac_no")
+    private String bankAccountNo;
+
     @Column(name = "email")
     @Email
     private String email;

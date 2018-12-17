@@ -172,6 +172,9 @@
             <column name="phone_no" type="varchar">
                 <constraints nullable="false"/>
             </column>
+            <column name="bank_ac_no" type="varchar">
+                <constraints nullable="true"/>
+            </column>
             <column name="email" type="varchar">
                 <constraints nullable="true"/>
             </column>
