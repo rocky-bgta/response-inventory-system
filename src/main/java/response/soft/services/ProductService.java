@@ -209,13 +209,13 @@ public class ProductService extends BaseService<Product> {
         //String base64textString[];
 
         try {
-            productModel = this.getById(id);
+            productModel = this.getByIdActiveStatus(id);
             //productModel.setImage(Base64.decodeBase64(productModel.getImage()));
 
             responseMessage = buildResponseMessage(productModel);
 
             if (responseMessage.data != null) {
-                responseMessage.httpStatus = HttpStatus.FOUND.value();
+                responseMessage.httpStatus = HttpStatus.OK.value();
                 responseMessage.message = "Get requested Product successfully";
             } else {
                 responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
@@ -291,7 +291,7 @@ public class ProductService extends BaseService<Product> {
             responseMessage = this.buildResponseMessage(list);
 
             if (responseMessage.data != null) {
-                responseMessage.httpStatus = HttpStatus.FOUND.value();
+                responseMessage.httpStatus = HttpStatus.OK.value();
                 responseMessage.message = "Get all Product successfully";
                 //this.commit();
             } else {

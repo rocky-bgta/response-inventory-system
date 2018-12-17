@@ -190,12 +190,12 @@ public class BrandService extends BaseService<Brand> {
         BrandModel brandModel;
 
         try {
-            brandModel=this.getById(id);
+            brandModel=this.getByIdActiveStatus(id);
 
             responseMessage = buildResponseMessage(brandModel);
 
             if (responseMessage.data != null) {
-                responseMessage.httpStatus = HttpStatus.FOUND.value();
+                responseMessage.httpStatus = HttpStatus.OK.value();
                 responseMessage.message = "Get requested brand successfully";
             } else {
                 responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
@@ -259,7 +259,7 @@ public class BrandService extends BaseService<Brand> {
             responseMessage = this.buildResponseMessage(list);
 
             if (responseMessage.data != null) {
-                responseMessage.httpStatus = HttpStatus.FOUND.value();
+                responseMessage.httpStatus = HttpStatus.OK.value();
                 responseMessage.message = "Get all brand successfully";
                 //this.commit();
             } else {

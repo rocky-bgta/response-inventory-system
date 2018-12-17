@@ -194,7 +194,7 @@ public class CategoryService extends BaseService<Category> {
             responseMessage = buildResponseMessage(categoryModel);
 
             if (responseMessage.data != null) {
-                responseMessage.httpStatus = HttpStatus.FOUND.value();
+                responseMessage.httpStatus = HttpStatus.OK.value();
                 responseMessage.message = "Get requested category successfully";
             } else {
                 responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
@@ -258,7 +258,7 @@ public class CategoryService extends BaseService<Category> {
             responseMessage = this.buildResponseMessage(list);
 
             if (responseMessage.data != null) {
-                responseMessage.httpStatus = HttpStatus.FOUND.value();
+                responseMessage.httpStatus = HttpStatus.OK.value();
                 responseMessage.message = "Get all category successfully";
                 //this.commit();
             } else {
