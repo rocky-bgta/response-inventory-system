@@ -91,7 +91,7 @@ public class StoreService extends BaseService<Store> {
     }
 
     public ResponseMessage updateStore(RequestMessage requestMessage) {
-        ResponseMessage responseMessage;
+        ResponseMessage responseMessage=null;
         StoreModel storeModel, storeSearchCondition,oldStore;
         List<StoreModel> storeModelList;
         try {
@@ -102,7 +102,7 @@ public class StoreService extends BaseService<Store> {
                 log.error(violation.getMessage());
             }*/
 
-            responseMessage = this.buildResponseMessage(storeModel);
+
 
             // retrieved old store to update created and created date.
             oldStore = this.getByIdActiveStatus(storeModel.getId());
@@ -114,6 +114,7 @@ public class StoreService extends BaseService<Store> {
             if (storeModelList.size() == 0) {
                 storeModel = this.update(storeModel,oldStore);
                 if (storeModel != null) {
+                    responseMessage = this.buildResponseMessage(storeModel);
                     responseMessage.message = "Store update successfully!";
                     responseMessage.httpStatus = HttpStatus.OK.value();
                     return responseMessage;
@@ -126,15 +127,20 @@ public class StoreService extends BaseService<Store> {
                     oldStore = storeModelList.get(0);
                     storeModel = this.update(storeModel,oldStore);
                     if (storeModel != null) {
+                        responseMessage = this.buildResponseMessage(storeModel);
                         responseMessage.message = "Store update successfully!";
                         responseMessage.httpStatus = HttpStatus.OK.value();
+                        return responseMessage;
                         //this.commit();
                     }
                 }else {
+                    responseMessage = this.buildResponseMessage(storeModel);
                     responseMessage.httpStatus = HttpStatus.CONFLICT.value();
                     responseMessage.message = "Same Store name already exist";
                     //this.rollBack();
                 }
+            }else {
+                responseMessage = this.buildFailedResponseMessage("Failed to Update Store");
             }
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();

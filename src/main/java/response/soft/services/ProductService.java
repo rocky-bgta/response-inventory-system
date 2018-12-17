@@ -69,7 +69,7 @@ public class ProductService extends BaseService<Product> {
                 log.error(violation.getMessage());
             }*/
 
-            productModel = Core.getTrimmedModel(productModel);
+            //productModel = Core.getTrimmedModel(productModel);
             productModel = this.save(productModel);
             //productModel.setBase64ImageString(new String(productModel.getImage()));
             responseMessage = this.buildResponseMessage(productModel);
@@ -93,9 +93,15 @@ public class ProductService extends BaseService<Product> {
     }
 
     public ResponseMessage updateProduct(RequestMessage requestMessage) {
-        ResponseMessage responseMessage;
-        ProductModel productModel;
-        byte[] imageByte;
+        ResponseMessage responseMessage=null;
+        ProductModel requestedProductModel,
+                searchDuplicateProductModel,
+                oldProductModel,
+                updatedProductModel;
+        List<ProductModel> foundDuplicateProduct;
+        int countPropertyValueDifference;
+        int acceptedUpdatePropertyDifference=3;
+        //byte[] imageByte;
         try {
 
 
@@ -105,26 +111,51 @@ public class ProductService extends BaseService<Product> {
             }*/
 
 
-            productModel = Core.processRequestMessage(requestMessage, ProductModel.class);
-            productModel = Core.getTrimmedModel(productModel);
-            /*if (productModel.getBase64ImageString() != null) {
-                imageByte = Base64.decodeBase64(productModel.getBase64ImageString());
-                productModel.setImage(imageByte);
-            } else {
-                productModel.setImage(null);
-            }*/
+            requestedProductModel = Core.processRequestMessage(requestMessage, ProductModel.class);
 
-            productModel = this.update(productModel);
-            responseMessage = this.buildResponseMessage(productModel);
+            // retrieved old store to update created and created date.
+            oldProductModel = this.getByIdActiveStatus(requestedProductModel.getId());
 
-            if (productModel != null) {
-                responseMessage.httpStatus = HttpStatus.OK.value();
-                responseMessage.message = "Product update successfully!";
-                //this.commit();
-            } else {
-                responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY.value();
-                responseMessage.message = "Failed to update Product";
-                //this.rollBack();
+
+            // "name", "category_id", "model_no", "brand", "barcode"
+            // search for duplicate product
+            if (requestedProductModel != null && !ObjectUtils.isEmpty(requestedProductModel)) {
+                searchDuplicateProductModel = new ProductModel();
+                searchDuplicateProductModel.setName(requestedProductModel.getName());
+                searchDuplicateProductModel.setCategoryId(requestedProductModel.getCategoryId());
+                searchDuplicateProductModel.setBrandId(requestedProductModel.getBrandId());
+                searchDuplicateProductModel.setModelNo(requestedProductModel.getModelNo());
+                searchDuplicateProductModel.setBarcode(requestedProductModel.getBarcode());
+                foundDuplicateProduct = this.getAllByConditionWithActive(searchDuplicateProductModel);
+
+                if (foundDuplicateProduct.size() == 0) {
+                    updatedProductModel = this.update(requestedProductModel,oldProductModel);
+                    responseMessage = this.buildResponseMessage(updatedProductModel);
+                    responseMessage.httpStatus = HttpStatus.OK.value();
+                    responseMessage.message = "Successfully Product updated";
+                    //this.commit();
+                    return responseMessage;
+                }
+
+                if(foundDuplicateProduct.size()>0){
+
+                    countPropertyValueDifference = Core.comparePropertyValueDifference(requestedProductModel,oldProductModel);
+                    if(countPropertyValueDifference==acceptedUpdatePropertyDifference
+                            || countPropertyValueDifference<acceptedUpdatePropertyDifference){
+                        updatedProductModel = this.update(requestedProductModel,oldProductModel);
+                        responseMessage = this.buildResponseMessage(updatedProductModel);
+                        responseMessage.httpStatus = HttpStatus.OK.value();
+                        responseMessage.message = "Successfully Product updated";
+                        return responseMessage;
+                    }else {
+                        responseMessage = this.buildResponseMessage(requestedProductModel);
+                        responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY.value();
+                        responseMessage.message = "Failed to update Product";
+                        //this.rollBack();
+                        return responseMessage;
+                    }
+
+                }
             }
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();

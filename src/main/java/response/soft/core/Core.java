@@ -12,10 +12,12 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.hibernate.SessionFactory;
+import org.javers.core.Javers;
+import org.javers.core.JaversBuilder;
+import org.javers.core.diff.Diff;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +38,6 @@ import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
@@ -63,7 +64,7 @@ public abstract class Core {
     private static final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
     public static final Validator validator = factory.getValidator();
 
-    public CyclicBarrier barrier;
+    //public CyclicBarrier barrier;
 
     public static BaseHistoryEntity HistoryEntity = new History();
     public static final ThreadLocal<String> messageId = new ThreadLocal<>();
@@ -84,6 +85,21 @@ public abstract class Core {
     public static final ThreadLocal<String> shortDirection = new ThreadLocal<>();
     public static final ThreadLocal<String> shortColumnName = new ThreadLocal<>();
     public static final ThreadLocal<Boolean> isDataTablePagination = new ThreadLocal<>();
+
+
+    //==================== update validation lib ===============================
+    private final static Javers compareObject = JaversBuilder.javers().build();
+    //private final static int baseEntityPropertyCount=3;
+    //==================== update validation lib ===============================
+
+    public static int comparePropertyValueDifference(Object newObject, Object oldObject){
+        int changeCount,result;
+        int baseEntityPropertyCount=3;
+        Diff diff= Core.compareObject.compare(newObject,oldObject);
+        changeCount = diff.getChanges().size();
+        result = Math.abs(baseEntityPropertyCount-changeCount);
+        return result;
+    }
 
 
     //public static final Map<String,SecurityResMessage> securityResponseCollection;
