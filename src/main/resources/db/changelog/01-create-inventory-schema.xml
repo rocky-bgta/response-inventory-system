@@ -198,8 +198,145 @@
                              tableName="vendor"/>
 
 
+        <createTable tableName="stock" remarks="A table to contain all the stock">
+            <column name="id" type="UUID">
+                <constraints nullable="false" unique="true" primaryKey="true"/>
+            </column>
+            <column name="store_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="in_out" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantity" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="unit_price" type="double">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total" type="double">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="varchar"></column>
+            <column name="updated_by" type="varchar"></column>
+            <column name="created_date" type="datetime"></column>
+            <column name="updated_date" type="datetime"></column>
+            <column name="status" type="integer"></column>
+        </createTable>
 
 
+        <createTable tableName="stock_in" remarks="A table to contain all the stock in">
+            <column name="id" type="UUID">
+                <constraints nullable="false" unique="true" primaryKey="true"/>
+            </column>
+            <column name="stock_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="store_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="vendor_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="double">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_status" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="entry_date" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="manufacturing_date" type="datetime">
+                <constraints nullable="true"/>
+            </column>
+            <column name="expiration_date" type="datetime">
+                <constraints nullable="true"/>
+            </column>
+            <column name="created_by" type="varchar"></column>
+            <column name="updated_by" type="varchar"></column>
+            <column name="created_date" type="datetime"></column>
+            <column name="updated_date" type="datetime"></column>
+            <column name="status" type="integer"></column>
+        </createTable>
+
+        <createTable tableName="stock_out" remarks="A table to contain all the stock out">
+            <column name="id" type="UUID">
+                <constraints nullable="false" unique="true" primaryKey="true"/>
+            </column>
+            <column name="stock_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="store_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="vendor_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="double">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sales_price" type="double">
+                <constraints nullable="false"/>
+            </column>
+            <column name="benefit" type="double">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="varchar"></column>
+            <column name="updated_by" type="varchar"></column>
+            <column name="created_date" type="datetime"></column>
+            <column name="updated_date" type="datetime"></column>
+            <column name="status" type="integer"></column>
+        </createTable>
+
+        <createTable tableName="product_transfer" remarks="A table to contain all the product transfer">
+            <column name="id" type="UUID">
+                <constraints nullable="false" unique="true" primaryKey="true"/>
+            </column>
+            <column name="stock_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="from_store_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="to_store_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="vendor_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reason" type="varchar">
+                <constraints nullable="true"/>
+            </column>
+
+
+            <column name="created_by" type="varchar"></column>
+            <column name="updated_by" type="varchar"></column>
+            <column name="created_date" type="datetime"></column>
+            <column name="updated_date" type="datetime"></column>
+            <column name="status" type="integer"></column>
+        </createTable>
 
 
 
