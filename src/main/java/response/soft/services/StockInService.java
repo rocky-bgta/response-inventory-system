@@ -12,14 +12,14 @@ import response.soft.core.Core;
 import response.soft.core.RequestMessage;
 import response.soft.core.ResponseMessage;
 import response.soft.core.datatable.model.DataTableRequest;
-import response.soft.entities.StockProduct;
+import response.soft.entities.StockProducts;
 import response.soft.model.StockInModel;
 
 import java.util.List;
 import java.util.UUID;
 
 @Service
-public class StockInService extends BaseService<StockProduct> {
+public class StockInService extends BaseService<StockProducts> {
 
     private static final Logger log = LoggerFactory.getLogger(StockInService.class);
 
@@ -27,7 +27,7 @@ public class StockInService extends BaseService<StockProduct> {
     protected void initEntityModel() {
         Core.runTimeModelType.remove();
         Core.runTimeEntityType.remove();
-        Core.runTimeEntityType.set(StockProduct.class);
+        Core.runTimeEntityType.set(StockProducts.class);
         Core.runTimeModelType.set(StockInModel.class);
     }
 
@@ -78,11 +78,11 @@ public class StockInService extends BaseService<StockProduct> {
 
             if (stockInModel != null) {
                 responseMessage.httpStatus = HttpStatus.CREATED.value();
-                responseMessage.message = "StockProduct save successfully!";
+                responseMessage.message = "StockProducts save successfully!";
                 //this.commit();
             } else {
                 responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY.value();
-                responseMessage.message = "Failed to save StockProduct";
+                responseMessage.message = "Failed to save StockProducts";
                 //this.rollBack();
             }
         } catch (Exception ex) {
@@ -135,7 +135,7 @@ public class StockInService extends BaseService<StockProduct> {
                     updatedStockInModel = this.update(requestedStockInModel,oldStockInModel);
                     responseMessage = this.buildResponseMessage(updatedStockInModel);
                     responseMessage.httpStatus = HttpStatus.OK.value();
-                    responseMessage.message = "Successfully StockProduct updated";
+                    responseMessage.message = "Successfully StockProducts updated";
                     //this.commit();
                     return responseMessage;
                 }
@@ -148,12 +148,12 @@ public class StockInService extends BaseService<StockProduct> {
                         updatedStockInModel = this.update(requestedStockInModel,oldStockInModel);
                         responseMessage = this.buildResponseMessage(updatedStockInModel);
                         responseMessage.httpStatus = HttpStatus.OK.value();
-                        responseMessage.message = "Successfully StockProduct updated";
+                        responseMessage.message = "Successfully StockProducts updated";
                         return responseMessage;
                     }else {
                         responseMessage = this.buildResponseMessage(requestedStockInModel);
                         responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY.value();
-                        responseMessage.message = "Failed to update StockProduct";
+                        responseMessage.message = "Failed to update StockProducts";
                         //this.rollBack();
                         return responseMessage;
                     }
@@ -190,11 +190,11 @@ public class StockInService extends BaseService<StockProduct> {
 
             if (stockInModel != null) {
                 responseMessage.httpStatus = HttpStatus.OK.value();
-                responseMessage.message = "StockProduct deleted successfully!";
+                responseMessage.message = "StockProducts deleted successfully!";
                 //this.commit();
             } else {
                 responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY.value();
-                responseMessage.message = "Failed to deleted StockProduct";
+                responseMessage.message = "Failed to deleted StockProducts";
                 //this.rollBack();
             }
         } catch (Exception ex) {
@@ -219,10 +219,10 @@ public class StockInService extends BaseService<StockProduct> {
 
             if (responseMessage.data != null) {
                 responseMessage.httpStatus = HttpStatus.OK.value();
-                responseMessage.message = "Get requested StockProduct successfully";
+                responseMessage.message = "Get requested StockProducts successfully";
             } else {
                 responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
-                responseMessage.message = "Failed to requested StockProduct";
+                responseMessage.message = "Failed to requested StockProducts";
             }
 
         } catch (Exception ex) {
@@ -263,7 +263,7 @@ public class StockInService extends BaseService<StockProduct> {
                         .append("p.description, ")
                         .append("p.barcode, ")
                         .append("p.image ")
-                        .append("FROM StockProduct p ")
+                        .append("FROM StockProducts p ")
                         .append("LEFT JOIN Category c ON p.categoryId = c.id  ")
                         .append("LEFT JOIN Brand b ON p.brandId = b.id  ")
                         .append("WHERE ")
@@ -295,11 +295,11 @@ public class StockInService extends BaseService<StockProduct> {
 
             if (responseMessage.data != null) {
                 responseMessage.httpStatus = HttpStatus.OK.value();
-                responseMessage.message = "Get all StockProduct successfully";
+                responseMessage.message = "Get all StockProducts successfully";
                 //this.commit();
             } else {
                 responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
-                responseMessage.message = "Failed to get StockProduct";
+                responseMessage.message = "Failed to get StockProducts";
                 //this.rollBack();
             }
         } catch (Exception ex) {
