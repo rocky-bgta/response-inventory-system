@@ -12,14 +12,14 @@ import response.soft.core.Core;
 import response.soft.core.RequestMessage;
 import response.soft.core.ResponseMessage;
 import response.soft.core.datatable.model.DataTableRequest;
-import response.soft.entities.StockOut;
+import response.soft.entities.StockSales;
 import response.soft.model.StockOutModel;
 
 import java.util.List;
 import java.util.UUID;
 
 @Service
-public class StockOutService extends BaseService<StockOut> {
+public class StockOutService extends BaseService<StockSales> {
 
     private static final Logger log = LoggerFactory.getLogger(StockOutService.class);
 
@@ -27,7 +27,7 @@ public class StockOutService extends BaseService<StockOut> {
     protected void initEntityModel() {
         Core.runTimeModelType.remove();
         Core.runTimeEntityType.remove();
-        Core.runTimeEntityType.set(StockOut.class);
+        Core.runTimeEntityType.set(StockSales.class);
         Core.runTimeModelType.set(StockOutModel.class);
     }
 
@@ -78,11 +78,11 @@ public class StockOutService extends BaseService<StockOut> {
 
             if (stockInModel != null) {
                 responseMessage.httpStatus = HttpStatus.CREATED.value();
-                responseMessage.message = "StockOut save successfully!";
+                responseMessage.message = "StockSales save successfully!";
                 //this.commit();
             } else {
                 responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY.value();
-                responseMessage.message = "Failed to save StockOut";
+                responseMessage.message = "Failed to save StockSales";
                 //this.rollBack();
             }
         } catch (Exception ex) {
@@ -135,7 +135,7 @@ public class StockOutService extends BaseService<StockOut> {
                     updatedStockOutModel = this.update(requestedStockOutModel,oldStockOutModel);
                     responseMessage = this.buildResponseMessage(updatedStockOutModel);
                     responseMessage.httpStatus = HttpStatus.OK.value();
-                    responseMessage.message = "Successfully StockOut updated";
+                    responseMessage.message = "Successfully StockSales updated";
                     //this.commit();
                     return responseMessage;
                 }
@@ -148,12 +148,12 @@ public class StockOutService extends BaseService<StockOut> {
                         updatedStockOutModel = this.update(requestedStockOutModel,oldStockOutModel);
                         responseMessage = this.buildResponseMessage(updatedStockOutModel);
                         responseMessage.httpStatus = HttpStatus.OK.value();
-                        responseMessage.message = "Successfully StockOut updated";
+                        responseMessage.message = "Successfully StockSales updated";
                         return responseMessage;
                     }else {
                         responseMessage = this.buildResponseMessage(requestedStockOutModel);
                         responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY.value();
-                        responseMessage.message = "Failed to update StockOut";
+                        responseMessage.message = "Failed to update StockSales";
                         //this.rollBack();
                         return responseMessage;
                     }
@@ -190,11 +190,11 @@ public class StockOutService extends BaseService<StockOut> {
 
             if (stockInModel != null) {
                 responseMessage.httpStatus = HttpStatus.OK.value();
-                responseMessage.message = "StockOut deleted successfully!";
+                responseMessage.message = "StockSales deleted successfully!";
                 //this.commit();
             } else {
                 responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY.value();
-                responseMessage.message = "Failed to deleted StockOut";
+                responseMessage.message = "Failed to deleted StockSales";
                 //this.rollBack();
             }
         } catch (Exception ex) {
@@ -219,10 +219,10 @@ public class StockOutService extends BaseService<StockOut> {
 
             if (responseMessage.data != null) {
                 responseMessage.httpStatus = HttpStatus.OK.value();
-                responseMessage.message = "Get requested StockOut successfully";
+                responseMessage.message = "Get requested StockSales successfully";
             } else {
                 responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
-                responseMessage.message = "Failed to requested StockOut";
+                responseMessage.message = "Failed to requested StockSales";
             }
 
         } catch (Exception ex) {
@@ -263,7 +263,7 @@ public class StockOutService extends BaseService<StockOut> {
                         .append("p.description, ")
                         .append("p.barcode, ")
                         .append("p.image ")
-                        .append("FROM StockOut p ")
+                        .append("FROM StockSales p ")
                         .append("LEFT JOIN Category c ON p.categoryId = c.id  ")
                         .append("LEFT JOIN Brand b ON p.brandId = b.id  ")
                         .append("WHERE ")
@@ -295,11 +295,11 @@ public class StockOutService extends BaseService<StockOut> {
 
             if (responseMessage.data != null) {
                 responseMessage.httpStatus = HttpStatus.OK.value();
-                responseMessage.message = "Get all StockOut successfully";
+                responseMessage.message = "Get all StockSales successfully";
                 //this.commit();
             } else {
                 responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
-                responseMessage.message = "Failed to get StockOut";
+                responseMessage.message = "Failed to get StockSales";
                 //this.rollBack();
             }
         } catch (Exception ex) {
