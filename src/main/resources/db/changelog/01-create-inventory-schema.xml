@@ -297,6 +297,9 @@
             <column name="date" type="datetime">
                 <constraints nullable="false"/>
             </column>
+            <column name="warrant_guarantee_period" type="integer">
+                <constraints nullable="true"/>
+            </column>
             <column name="created_by" type="varchar"></column>
             <column name="updated_by" type="varchar"></column>
             <column name="created_date" type="datetime"></column>
@@ -304,7 +307,7 @@
             <column name="status" type="integer"></column>
         </createTable>
 
-        <createTable tableName="product_transfer" remarks="A table to contain all the product transfer">
+        <createTable tableName="store_products_transfer" remarks="A table to contain all the product transfer between store">
             <column name="id" type="UUID">
                 <constraints nullable="false" unique="true" primaryKey="true"/>
             </column>

@@ -56,4 +56,8 @@ public class StoreSalesProducts extends BaseEntity {
     @Column(name = "date")
     @NotNull
     private Date date;
+
+    @Column(name = "warrant_guarantee_period")
+    private Integer warrantGuaranteePeriod;
+
 }

@@ -19,4 +19,5 @@ public class StoreSalesProductsModel extends BaseModel {
     private Double salesPrice;
     private Double benefit;
     private Date date;
+    private Integer warrantGuaranteePeriod;
 }
