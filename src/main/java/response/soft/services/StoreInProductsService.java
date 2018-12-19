@@ -31,7 +31,7 @@ public class StoreInProductsService extends BaseService<StoreInProducts> {
         Core.runTimeModelType.set(StoreInProductsModel.class);
     }
 
-    public ResponseMessage saveStockIn(RequestMessage requestMessage) {
+    public ResponseMessage saveStoreInProducts(RequestMessage requestMessage) {
         ResponseMessage responseMessage;// = new ResponseMessage();
         StoreInProductsModel storeInProductsModel;
         //byte[] imageByte;
@@ -94,7 +94,7 @@ public class StoreInProductsService extends BaseService<StoreInProducts> {
         return responseMessage;
     }
 
-    public ResponseMessage updateStockIn(RequestMessage requestMessage) {
+    public ResponseMessage updateStoreInProducts(RequestMessage requestMessage) {
         ResponseMessage responseMessage=null;
         StoreInProductsModel requestedStoreInProductsModel,
                 searchDuplicateStockModel,
@@ -170,7 +170,7 @@ public class StoreInProductsService extends BaseService<StoreInProducts> {
     }
 
 
-    public ResponseMessage deleteStockIn(UUID id) {
+    public ResponseMessage deleteStoreInProducts(UUID id) {
         ResponseMessage responseMessage;
         StoreInProductsModel storeInProductsModel;
         Integer numberOfDeletedRow;
@@ -206,7 +206,7 @@ public class StoreInProductsService extends BaseService<StoreInProducts> {
         return responseMessage;
     }
 
-    public ResponseMessage getByStockInId(UUID id) {
+    public ResponseMessage getByStoreInProductsId(UUID id) {
         ResponseMessage responseMessage;
         StoreInProductsModel storeInProductsModel;
         //String base64textString[];
@@ -236,7 +236,7 @@ public class StoreInProductsService extends BaseService<StoreInProducts> {
     }
 
 
-    public ResponseMessage getAllStockIn(RequestMessage requestMessage) {
+    public ResponseMessage getAllStoreInProducts(RequestMessage requestMessage) {
         ResponseMessage responseMessage;
         List<StoreInProductsModel> list;
         DataTableRequest dataTableRequest;

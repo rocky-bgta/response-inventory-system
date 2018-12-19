@@ -31,7 +31,7 @@ public class StoreSalesProductsService extends BaseService<StoreSalesProducts> {
         Core.runTimeModelType.set(StoreSalesProductsModel.class);
     }
 
-    public ResponseMessage saveStockOut(RequestMessage requestMessage) {
+    public ResponseMessage saveStoreSalesProducts(RequestMessage requestMessage) {
         ResponseMessage responseMessage;// = new ResponseMessage();
         StoreSalesProductsModel stockInModel;
         //byte[] imageByte;
@@ -94,7 +94,7 @@ public class StoreSalesProductsService extends BaseService<StoreSalesProducts> {
         return responseMessage;
     }
 
-    public ResponseMessage updateStockOut(RequestMessage requestMessage) {
+    public ResponseMessage updateStoreSalesProducts(RequestMessage requestMessage) {
         ResponseMessage responseMessage=null;
         StoreSalesProductsModel requestedStoreSalesProductsModel,
                 searchDuplicateStockModel,
@@ -170,7 +170,7 @@ public class StoreSalesProductsService extends BaseService<StoreSalesProducts> {
     }
 
 
-    public ResponseMessage deleteStockOut(UUID id) {
+    public ResponseMessage deleteStoreSalesProducts(UUID id) {
         ResponseMessage responseMessage;
         StoreSalesProductsModel stockInModel;
         Integer numberOfDeletedRow;
@@ -206,7 +206,7 @@ public class StoreSalesProductsService extends BaseService<StoreSalesProducts> {
         return responseMessage;
     }
 
-    public ResponseMessage getByStockOutId(UUID id) {
+    public ResponseMessage getByStoreSalesProductsId(UUID id) {
         ResponseMessage responseMessage;
         StoreSalesProductsModel stockInModel;
         //String base64textString[];
@@ -236,7 +236,7 @@ public class StoreSalesProductsService extends BaseService<StoreSalesProducts> {
     }
 
 
-    public ResponseMessage getAllStockOut(RequestMessage requestMessage) {
+    public ResponseMessage getAllStoreSalesProducts(RequestMessage requestMessage) {
         ResponseMessage responseMessage;
         List<StoreSalesProductsModel> list;
         DataTableRequest dataTableRequest;
