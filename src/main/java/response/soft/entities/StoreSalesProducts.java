@@ -17,8 +17,8 @@ import java.util.UUID;
 @EqualsAndHashCode
 @DynamicInsert
 @DynamicUpdate
-@Table(name = "stock_in")
-public class StockProducts extends BaseEntity {
+@Table(name = "store_sales_products")
+public class StoreSalesProducts extends BaseEntity {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
@@ -45,19 +45,15 @@ public class StockProducts extends BaseEntity {
     @NotNull
     private Double price;
 
-    @Column(name = "product_status")
+    @Column(name = "sales_price")
     @NotNull
-    private Integer productStatus;
+    private Double salesPrice;
 
-    @Column(name = "entry_date")
+    @Column(name = "benefit")
     @NotNull
-    private Date entryDate;
+    private Double benefit;
 
-    @Column(name = "manufacturing_date")
-    private Date manufacturingDate;
-
-    @Column(name = "expiration_date")
-    private Date expirationDate;
-
-
+    @Column(name = "date")
+    @NotNull
+    private Date date;
 }

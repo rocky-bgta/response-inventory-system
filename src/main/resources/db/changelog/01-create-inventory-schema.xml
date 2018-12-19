@@ -231,7 +231,7 @@
         </createTable>
 
 
-        <createTable tableName="stock_in" remarks="A table to contain all the stock in">
+        <createTable tableName="store_in_products" remarks="A table to contain all the stock in">
             <column name="id" type="UUID">
                 <constraints nullable="false" unique="true" primaryKey="true"/>
             </column>
@@ -269,7 +269,7 @@
             <column name="status" type="integer"></column>
         </createTable>
 
-        <createTable tableName="stock_out" remarks="A table to contain all the stock out">
+        <createTable tableName="store_sales_products" remarks="A table to contain all the stock out">
             <column name="id" type="UUID">
                 <constraints nullable="false" unique="true" primaryKey="true"/>
             </column>
