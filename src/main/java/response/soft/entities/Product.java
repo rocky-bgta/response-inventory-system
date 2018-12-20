@@ -54,7 +54,7 @@ public class Product extends BaseEntity {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "barcode")
+    @Column(name = "barcode", unique = true)
     @NotNull
     private String barcode;
 

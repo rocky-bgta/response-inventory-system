@@ -92,6 +92,44 @@ public class ProductService extends BaseService<Product> {
         return responseMessage;
     }
 
+    public ResponseMessage getProductByBarcode(String barcode){
+        ResponseMessage responseMessage;
+        ProductModel whereConditionProductModel, foundProduct;
+        List<ProductModel> productModelList;
+        //Integer numberOfDeletedRow;
+        try {
+            //ProductModel = Core.processRequestMessage(requestMessage, ProductModel.class);
+
+            /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(ProductModel);
+            for (ConstraintViolation<CountryModel> violation : violations) {
+                log.error(violation.getMessage());
+            }*/
+
+            whereConditionProductModel = new ProductModel();
+            whereConditionProductModel.setBarcode(barcode.trim());
+            productModelList = this.getAllByConditionWithActive(whereConditionProductModel);
+
+            if (productModelList != null && productModelList.size()==1) {
+                foundProduct = productModelList.get(0);
+                responseMessage = this.buildResponseMessage(foundProduct);
+                responseMessage.httpStatus = HttpStatus.OK.value();
+                responseMessage.message = "Product found successfully";
+
+            } else {
+                responseMessage = this.buildResponseMessage();
+                responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY.value();
+                responseMessage.message = "Product not found in current stock";
+
+            }
+
+        } catch (Exception ex) {
+            responseMessage = this.buildFailedResponseMessage();
+            ex.printStackTrace();
+            log.error("getProductByBarcode -> got exception");
+        }
+        return responseMessage;
+    }
+
     public ResponseMessage updateProduct(RequestMessage requestMessage) {
         ResponseMessage responseMessage=null;
         ProductModel requestedProductModel,

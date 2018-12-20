@@ -40,6 +40,16 @@ public class ProductController {
         return responseMessage;
     }
 
+    @ApiOperation(value ="", response = Object.class)
+    @ResponseStatus(HttpStatus.OK)
+    @RequestMapping(value = "/{barcode}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseMessage getProductByBarcode(@PathVariable String barcode){
+        ResponseMessage responseMessage;
+        responseMessage = this.productService.getProductByBarcode(barcode);
+        return responseMessage;
+    }
+
+
     @ApiOperation(value ="", response = ProductModel.class)
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
