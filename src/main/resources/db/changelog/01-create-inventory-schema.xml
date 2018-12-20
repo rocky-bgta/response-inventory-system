@@ -109,7 +109,7 @@
             </column>
 
             <column name="description" type="varchar"></column>
-            <column name="barcode" type="varchar">
+            <column name="barcode" type="char(13)">
                 <constraints nullable="false" unique="true"/>
             </column>
             <column name="image" type="text"></column>
