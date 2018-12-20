@@ -12,14 +12,14 @@ import response.soft.core.Core;
 import response.soft.core.RequestMessage;
 import response.soft.core.ResponseMessage;
 import response.soft.core.datatable.model.DataTableRequest;
-import response.soft.entities.StoreInProducts;
+import response.soft.entities.StoreInProduct;
 import response.soft.model.StoreInProductsModel;
 
 import java.util.List;
 import java.util.UUID;
 
 @Service
-public class StoreInProductsService extends BaseService<StoreInProducts> {
+public class StoreInProductsService extends BaseService<StoreInProduct> {
 
     private static final Logger log = LoggerFactory.getLogger(StoreInProductsService.class);
 
@@ -27,7 +27,7 @@ public class StoreInProductsService extends BaseService<StoreInProducts> {
     protected void initEntityModel() {
         Core.runTimeModelType.remove();
         Core.runTimeEntityType.remove();
-        Core.runTimeEntityType.set(StoreInProducts.class);
+        Core.runTimeEntityType.set(StoreInProduct.class);
         Core.runTimeModelType.set(StoreInProductsModel.class);
     }
 
@@ -78,11 +78,11 @@ public class StoreInProductsService extends BaseService<StoreInProducts> {
 
             if (storeInProductsModel != null) {
                 responseMessage.httpStatus = HttpStatus.CREATED.value();
-                responseMessage.message = "StoreInProducts save successfully!";
+                responseMessage.message = "StoreInProduct save successfully!";
                 //this.commit();
             } else {
                 responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY.value();
-                responseMessage.message = "Failed to save StoreInProducts";
+                responseMessage.message = "Failed to save StoreInProduct";
                 //this.rollBack();
             }
         } catch (Exception ex) {
@@ -135,7 +135,7 @@ public class StoreInProductsService extends BaseService<StoreInProducts> {
                     updatedStoreInProductsModel = this.update(requestedStoreInProductsModel, oldStoreInProductsModel);
                     responseMessage = this.buildResponseMessage(updatedStoreInProductsModel);
                     responseMessage.httpStatus = HttpStatus.OK.value();
-                    responseMessage.message = "Successfully StoreInProducts updated";
+                    responseMessage.message = "Successfully StoreInProduct updated";
                     //this.commit();
                     return responseMessage;
                 }
@@ -148,12 +148,12 @@ public class StoreInProductsService extends BaseService<StoreInProducts> {
                         updatedStoreInProductsModel = this.update(requestedStoreInProductsModel, oldStoreInProductsModel);
                         responseMessage = this.buildResponseMessage(updatedStoreInProductsModel);
                         responseMessage.httpStatus = HttpStatus.OK.value();
-                        responseMessage.message = "Successfully StoreInProducts updated";
+                        responseMessage.message = "Successfully StoreInProduct updated";
                         return responseMessage;
                     }else {
                         responseMessage = this.buildResponseMessage(requestedStoreInProductsModel);
                         responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY.value();
-                        responseMessage.message = "Failed to update StoreInProducts";
+                        responseMessage.message = "Failed to update StoreInProduct";
                         //this.rollBack();
                         return responseMessage;
                     }
@@ -190,11 +190,11 @@ public class StoreInProductsService extends BaseService<StoreInProducts> {
 
             if (storeInProductsModel != null) {
                 responseMessage.httpStatus = HttpStatus.OK.value();
-                responseMessage.message = "StoreInProducts deleted successfully!";
+                responseMessage.message = "StoreInProduct deleted successfully!";
                 //this.commit();
             } else {
                 responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY.value();
-                responseMessage.message = "Failed to deleted StoreInProducts";
+                responseMessage.message = "Failed to deleted StoreInProduct";
                 //this.rollBack();
             }
         } catch (Exception ex) {
@@ -219,10 +219,10 @@ public class StoreInProductsService extends BaseService<StoreInProducts> {
 
             if (responseMessage.data != null) {
                 responseMessage.httpStatus = HttpStatus.OK.value();
-                responseMessage.message = "Get requested StoreInProducts successfully";
+                responseMessage.message = "Get requested StoreInProduct successfully";
             } else {
                 responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
-                responseMessage.message = "Failed to requested StoreInProducts";
+                responseMessage.message = "Failed to requested StoreInProduct";
             }
 
         } catch (Exception ex) {
@@ -263,7 +263,7 @@ public class StoreInProductsService extends BaseService<StoreInProducts> {
                         .append("p.description, ")
                         .append("p.barcode, ")
                         .append("p.image ")
-                        .append("FROM StoreInProducts p ")
+                        .append("FROM StoreInProduct p ")
                         .append("LEFT JOIN Category c ON p.categoryId = c.id  ")
                         .append("LEFT JOIN Brand b ON p.brandId = b.id  ")
                         .append("WHERE ")
@@ -295,11 +295,11 @@ public class StoreInProductsService extends BaseService<StoreInProducts> {
 
             if (responseMessage.data != null) {
                 responseMessage.httpStatus = HttpStatus.OK.value();
-                responseMessage.message = "Get all StoreInProducts successfully";
+                responseMessage.message = "Get all StoreInProduct successfully";
                 //this.commit();
             } else {
                 responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
-                responseMessage.message = "Failed to get StoreInProducts";
+                responseMessage.message = "Failed to get StoreInProduct";
                 //this.rollBack();
             }
         } catch (Exception ex) {

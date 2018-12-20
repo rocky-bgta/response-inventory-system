@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Data
 @EqualsAndHashCode
-public class StoreSalesProductsModel extends BaseModel {
+public class StoreOutProductsModel extends BaseModel {
     private UUID id;
     private UUID stockId;
     private UUID storeId;

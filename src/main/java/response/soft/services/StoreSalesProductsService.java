@@ -12,14 +12,14 @@ import response.soft.core.Core;
 import response.soft.core.RequestMessage;
 import response.soft.core.ResponseMessage;
 import response.soft.core.datatable.model.DataTableRequest;
-import response.soft.entities.StoreSalesProducts;
-import response.soft.model.StoreSalesProductsModel;
+import response.soft.entities.StoreOutProduct;
+import response.soft.model.StoreOutProductsModel;
 
 import java.util.List;
 import java.util.UUID;
 
 @Service
-public class StoreSalesProductsService extends BaseService<StoreSalesProducts> {
+public class StoreSalesProductsService extends BaseService<StoreOutProduct> {
 
     private static final Logger log = LoggerFactory.getLogger(StoreSalesProductsService.class);
 
@@ -27,24 +27,24 @@ public class StoreSalesProductsService extends BaseService<StoreSalesProducts> {
     protected void initEntityModel() {
         Core.runTimeModelType.remove();
         Core.runTimeEntityType.remove();
-        Core.runTimeEntityType.set(StoreSalesProducts.class);
-        Core.runTimeModelType.set(StoreSalesProductsModel.class);
+        Core.runTimeEntityType.set(StoreOutProduct.class);
+        Core.runTimeModelType.set(StoreOutProductsModel.class);
     }
 
     public ResponseMessage saveStoreSalesProducts(RequestMessage requestMessage) {
         ResponseMessage responseMessage;// = new ResponseMessage();
-        StoreSalesProductsModel stockInModel;
+        StoreOutProductsModel stockInModel;
         //byte[] imageByte;
-        StoreSalesProductsModel searchDuplicateStoreSalesProductsModel;
-        List<StoreSalesProductsModel> foundDuplicateStoreSalesProductsModelList;
+        StoreOutProductsModel searchDuplicateStoreOutProductsModel;
+        List<StoreOutProductsModel> foundDuplicateStoreOutProductsModelList;
         try {
-            stockInModel = Core.processRequestMessage(requestMessage, StoreSalesProductsModel.class);
+            stockInModel = Core.processRequestMessage(requestMessage, StoreOutProductsModel.class);
             // "name", "category_id", "model_no", "brand", "barcode"
             // search for duplicate product
 
             /*
             if (stockInModel != null && !ObjectUtils.isEmpty(stockInModel)) {
-                searchDuplicateStockModel = new StoreSalesProductsModel();
+                searchDuplicateStockModel = new StoreOutProductsModel();
                 searchDuplicateStockModel.setName(stockInModel.getName());
                 searchDuplicateStockModel.setCategoryId(stockInModel.getCategoryId());
                 searchDuplicateStockModel.setBrandId(stockInModel.getBrandId());
@@ -78,11 +78,11 @@ public class StoreSalesProductsService extends BaseService<StoreSalesProducts> {
 
             if (stockInModel != null) {
                 responseMessage.httpStatus = HttpStatus.CREATED.value();
-                responseMessage.message = "StoreSalesProducts save successfully!";
+                responseMessage.message = "StoreOutProduct save successfully!";
                 //this.commit();
             } else {
                 responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY.value();
-                responseMessage.message = "Failed to save StoreSalesProducts";
+                responseMessage.message = "Failed to save StoreOutProduct";
                 //this.rollBack();
             }
         } catch (Exception ex) {
@@ -96,64 +96,64 @@ public class StoreSalesProductsService extends BaseService<StoreSalesProducts> {
 
     public ResponseMessage updateStoreSalesProducts(RequestMessage requestMessage) {
         ResponseMessage responseMessage=null;
-        StoreSalesProductsModel requestedStoreSalesProductsModel,
+        StoreOutProductsModel requestedStoreOutProductsModel,
                 searchDuplicateStockModel,
-                oldStoreSalesProductsModel,
-                updatedStoreSalesProductsModel;
-        List<StoreSalesProductsModel> foundDuplicateStoreSalesProductsModelList;
+                oldStoreOutProductsModel,
+                updatedStoreOutProductsModel;
+        List<StoreOutProductsModel> foundDuplicateStoreOutProductsModelList;
         int countPropertyValueDifference;
         int acceptedUpdatePropertyDifference=3;
         //byte[] imageByte;
         try {
 
 
-            /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(StoreSalesProductsModel);
+            /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(StoreOutProductsModel);
             for (ConstraintViolation<CountryModel> violation : violations) {
                 log.error(violation.getMessage());
             }*/
 
 
-            requestedStoreSalesProductsModel = Core.processRequestMessage(requestMessage, StoreSalesProductsModel.class);
+            requestedStoreOutProductsModel = Core.processRequestMessage(requestMessage, StoreOutProductsModel.class);
 
             // retrieved old store to update created and created date.
-            oldStoreSalesProductsModel = this.getByIdActiveStatus(requestedStoreSalesProductsModel.getId());
+            oldStoreOutProductsModel = this.getByIdActiveStatus(requestedStoreOutProductsModel.getId());
 
 
             // "name", "category_id", "model_no", "brand", "barcode"
             // search for duplicate product
 
-            if (requestedStoreSalesProductsModel != null && !ObjectUtils.isEmpty(requestedStoreSalesProductsModel)) {
-                searchDuplicateStockModel = new StoreSalesProductsModel();
+            if (requestedStoreOutProductsModel != null && !ObjectUtils.isEmpty(requestedStoreOutProductsModel)) {
+                searchDuplicateStockModel = new StoreOutProductsModel();
 //                searchDuplicateStockModel.setName(requestedStockModel.getName());
 //                searchDuplicateStockModel.setCategoryId(requestedStockModel.getCategoryId());
 //                searchDuplicateStockModel.setBrandId(requestedStockModel.getBrandId());
 //                searchDuplicateStockModel.setModelNo(requestedStockModel.getModelNo());
 //                searchDuplicateStockModel.setBarcode(requestedStockModel.getBarcode());
-                foundDuplicateStoreSalesProductsModelList = this.getAllByConditionWithActive(searchDuplicateStockModel);
+                foundDuplicateStoreOutProductsModelList = this.getAllByConditionWithActive(searchDuplicateStockModel);
 
-                if (foundDuplicateStoreSalesProductsModelList.size() == 0) {
-                    updatedStoreSalesProductsModel = this.update(requestedStoreSalesProductsModel, oldStoreSalesProductsModel);
-                    responseMessage = this.buildResponseMessage(updatedStoreSalesProductsModel);
+                if (foundDuplicateStoreOutProductsModelList.size() == 0) {
+                    updatedStoreOutProductsModel = this.update(requestedStoreOutProductsModel, oldStoreOutProductsModel);
+                    responseMessage = this.buildResponseMessage(updatedStoreOutProductsModel);
                     responseMessage.httpStatus = HttpStatus.OK.value();
-                    responseMessage.message = "Successfully StoreSalesProducts updated";
+                    responseMessage.message = "Successfully StoreOutProduct updated";
                     //this.commit();
                     return responseMessage;
                 }
 
-                if(foundDuplicateStoreSalesProductsModelList.size()>0){
+                if(foundDuplicateStoreOutProductsModelList.size()>0){
 
-                    countPropertyValueDifference = Core.comparePropertyValueDifference(requestedStoreSalesProductsModel, oldStoreSalesProductsModel);
+                    countPropertyValueDifference = Core.comparePropertyValueDifference(requestedStoreOutProductsModel, oldStoreOutProductsModel);
                     if(countPropertyValueDifference==acceptedUpdatePropertyDifference
                             || countPropertyValueDifference<acceptedUpdatePropertyDifference){
-                        updatedStoreSalesProductsModel = this.update(requestedStoreSalesProductsModel, oldStoreSalesProductsModel);
-                        responseMessage = this.buildResponseMessage(updatedStoreSalesProductsModel);
+                        updatedStoreOutProductsModel = this.update(requestedStoreOutProductsModel, oldStoreOutProductsModel);
+                        responseMessage = this.buildResponseMessage(updatedStoreOutProductsModel);
                         responseMessage.httpStatus = HttpStatus.OK.value();
-                        responseMessage.message = "Successfully StoreSalesProducts updated";
+                        responseMessage.message = "Successfully StoreOutProduct updated";
                         return responseMessage;
                     }else {
-                        responseMessage = this.buildResponseMessage(requestedStoreSalesProductsModel);
+                        responseMessage = this.buildResponseMessage(requestedStoreOutProductsModel);
                         responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY.value();
-                        responseMessage.message = "Failed to update StoreSalesProducts";
+                        responseMessage.message = "Failed to update StoreOutProduct";
                         //this.rollBack();
                         return responseMessage;
                     }
@@ -172,17 +172,17 @@ public class StoreSalesProductsService extends BaseService<StoreSalesProducts> {
 
     public ResponseMessage deleteStoreSalesProducts(UUID id) {
         ResponseMessage responseMessage;
-        StoreSalesProductsModel stockInModel;
+        StoreOutProductsModel stockInModel;
         Integer numberOfDeletedRow;
         try {
-            //StoreSalesProductsModel = Core.processRequestMessage(requestMessage, StoreSalesProductsModel.class);
+            //StoreOutProductsModel = Core.processRequestMessage(requestMessage, StoreOutProductsModel.class);
 
-            /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(StoreSalesProductsModel);
+            /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(StoreOutProductsModel);
             for (ConstraintViolation<CountryModel> violation : violations) {
                 log.error(violation.getMessage());
             }*/
             stockInModel = this.getById(id);
-            //StoreSalesProductsModel = this.softDelete(StoreSalesProductsModel);
+            //StoreOutProductsModel = this.softDelete(StoreOutProductsModel);
 
             numberOfDeletedRow = this.deleteSoft(id);
 
@@ -190,11 +190,11 @@ public class StoreSalesProductsService extends BaseService<StoreSalesProducts> {
 
             if (stockInModel != null) {
                 responseMessage.httpStatus = HttpStatus.OK.value();
-                responseMessage.message = "StoreSalesProducts deleted successfully!";
+                responseMessage.message = "StoreOutProduct deleted successfully!";
                 //this.commit();
             } else {
                 responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY.value();
-                responseMessage.message = "Failed to deleted StoreSalesProducts";
+                responseMessage.message = "Failed to deleted StoreOutProduct";
                 //this.rollBack();
             }
         } catch (Exception ex) {
@@ -208,7 +208,7 @@ public class StoreSalesProductsService extends BaseService<StoreSalesProducts> {
 
     public ResponseMessage getByStoreSalesProductsId(UUID id) {
         ResponseMessage responseMessage;
-        StoreSalesProductsModel stockInModel;
+        StoreOutProductsModel stockInModel;
         //String base64textString[];
 
         try {
@@ -219,10 +219,10 @@ public class StoreSalesProductsService extends BaseService<StoreSalesProducts> {
 
             if (responseMessage.data != null) {
                 responseMessage.httpStatus = HttpStatus.OK.value();
-                responseMessage.message = "Get requested StoreSalesProducts successfully";
+                responseMessage.message = "Get requested StoreOutProduct successfully";
             } else {
                 responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
-                responseMessage.message = "Failed to requested StoreSalesProducts";
+                responseMessage.message = "Failed to requested StoreOutProduct";
             }
 
         } catch (Exception ex) {
@@ -238,7 +238,7 @@ public class StoreSalesProductsService extends BaseService<StoreSalesProducts> {
 
     public ResponseMessage getAllStoreSalesProducts(RequestMessage requestMessage) {
         ResponseMessage responseMessage;
-        List<StoreSalesProductsModel> list;
+        List<StoreOutProductsModel> list;
         DataTableRequest dataTableRequest;
         StringBuilder queryBuilderString;
         String searchKey=null;
@@ -263,7 +263,7 @@ public class StoreSalesProductsService extends BaseService<StoreSalesProducts> {
                         .append("p.description, ")
                         .append("p.barcode, ")
                         .append("p.image ")
-                        .append("FROM StoreSalesProducts p ")
+                        .append("FROM StoreOutProduct p ")
                         .append("LEFT JOIN Category c ON p.categoryId = c.id  ")
                         .append("LEFT JOIN Brand b ON p.brandId = b.id  ")
                         .append("WHERE ")
@@ -277,7 +277,7 @@ public class StoreSalesProductsService extends BaseService<StoreSalesProducts> {
                         .append(") ")
                         .append("AND p.status="+SqlEnum.Status.Active.get());
 
-                list = this.executeHqlQuery(queryBuilderString.toString(), StoreSalesProductsModel.class, SqlEnum.QueryType.Join.get());
+                list = this.executeHqlQuery(queryBuilderString.toString(), StoreOutProductsModel.class, SqlEnum.QueryType.Join.get());
 
             } else {
                 list = this.getAll();
@@ -285,7 +285,7 @@ public class StoreSalesProductsService extends BaseService<StoreSalesProducts> {
 
 
 
-            /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(StoreSalesProductsModel);
+            /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(StoreOutProductsModel);
             for (ConstraintViolation<CountryModel> violation : violations) {
                 log.error(violation.getMessage());
             }*/
@@ -295,11 +295,11 @@ public class StoreSalesProductsService extends BaseService<StoreSalesProducts> {
 
             if (responseMessage.data != null) {
                 responseMessage.httpStatus = HttpStatus.OK.value();
-                responseMessage.message = "Get all StoreSalesProducts successfully";
+                responseMessage.message = "Get all StoreOutProduct successfully";
                 //this.commit();
             } else {
                 responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
-                responseMessage.message = "Failed to get StoreSalesProducts";
+                responseMessage.message = "Failed to get StoreOutProduct";
                 //this.rollBack();
             }
         } catch (Exception ex) {

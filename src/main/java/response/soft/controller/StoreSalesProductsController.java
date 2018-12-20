@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import response.soft.core.RequestMessage;
 import response.soft.core.ResponseMessage;
-import response.soft.model.StoreSalesProductsModel;
+import response.soft.model.StoreOutProductsModel;
 import response.soft.services.StoreSalesProductsService;
 
 import java.util.UUID;
@@ -41,7 +41,7 @@ public class StoreSalesProductsController {
         return responseMessage;
     }
 
-    @ApiOperation(value ="", response = StoreSalesProductsModel.class)
+    @ApiOperation(value ="", response = StoreOutProductsModel.class)
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseMessage save(@RequestBody RequestMessage requestMessage) {
@@ -50,7 +50,7 @@ public class StoreSalesProductsController {
         return responseMessage;
     }
 
-    @ApiOperation(value ="", response = StoreSalesProductsModel.class)
+    @ApiOperation(value ="", response = StoreOutProductsModel.class)
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseMessage update(@RequestBody RequestMessage requestMessage) {
@@ -59,7 +59,7 @@ public class StoreSalesProductsController {
         return responseMessage;
     }
 
-    @ApiOperation(value ="", response = StoreSalesProductsModel.class)
+    @ApiOperation(value ="", response = StoreOutProductsModel.class)
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "{id}",method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseMessage> delete(@PathVariable UUID id) {

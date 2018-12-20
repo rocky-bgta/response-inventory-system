@@ -231,7 +231,7 @@
         </createTable>
 
 
-        <createTable tableName="store_in_products" remarks="A table to contain all the stock in">
+        <createTable tableName="store_in_product" remarks="A table to contain all the stock in">
             <column name="id" type="UUID">
                 <constraints nullable="false" unique="true" primaryKey="true"/>
             </column>
@@ -269,7 +269,7 @@
             <column name="status" type="integer"></column>
         </createTable>
 
-        <createTable tableName="store_sales_products" remarks="A table to contain all the stock out">
+        <createTable tableName="store_out_product" remarks="A table to contain all the stock out">
             <column name="id" type="UUID">
                 <constraints nullable="false" unique="true" primaryKey="true"/>
             </column>
@@ -279,27 +279,17 @@
             <column name="store_id" type="UUID">
                 <constraints nullable="false"/>
             </column>
+
+            <column name="store_in_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
             <column name="product_id" type="UUID">
-                <constraints nullable="false"/>
-            </column>
-            <column name="vendor_id" type="UUID">
-                <constraints nullable="false"/>
-            </column>
-            <column name="price" type="double">
-                <constraints nullable="false"/>
-            </column>
-            <column name="sales_price" type="double">
-                <constraints nullable="false"/>
-            </column>
-            <column name="benefit" type="double">
                 <constraints nullable="false"/>
             </column>
             <column name="date" type="datetime">
                 <constraints nullable="false"/>
             </column>
-            <column name="warrant_guarantee_period" type="integer">
-                <constraints nullable="true"/>
-            </column>
+
             <column name="created_by" type="varchar"></column>
             <column name="updated_by" type="varchar"></column>
             <column name="created_date" type="datetime"></column>
@@ -340,6 +330,135 @@
             <column name="updated_date" type="datetime"></column>
             <column name="status" type="integer"></column>
         </createTable>
+
+        <createTable tableName="product_sales" remarks="A table to contain all the product sales information">
+            <column name="id" type="UUID">
+                <constraints nullable="false" unique="true" primaryKey="true"/>
+            </column>
+            <column name="store_out_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="customer_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="buy_price" type="double">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sales_type" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sales_price" type="double">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="support_period" type="integer">
+                <constraints nullable="true"/>
+            </column>
+
+
+            <column name="created_by" type="varchar"></column>
+            <column name="updated_by" type="varchar"></column>
+            <column name="created_date" type="datetime"></column>
+            <column name="updated_date" type="datetime"></column>
+            <column name="status" type="integer"></column>
+        </createTable>
+
+        <createTable tableName="sales_balance" remarks="A table to contain all the product sales balance information">
+            <column name="id" type="UUID">
+                <constraints nullable="false" unique="true" primaryKey="true"/>
+            </column>
+            <column name="product_sales_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="paid" type="double">
+                <constraints nullable="false"/>
+            </column>
+            <column name="due" type="double">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_by" type="varchar"></column>
+            <column name="updated_by" type="varchar"></column>
+            <column name="created_date" type="datetime"></column>
+            <column name="updated_date" type="datetime"></column>
+            <column name="status" type="integer"></column>
+        </createTable>
+
+        <createTable tableName="due_payment" remarks="A table to contain all the product payment due information">
+            <column name="id" type="UUID">
+                <constraints nullable="false" unique="true" primaryKey="true"/>
+            </column>
+            <column name="sales_balance_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="customer_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="due" type="double">
+                <constraints nullable="false"/>
+            </column>
+            <column name="paid" type="double">
+                <constraints nullable="true"/>
+            </column>
+            <column name="paid_status" type="integer">
+                <constraints nullable="true"/>
+            </column>
+            <column name="date" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+
+
+            <column name="created_by" type="varchar"></column>
+            <column name="updated_by" type="varchar"></column>
+            <column name="created_date" type="datetime"></column>
+            <column name="updated_date" type="datetime"></column>
+            <column name="status" type="integer"></column>
+        </createTable>
+
+        <createTable tableName="customer" remarks="A table to contain all customer information">
+            <column name="id" type="UUID">
+                <constraints nullable="false" unique="true" primaryKey="true"/>
+            </column>
+            <column name="customer_code" type="char(13)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="phone" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="address" type="varchar">
+                <constraints nullable="true"/>
+            </column>
+            <column name="activity" type="integer">
+                <constraints nullable="true"/>
+            </column>
+            <column name="comment" type="varchar">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="created_by" type="varchar"></column>
+            <column name="updated_by" type="varchar"></column>
+            <column name="created_date" type="datetime"></column>
+            <column name="updated_date" type="datetime"></column>
+            <column name="status" type="integer"></column>
+        </createTable>
+
 
 
 
