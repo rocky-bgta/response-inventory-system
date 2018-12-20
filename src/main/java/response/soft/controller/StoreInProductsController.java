@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import response.soft.core.RequestMessage;
 import response.soft.core.ResponseMessage;
 import response.soft.model.StoreInProductsModel;
+import response.soft.model.complexModel.StoreInProductsComplexModel;
 import response.soft.services.StoreInProductsService;
 
 import java.util.UUID;
@@ -41,7 +42,7 @@ public class StoreInProductsController {
         return responseMessage;
     }
 
-    @ApiOperation(value ="", response = StoreInProductsModel.class)
+    @ApiOperation(value ="", response = StoreInProductsComplexModel.class)
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseMessage save(@RequestBody RequestMessage requestMessage) {
