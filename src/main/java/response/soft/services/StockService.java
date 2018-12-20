@@ -172,7 +172,7 @@ public class StockService extends BaseService<Stock> {
                 //this.commit();
             } else {
                 responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY.value();
-                responseMessage.message = "Failed to deleted vendor";
+                responseMessage.message = "Failed to deleted Stock";
                 //this.rollBack();
             }
         } catch (Exception ex) {
@@ -195,10 +195,10 @@ public class StockService extends BaseService<Stock> {
 
             if (responseMessage.data != null) {
                 responseMessage.httpStatus = HttpStatus.OK.value();
-                responseMessage.message = "Get requested vendor successfully";
+                responseMessage.message = "Get requested Stock successfully";
             } else {
                 responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
-                responseMessage.message = "Failed to requested vendor";
+                responseMessage.message = "Failed to requested Stock";
             }
 
         } catch (Exception ex) {
@@ -267,10 +267,10 @@ public class StockService extends BaseService<Stock> {
             responseMessage = this.buildResponseMessage(list);
 
             if (responseMessage.data != null) {
-                responseMessage.message = "Get all vendor successfully";
+                responseMessage.message = "Get all Stock successfully";
                 //this.commit();
             } else {
-                responseMessage.message = "Failed to get vendor";
+                responseMessage.message = "Failed to get Stock";
                 //this.rollBack();
             }
             responseMessage.httpStatus = HttpStatus.OK.value();
