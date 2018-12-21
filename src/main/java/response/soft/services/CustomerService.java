@@ -123,6 +123,8 @@ public class CustomerService extends BaseService<Customer> {
 
 
             if(customerModelList.size()>0){
+
+
                 if(StringUtils.equals(customerModelList.get(0).getCustomerCode(), requestedCustomerModel.getCustomerCode())){
                     oldCustomer = customerModelList.get(0);
                     requestedCustomerModel = this.update(requestedCustomerModel,oldCustomer);
@@ -216,17 +218,19 @@ public class CustomerService extends BaseService<Customer> {
         ResponseMessage responseMessage;
         List<CustomerModel> list;
         DataTableRequest dataTableRequest;
+        CustomerModel requestedCustomerModel;
         String searchKey=null;
         //CustomerModel brandSearchModel;
         StringBuilder queryBuilderString;
         try {
-            Core.processRequestMessage(requestMessage);
+            requestedCustomerModel = Core.processRequestMessage(requestMessage);
 
             dataTableRequest = requestMessage.dataTableRequest;
             if(dataTableRequest!=null) {
                 searchKey = dataTableRequest.search.value;
                 searchKey = searchKey.trim().toLowerCase();
             }
+
 
             /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(categoryModel);
             for (ConstraintViolation<CountryModel> violation : violations) {
@@ -239,24 +243,30 @@ public class CustomerService extends BaseService<Customer> {
 
             if (dataTableRequest != null && !StringUtils.isEmpty(searchKey)) {
 
+
+
                 queryBuilderString = new StringBuilder();
-                queryBuilderString.append("SELECT v.id, ")
-                        .append("v.name, ")
-                        .append("v.phoneNo, ")
-                        .append("v.email, ")
-                        .append("v.address, ")
-                        .append("v.description ")
-                        .append("FROM Customer v ")
+                queryBuilderString.append("SELECT e.id, ")
+                        .append("e.customerCode, ")
+                        .append("e.name, ")
+                        .append("e.phoneNo1, ")
+                        .append("e.phoneNo2, ")
+                        .append("e.address, ")
+                        .append("e.email, ")
+                        .append("CAST(e.activity AS string), ")
+                        .append("e.comment ")
+                        .append("FROM Customer e ")
                         .append("WHERE ")
                         .append("( ")
-                        .append("lower(v.name) LIKE '%" + searchKey + "%' ")
-                        .append("OR lower(v.phoneNo) LIKE '%" + searchKey + "%' ")
-                        .append("OR lower(v.email) LIKE '%" + searchKey + "%' ")
-                        .append("OR lower(v.address) LIKE '%" + searchKey + "%' ")
-                        .append("OR lower(v.description) LIKE '%" + searchKey + "%' ")
-                        .append("OR lower(v.description) LIKE '%" + searchKey + "%' ")
+                        .append("lower(e.name) LIKE '%" + searchKey + "%' ")
+                        .append("OR lower(e.phoneNo1) LIKE '%" + searchKey + "%' ")
+                        .append("OR lower(e.phoneNo2) LIKE '%" + searchKey + "%' ")
+                        .append("OR lower(e.email) LIKE '%" + searchKey + "%' ")
+                        .append("OR lower(e.address) LIKE '%" + searchKey + "%' ")
+                        .append("OR CAST(e.activity AS string) LIKE '%" + searchKey + "%' ")
+                        .append("OR lower(e.comment) LIKE '%" + searchKey + "%' ")
                         .append(") ")
-                        .append("AND v.status="+SqlEnum.Status.Active.get());
+                        .append("AND e.status="+SqlEnum.Status.Active.get());
 
                 list = this.executeHqlQuery(queryBuilderString.toString(),CustomerModel.class,SqlEnum.QueryType.Join.get());
                 //============ full text search ===========================================

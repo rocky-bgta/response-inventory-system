@@ -8,6 +8,7 @@
  */
 package response.soft.core;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,6 +18,7 @@ import com.google.gson.GsonBuilder;
 import org.hibernate.SessionFactory;
 import org.javers.core.Javers;
 import org.javers.core.JaversBuilder;
+import org.javers.core.diff.Change;
 import org.javers.core.diff.Diff;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -93,10 +95,13 @@ public abstract class Core {
     //==================== update validation lib ===============================
 
     public static int comparePropertyValueDifference(Object newObject, Object oldObject){
+        //List<Change> changeList;
         int changeCount,result;
         int baseEntityPropertyCount=3;
         Diff diff= Core.compareObject.compare(newObject,oldObject);
         changeCount = diff.getChanges().size();
+        //changeList = diff.getChanges();
+
         result = Math.abs(baseEntityPropertyCount-changeCount);
         return result;
     }

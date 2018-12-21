@@ -253,7 +253,6 @@ public class VendorService extends BaseService<Vendor> {
                         .append("OR lower(v.email) LIKE '%" + searchKey + "%' ")
                         .append("OR lower(v.address) LIKE '%" + searchKey + "%' ")
                         .append("OR lower(v.description) LIKE '%" + searchKey + "%' ")
-                        .append("OR lower(v.description) LIKE '%" + searchKey + "%' ")
                         .append(") ")
                         .append("AND v.status="+SqlEnum.Status.Active.get());
 

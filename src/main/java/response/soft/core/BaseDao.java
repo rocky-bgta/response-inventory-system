@@ -158,7 +158,8 @@ public abstract class BaseDao extends Core {
             jsonArray = jsonArray.substring(1, jsonArray.length() - 1);
             jsonArray = StringUtils.replace(jsonArray, ",", ":");
             jsonArray = StringUtils.replace(jsonArray, "}:", "},");
-            jsonArray = StringUtils.replace(jsonArray,"null","");
+            jsonArray = StringUtils.replace(jsonArray,"null","\" \"");
+
 
             String token[] = jsonArray.split(",");
             String fieldName;
@@ -172,28 +173,28 @@ public abstract class BaseDao extends Core {
                 String keyValue = item.substring(2, item.length() - 1);
 
                 Pattern pattern = Pattern.compile("\":\"");
-                String[] result = pattern.split(keyValue);
+                String[] subToken = pattern.split(keyValue);
 
 
-                for (int i=0; i<result.length; i++) {
-                    result[i] =  StringUtils.replace(result[i],":","");
+                for (int i=0; i<subToken.length; i++) {
+                    subToken[i] =  StringUtils.replace(subToken[i],":","");
                 }
 
-                for (int i=0; i<result.length; i++) {
-                    if(StringUtils.contains(result[i],"\""));
-                        result[i] =  StringUtils.removeEnd(result[i],"\"");
+                for (int i=0; i<subToken.length; i++) {
+                    if(StringUtils.contains(subToken[i],"\""));
+                        subToken[i] =  StringUtils.removeEnd(subToken[i],"\"");
                 }
 
-                for (int i=0; i<result.length; i++) {
-                    result[i] = "\""+ result[i] +"\"";
+                for (int i=0; i<subToken.length; i++) {
+                    subToken[i] = "\""+ subToken[i] +"\"";
                 }
 
                 //String subToken[] = keyValue.split(":");
-                for (int i = 0; i < result.length; i++) {
+                for (int i = 0; i < subToken.length; i++) {
                     fieldName = fields[i].getName();
                     Type type = fields[i].getType();
                     //fieldValue=StringUtils.substring(subToken[i], 1, subToken[i].length() - 1);
-                    fieldValue = AppUtils.castValue(StringUtils.remove(type.toString(),"class ").trim(),result[i]);
+                    fieldValue = AppUtils.castValue(StringUtils.remove(type.toString(),"class ").trim(),subToken[i]);
                     temJson += "\"" + fieldName+ "\":"+fieldValue +",";
                 }
                 temJson = temJson.substring(0,temJson.length()-1);
