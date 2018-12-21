@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 import response.soft.core.BaseEntity;
 
 import javax.persistence.*;
@@ -33,9 +34,13 @@ public class Customer extends BaseEntity {
     @NotNull
     private String name;
 
-    @Column(name = "phone")
+    @Column(name = "phone_no1")
     @NotNull
-    private String phone;
+    private String phoneNo1;
+
+    @Column(name = "phone_no2")
+    @NotNull
+    private String phoneNo2;
 
     @Column(name = "address")
     private String address;
@@ -45,4 +50,8 @@ public class Customer extends BaseEntity {
 
     @Column(name = "comment")
     private String comment;
+
+    @Column(name = "image")
+    @Type(type="text")
+    private String image;
 }

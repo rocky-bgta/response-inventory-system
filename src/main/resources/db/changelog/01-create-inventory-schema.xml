@@ -439,8 +439,11 @@
             <column name="name" type="varchar">
                 <constraints nullable="false"/>
             </column>
-            <column name="phone" type="varchar">
+            <column name="phone_no1" type="char(20)">
                 <constraints nullable="false"/>
+            </column>
+            <column name="phone_no2" type="char(20)">
+                <constraints nullable="true"/>
             </column>
             <column name="address" type="varchar">
                 <constraints nullable="true"/>
@@ -451,6 +454,7 @@
             <column name="comment" type="varchar">
                 <constraints nullable="true"/>
             </column>
+            <column name="image" type="text"></column>
 
             <column name="created_by" type="varchar"></column>
             <column name="updated_by" type="varchar"></column>

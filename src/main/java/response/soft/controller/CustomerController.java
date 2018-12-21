@@ -9,19 +9,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import response.soft.core.RequestMessage;
 import response.soft.core.ResponseMessage;
-import response.soft.model.StoreInProductsModel;
-import response.soft.model.view.StoreInProductsViewModel;
-import response.soft.services.StoreInProductsService;
+import response.soft.model.CustomerModel;
+import response.soft.services.CustomerService;
 
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/store-in-products")
-@Api(tags = "Store in Product Api List")
-public class StoreInProductsController {
+@RequestMapping("api/vendor")
+@Api(tags = "Vendor Api List")
+public class CustomerController {
 
     @Autowired
-    private StoreInProductsService storeInProductsService;
+    private CustomerService customerService;
 
 
     @ApiOperation(value ="", response = Object.class)
@@ -29,7 +28,7 @@ public class StoreInProductsController {
     @RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseMessage getAll(@RequestBody RequestMessage requestMessage){
         ResponseMessage responseMessage;
-        responseMessage = this.storeInProductsService.getAllStoreInProducts(requestMessage);
+        responseMessage = this.customerService.getAllCustomer(requestMessage);
         return responseMessage;
     }
 
@@ -38,34 +37,34 @@ public class StoreInProductsController {
     @RequestMapping(value = "{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseMessage getById(@PathVariable UUID id){
         ResponseMessage responseMessage;
-        responseMessage = this.storeInProductsService.getByStoreInProductsId(id);
+        responseMessage = this.customerService.getByCustomerId(id);
         return responseMessage;
     }
 
-    @ApiOperation(value ="", response = StoreInProductsViewModel.class)
+    @ApiOperation(value ="", response = CustomerModel.class)
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseMessage save(@RequestBody RequestMessage requestMessage) {
         ResponseMessage responseMessage;
-        responseMessage = this.storeInProductsService.saveStoreInProducts(requestMessage);
+        responseMessage = this.customerService.saveCustomer(requestMessage);
         return responseMessage;
     }
 
-    @ApiOperation(value ="", response = StoreInProductsModel.class)
+    @ApiOperation(value ="", response = CustomerModel.class)
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseMessage update(@RequestBody RequestMessage requestMessage) {
         ResponseMessage responseMessage;
-        responseMessage = this.storeInProductsService.updateStoreInProducts(requestMessage);
+        responseMessage = this.customerService.updateCustomer(requestMessage);
         return responseMessage;
     }
 
-    @ApiOperation(value ="", response = StoreInProductsModel.class)
+    @ApiOperation(value ="", response = CustomerModel.class)
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "{id}",method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseMessage> delete(@PathVariable UUID id) {
         ResponseMessage responseMessage;
-        responseMessage = this.storeInProductsService.deleteStoreInProducts(id);
+        responseMessage = this.customerService.deleteCustomer(id);
         return new ResponseEntity(responseMessage,HttpStatus.OK);
     }
 }

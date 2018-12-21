@@ -1,4 +1,4 @@
-package response.soft.model.complexModel;
+package response.soft.model.view;
 
 import lombok.Data;
 
@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.UUID;
 
 @Data
-public class StoreInProductsComplexModel {
+public class StoreInProductsViewModel {
     private UUID vendorId;
     private UUID storeId;
     private UUID productId;
