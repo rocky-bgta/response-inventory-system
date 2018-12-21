@@ -15,8 +15,8 @@ import response.soft.services.CustomerService;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/vendor")
-@Api(tags = "Vendor Api List")
+@RequestMapping("api/customer")
+@Api(tags = "Customer Api List")
 public class CustomerController {
 
     @Autowired

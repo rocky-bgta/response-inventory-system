@@ -15,6 +15,7 @@ public class CustomerModel extends BaseModel {
     private String phoneNo1;
     private String phoneNo2;
     private String address;
+    private String email;
     private Integer activity;
     private String comment;
     private String image;

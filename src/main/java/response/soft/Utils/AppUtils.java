@@ -113,18 +113,23 @@ public final class AppUtils {
         try {
             switch (type) {
                 case "java.lang.Integer":
+                    String integerString=inputValue.toString();
+                    if(StringUtils.contains(integerString,"\"")){
+                        integerString = StringUtils.remove(integerString.trim(),"\"");
+                        inputValue = integerString;
+                    }
                     result = Integer.parseInt(inputValue.toString());
                     break;
                 case "java.lang.Double":
                     String doubleString=inputValue.toString();
                     if(StringUtils.contains(doubleString,"\"")){
-                        doubleString = StringUtils.remove(doubleString,"\"");
+                        doubleString = StringUtils.remove(doubleString.trim(),"\"");
                         inputValue = doubleString;
                     }
-                    result = Double.parseDouble(inputValue.toString());
+                    result = Double.parseDouble(inputValue.toString().trim());
                     break;
                 case "java.lang.Float":
-                    result = Float.parseFloat(inputValue.toString());
+                    result = Float.parseFloat(inputValue.toString().trim());
                     break;
                 case "java.lang.Boolean":
                     result = Boolean.parseBoolean(inputValue.toString());
@@ -137,7 +142,7 @@ public final class AppUtils {
                     break;
                 case "java.lang.String":
                     //result = "'" + inputValue + "'";
-                    result = (String) inputValue;
+                    result =  inputValue.toString().trim();
                     break;
                 case "java.util.UUID":
                     if(inputValue instanceof UUID){

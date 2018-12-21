@@ -433,16 +433,19 @@
             <column name="id" type="UUID">
                 <constraints nullable="false" unique="true" primaryKey="true"/>
             </column>
-            <column name="customer_code" type="char(13)">
+            <column name="customer_code" type="char(50)">
                 <constraints nullable="false"/>
             </column>
             <column name="name" type="varchar">
                 <constraints nullable="false"/>
             </column>
-            <column name="phone_no1" type="char(20)">
+            <column name="phone_no1" type="varchar">
                 <constraints nullable="false"/>
             </column>
-            <column name="phone_no2" type="char(20)">
+            <column name="phone_no2" type="varchar">
+                <constraints nullable="true"/>
+            </column>
+            <column name="email" type="varchar">
                 <constraints nullable="true"/>
             </column>
             <column name="address" type="varchar">

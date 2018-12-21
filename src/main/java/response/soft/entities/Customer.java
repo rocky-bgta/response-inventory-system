@@ -9,6 +9,7 @@ import org.hibernate.annotations.Type;
 import response.soft.core.BaseEntity;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
@@ -39,8 +40,11 @@ public class Customer extends BaseEntity {
     private String phoneNo1;
 
     @Column(name = "phone_no2")
-    @NotNull
     private String phoneNo2;
+
+    @Column(name = "email")
+    @Email
+    private String email;
 
     @Column(name = "address")
     private String address;

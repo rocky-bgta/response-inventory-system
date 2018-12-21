@@ -31,12 +31,12 @@ public class CustomerService extends BaseService<Customer> {
         Core.runTimeModelType.set(CustomerModel.class);
     }
 
-    private ResponseMessage checkDuplicateStore(CustomerModel vendorModel) throws Exception {
+    private ResponseMessage checkDuplicateStore(CustomerModel customerModel) throws Exception {
         ResponseMessage responseMessage;
         CustomerModel searchDuplicateCustomerModel;
         List<CustomerModel> foundDuplicateCustomer;
         searchDuplicateCustomerModel = new CustomerModel();
-        searchDuplicateCustomerModel.setName(vendorModel.getName());
+        searchDuplicateCustomerModel.setCustomerCode(customerModel.getCustomerCode());
         foundDuplicateCustomer = this.getAllByConditionWithActive(searchDuplicateCustomerModel);
         if (foundDuplicateCustomer.size() != 0) {
             responseMessage = this.buildResponseMessage();
@@ -50,9 +50,9 @@ public class CustomerService extends BaseService<Customer> {
 
     public ResponseMessage saveCustomer(RequestMessage requestMessage) {
         ResponseMessage responseMessage;
-        CustomerModel vendorModel;
+        CustomerModel requestCustomerModel, saveCustomerModel;
         try {
-            vendorModel = Core.processRequestMessage(requestMessage, CustomerModel.class);
+            requestCustomerModel = Core.processRequestMessage(requestMessage, CustomerModel.class);
 
             /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(categoryModel);
             for (ConstraintViolation<CountryModel> violation : violations) {
@@ -60,17 +60,18 @@ public class CustomerService extends BaseService<Customer> {
             }*/
 
             // search for duplicate product
-            if (vendorModel != null && !ObjectUtils.isEmpty(vendorModel)) {
-                responseMessage = this.checkDuplicateStore(vendorModel);
+            if (requestCustomerModel != null && !ObjectUtils.isEmpty(requestCustomerModel)) {
+                responseMessage = this.checkDuplicateStore(requestCustomerModel);
                 if (responseMessage != null)
                     return responseMessage;
             }
 
+            requestCustomerModel.setCustomerCode(UUID.randomUUID().toString());
 
-            vendorModel = this.save(vendorModel);
-            responseMessage = this.buildResponseMessage(vendorModel);
+            saveCustomerModel = this.save(requestCustomerModel);
+            responseMessage = this.buildResponseMessage(saveCustomerModel);
 
-            if (vendorModel != null) {
+            if (saveCustomerModel != null) {
                 responseMessage.httpStatus = HttpStatus.CREATED.value();
                 responseMessage.message = "Customer save successfully!";
                 //this.commit();
@@ -90,29 +91,29 @@ public class CustomerService extends BaseService<Customer> {
 
     public ResponseMessage updateCustomer(RequestMessage requestMessage) {
         ResponseMessage responseMessage;
-        CustomerModel vendorModel, vendorSearchCondition,oldCustomer;
-        List<CustomerModel> vendorModelList;
+        CustomerModel requestedCustomerModel, customerSearchCondition,oldCustomer;
+        List<CustomerModel> customerModelList;
         try {
-            vendorModel = Core.processRequestMessage(requestMessage, CustomerModel.class);
+            requestedCustomerModel = Core.processRequestMessage(requestMessage, CustomerModel.class);
 
             /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(categoryModel);
             for (ConstraintViolation<CountryModel> violation : violations) {
                 log.error(violation.getMessage());
             }*/
 
-            responseMessage = this.buildResponseMessage(vendorModel);
+            responseMessage = this.buildResponseMessage(requestedCustomerModel);
 
             // retrieved old vendor to update created and created date.
-            oldCustomer = this.getByIdActiveStatus(vendorModel.getId());
+            oldCustomer = this.getByIdActiveStatus(requestedCustomerModel.getId());
 
 
 
-            vendorSearchCondition = new CustomerModel();
-            vendorSearchCondition.setName(vendorModel.getName());
-            vendorModelList = this.getAllByConditionWithActive(vendorSearchCondition);
-            if (vendorModelList.size() == 0) {
-                vendorModel = this.update(vendorModel,oldCustomer);
-                if (vendorModel != null) {
+            customerSearchCondition = new CustomerModel();
+            customerSearchCondition.setCustomerCode(requestedCustomerModel.getCustomerCode());
+            customerModelList = this.getAllByConditionWithActive(customerSearchCondition);
+            if (customerModelList.size() == 0) {
+                requestedCustomerModel = this.update(requestedCustomerModel,oldCustomer);
+                if (requestedCustomerModel != null) {
                     responseMessage.message = "Customer update successfully!";
                     responseMessage.httpStatus = HttpStatus.OK.value();
                     return responseMessage;
@@ -121,11 +122,11 @@ public class CustomerService extends BaseService<Customer> {
             }
 
 
-            if(vendorModelList.size()>0){
-                if(StringUtils.equals(vendorModelList.get(0).getName(), vendorModel.getName())){
-                    oldCustomer = vendorModelList.get(0);
-                    vendorModel = this.update(vendorModel,oldCustomer);
-                    if (vendorModel != null) {
+            if(customerModelList.size()>0){
+                if(StringUtils.equals(customerModelList.get(0).getCustomerCode(), requestedCustomerModel.getCustomerCode())){
+                    oldCustomer = customerModelList.get(0);
+                    requestedCustomerModel = this.update(requestedCustomerModel,oldCustomer);
+                    if (requestedCustomerModel != null) {
                         responseMessage.message = "Customer update successfully!";
                         responseMessage.httpStatus = HttpStatus.OK.value();
                         //this.commit();
