@@ -36,7 +36,7 @@ public class CustomerService extends BaseService<Customer> {
         CustomerModel searchDuplicateCustomerModel;
         List<CustomerModel> foundDuplicateCustomer;
         searchDuplicateCustomerModel = new CustomerModel();
-        searchDuplicateCustomerModel.setCustomerCode(customerModel.getCustomerCode());
+        //searchDuplicateCustomerModel.setCustomerCode(customerModel.getCustomerCode());
         foundDuplicateCustomer = this.getAllByConditionWithActive(searchDuplicateCustomerModel);
         if (foundDuplicateCustomer.size() != 0) {
             responseMessage = this.buildResponseMessage();
@@ -66,7 +66,7 @@ public class CustomerService extends BaseService<Customer> {
                     return responseMessage;
             }
 
-            requestCustomerModel.setCustomerCode(UUID.randomUUID().toString());
+            //requestCustomerModel.setCustomerCode(UUID.randomUUID().toString());
 
             saveCustomerModel = this.save(requestCustomerModel);
             responseMessage = this.buildResponseMessage(saveCustomerModel);
@@ -109,7 +109,7 @@ public class CustomerService extends BaseService<Customer> {
 
 
             customerSearchCondition = new CustomerModel();
-            customerSearchCondition.setCustomerCode(requestedCustomerModel.getCustomerCode());
+            //customerSearchCondition.setCustomerCode(requestedCustomerModel.getCustomerCode());
             customerModelList = this.getAllByConditionWithActive(customerSearchCondition);
             if (customerModelList.size() == 0) {
                 requestedCustomerModel = this.update(requestedCustomerModel,oldCustomer);
@@ -125,7 +125,7 @@ public class CustomerService extends BaseService<Customer> {
             if(customerModelList.size()>0){
 
 
-                if(StringUtils.equals(customerModelList.get(0).getCustomerCode(), requestedCustomerModel.getCustomerCode())){
+                if(StringUtils.equals(customerModelList.get(0).getName(), requestedCustomerModel.getName())){
                     oldCustomer = customerModelList.get(0);
                     requestedCustomerModel = this.update(requestedCustomerModel,oldCustomer);
                     if (requestedCustomerModel != null) {
@@ -138,6 +138,8 @@ public class CustomerService extends BaseService<Customer> {
                     responseMessage.message = "Same Customer name already exist";
                     //this.rollBack();
                 }
+
+
             }
 
         } catch (Exception ex) {
@@ -247,7 +249,6 @@ public class CustomerService extends BaseService<Customer> {
 
                 queryBuilderString = new StringBuilder();
                 queryBuilderString.append("SELECT e.id, ")
-                        .append("e.customerCode, ")
                         .append("e.name, ")
                         .append("e.phoneNo1, ")
                         .append("e.phoneNo2, ")

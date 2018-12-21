@@ -120,11 +120,10 @@
             <column name="updated_date" type="datetime"></column>
             <column name="status" type="integer"></column>
         </createTable>
-        <addUniqueConstraint columnNames="name,category_id,model_no,brand_id"
-                             constraintName="unique by name, category_id, model_no, barcode and brand_id"
+        <addUniqueConstraint columnNames="name,category_id,model_no,brand_id,status"
+                             constraintName="unique Product by name, category_id, model_no, barcode,brand_id and status"
                              schemaName="inventory"
                              tableName="product"/>
-
 
         <createTable tableName="store" remarks="A table to contain all the store">
             <column name="id" type="UUID">
@@ -161,7 +160,6 @@
                              schemaName="inventory"
                              tableName="store"/>
 
-
         <createTable tableName="vendor" remarks="A table to contain all the vendor">
             <column name="id" type="UUID">
                 <constraints nullable="false" primaryKey="true"/>
@@ -197,7 +195,6 @@
                              schemaName="inventory"
                              tableName="vendor"/>
 
-
         <createTable tableName="stock" remarks="A table to contain all the stock">
             <column name="id" type="UUID">
                 <constraints nullable="false" unique="true" primaryKey="true"/>
@@ -229,7 +226,6 @@
             <column name="updated_date" type="datetime"></column>
             <column name="status" type="integer"></column>
         </createTable>
-
 
         <createTable tableName="store_in_product" remarks="A table to contain all the stock in">
             <column name="id" type="UUID">
@@ -433,9 +429,6 @@
             <column name="id" type="UUID">
                 <constraints nullable="false" unique="true" primaryKey="true"/>
             </column>
-            <column name="customer_code" type="varchar">
-                <constraints nullable="false"/>
-            </column>
             <column name="name" type="varchar">
                 <constraints nullable="false"/>
             </column>
@@ -465,6 +458,10 @@
             <column name="updated_date" type="datetime"></column>
             <column name="status" type="integer"></column>
         </createTable>
+        <addUniqueConstraint columnNames="name, phone_no1, address, status"
+                             constraintName="unique Customer base on  name phone_no1 address and status"
+                             schemaName="inventory"
+                             tableName="customer"/>
 
 
 

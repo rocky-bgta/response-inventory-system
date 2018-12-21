@@ -10,7 +10,7 @@ import java.util.UUID;
 @EqualsAndHashCode
 public class CustomerModel extends BaseModel {
     private UUID id;
-    private String customerCode;
+    //private String customerCode;
     private String name;
     private String phoneNo1;
     private String phoneNo2;

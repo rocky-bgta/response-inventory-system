@@ -18,7 +18,8 @@ import java.util.UUID;
 @EqualsAndHashCode
 @DynamicInsert
 @DynamicUpdate
-@Table(name = "customer")
+@Table(name = "customer",uniqueConstraints=
+@UniqueConstraint(columnNames={"name", "phone_no1", "address", "status"}))
 public class Customer extends BaseEntity {
 
     @Id
@@ -27,9 +28,9 @@ public class Customer extends BaseEntity {
     @Column(name = "id", nullable = false)
     private UUID id;
 
-    @Column(name = "customer_code",unique = true)
+    /*@Column(name = "customer_code",unique = true)
     @NotNull
-    private String customerCode;
+    private String customerCode;*/
 
     @Column(name = "name")
     @NotNull

@@ -19,7 +19,7 @@ import java.util.UUID;
 @DynamicInsert
 @DynamicUpdate
 @Table(name = "product",uniqueConstraints=
-@UniqueConstraint(columnNames={"name", "category_id", "model_no", "brand_id", "barcode"}))
+@UniqueConstraint(columnNames={"name", "category_id", "model_no", "brand_id", "barcode","status"}))
 public class Product extends BaseEntity {
     @Id
     @GeneratedValue(generator = "uuid2")
