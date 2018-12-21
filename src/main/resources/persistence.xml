@@ -13,7 +13,7 @@
 
             <property name="hibernate.default_schema" value="inventory"></property>
             <property name="javax.persistence.jdbc.user" value="postgres" /> <!-- DB User -->
-            <property name="javax.persistence.jdbc.password" value="abcd123!" /> <!-- DB Password -->
+            <property name="javax.persistence.jdbc.password" value="postgres" /> <!-- DB Password -->
 
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL9Dialect"/> <!-- DB Dialect -->
             <property name="hibernate.hbm2ddl.auto" value="update" /> <!-- create / create-drop / update -->
