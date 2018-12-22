@@ -31,26 +31,32 @@ public class CustomerService extends BaseService<Customer> {
         Core.runTimeModelType.set(CustomerModel.class);
     }
 
-    private ResponseMessage checkDuplicateStore(CustomerModel customerModel) throws Exception {
-        ResponseMessage responseMessage;
-        CustomerModel searchDuplicateCustomerModel;
-        List<CustomerModel> foundDuplicateCustomer;
-        searchDuplicateCustomerModel = new CustomerModel();
-        //searchDuplicateCustomerModel.setCustomerCode(customerModel.getCustomerCode());
-        foundDuplicateCustomer = this.getAllByConditionWithActive(searchDuplicateCustomerModel);
-        if (foundDuplicateCustomer.size() != 0) {
-            responseMessage = this.buildResponseMessage();
-            responseMessage.httpStatus = HttpStatus.CONFLICT.value();
-            responseMessage.message = "Same Customer name already exist";
-            return responseMessage;
-        } else {
-            return null;
+    private Boolean checkDuplicateModelFound(CustomerModel requestedCustomerModel) throws Exception {
+        Boolean isDuplicate;
+        try {
+            CustomerModel customerSearchCondition;
+            List<CustomerModel> foundDuplicateCustomer;
+            customerSearchCondition = new CustomerModel();
+            customerSearchCondition.setName(requestedCustomerModel.getName());
+            customerSearchCondition.setPhoneNo1(requestedCustomerModel.getPhoneNo1());
+            customerSearchCondition.setAddress(requestedCustomerModel.getAddress());
+            foundDuplicateCustomer = this.getAllByConditionWithActive(customerSearchCondition);
+            if (foundDuplicateCustomer.size() != 0) {
+                isDuplicate = true;
+            } else {
+                isDuplicate = false;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw ex;
         }
+        return isDuplicate;
     }
 
     public ResponseMessage saveCustomer(RequestMessage requestMessage) {
         ResponseMessage responseMessage;
         CustomerModel requestCustomerModel, saveCustomerModel;
+        Boolean checkDuplicateModel;
         try {
             requestCustomerModel = Core.processRequestMessage(requestMessage, CustomerModel.class);
 
@@ -60,10 +66,15 @@ public class CustomerService extends BaseService<Customer> {
             }*/
 
             // search for duplicate product
+
             if (requestCustomerModel != null && !ObjectUtils.isEmpty(requestCustomerModel)) {
-                responseMessage = this.checkDuplicateStore(requestCustomerModel);
-                if (responseMessage != null)
+                checkDuplicateModel = this.checkDuplicateModelFound(requestCustomerModel);
+                if(checkDuplicateModel){
+                    responseMessage = this.buildResponseMessage();
+                    responseMessage.httpStatus = HttpStatus.CONFLICT.value();
+                    responseMessage.message = "Same Customer Name ,Phone No and Address already exist";
                     return responseMessage;
+                }
             }
 
             //requestCustomerModel.setCustomerCode(UUID.randomUUID().toString());
@@ -91,8 +102,9 @@ public class CustomerService extends BaseService<Customer> {
 
     public ResponseMessage updateCustomer(RequestMessage requestMessage) {
         ResponseMessage responseMessage;
-        CustomerModel requestedCustomerModel, customerSearchCondition,oldCustomer;
-        List<CustomerModel> customerModelList;
+        CustomerModel requestedCustomerModel,oldCustomerModel;
+        //List<CustomerModel> customerModelList;
+        Boolean checkDuplicateModel;
         int allowChangePropertyValueForCustomer=4, actualPropertyChangeValueChangeInRequest;
         try {
             requestedCustomerModel = Core.processRequestMessage(requestMessage, CustomerModel.class);
@@ -105,33 +117,33 @@ public class CustomerService extends BaseService<Customer> {
             responseMessage = this.buildResponseMessage(requestedCustomerModel);
 
             // retrieved old vendor to update created and created date.
-            oldCustomer = this.getByIdActiveStatus(requestedCustomerModel.getId());
+            oldCustomerModel = this.getByIdActiveStatus(requestedCustomerModel.getId());
 
+            checkDuplicateModel = this.checkDuplicateModelFound(requestedCustomerModel);
 
-
+/*
             customerSearchCondition = new CustomerModel();
             customerSearchCondition.setName(requestedCustomerModel.getName());
             customerSearchCondition.setPhoneNo1(requestedCustomerModel.getPhoneNo1());
             customerSearchCondition.setAddress(requestedCustomerModel.getAddress());
             customerModelList = this.getAllByConditionWithActive(customerSearchCondition);
-            if (customerModelList.size() == 0) {
-                requestedCustomerModel = this.update(requestedCustomerModel,oldCustomer);
+            */
+
+            if (checkDuplicateModel) {
+                requestedCustomerModel = this.update(requestedCustomerModel,oldCustomerModel);
                 if (requestedCustomerModel != null) {
                     responseMessage.message = "Customer update successfully!";
                     responseMessage.httpStatus = HttpStatus.OK.value();
                     return responseMessage;
                     //this.commit();
                 }
-            }
-
-            if(customerModelList.size()>0){
+            }else {
 
                 actualPropertyChangeValueChangeInRequest=
-                        Core.comparePropertyValueDifference(requestedCustomerModel,oldCustomer);
+                        Core.comparePropertyValueDifference(requestedCustomerModel,oldCustomerModel);
 
                 if((allowChangePropertyValueForCustomer>=actualPropertyChangeValueChangeInRequest)){
-
-                    requestedCustomerModel = this.update(requestedCustomerModel,oldCustomer);
+                    requestedCustomerModel = this.update(requestedCustomerModel,oldCustomerModel);
                     if (requestedCustomerModel != null) {
                         responseMessage.message = "Customer update successfully!";
                         responseMessage.httpStatus = HttpStatus.OK.value();
@@ -139,12 +151,11 @@ public class CustomerService extends BaseService<Customer> {
                     }
                 }else {
                     responseMessage.httpStatus = HttpStatus.CONFLICT.value();
-                    responseMessage.message = "Same Customer name already exist";
+                    responseMessage.message = "Failed to update Customer information!!!";
                     //this.rollBack();
                 }
-
-
             }
+
 
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
