@@ -93,6 +93,7 @@ public class CustomerService extends BaseService<Customer> {
         ResponseMessage responseMessage;
         CustomerModel requestedCustomerModel, customerSearchCondition,oldCustomer;
         List<CustomerModel> customerModelList;
+        int allowChangePropertyValueForCustomer=4, actualPropertyChangeValueChangeInRequest;
         try {
             requestedCustomerModel = Core.processRequestMessage(requestMessage, CustomerModel.class);
 
@@ -109,7 +110,9 @@ public class CustomerService extends BaseService<Customer> {
 
 
             customerSearchCondition = new CustomerModel();
-            //customerSearchCondition.setCustomerCode(requestedCustomerModel.getCustomerCode());
+            customerSearchCondition.setName(requestedCustomerModel.getName());
+            customerSearchCondition.setPhoneNo1(requestedCustomerModel.getPhoneNo1());
+            customerSearchCondition.setAddress(requestedCustomerModel.getAddress());
             customerModelList = this.getAllByConditionWithActive(customerSearchCondition);
             if (customerModelList.size() == 0) {
                 requestedCustomerModel = this.update(requestedCustomerModel,oldCustomer);
@@ -121,12 +124,13 @@ public class CustomerService extends BaseService<Customer> {
                 }
             }
 
-
             if(customerModelList.size()>0){
 
+                actualPropertyChangeValueChangeInRequest=
+                        Core.comparePropertyValueDifference(requestedCustomerModel,oldCustomer);
 
-                if(StringUtils.equals(customerModelList.get(0).getName(), requestedCustomerModel.getName())){
-                    oldCustomer = customerModelList.get(0);
+                if((allowChangePropertyValueForCustomer>=actualPropertyChangeValueChangeInRequest)){
+
                     requestedCustomerModel = this.update(requestedCustomerModel,oldCustomer);
                     if (requestedCustomerModel != null) {
                         responseMessage.message = "Customer update successfully!";

@@ -123,7 +123,7 @@ public class VendorService extends BaseService<Vendor> {
 
             if(vendorModelList.size()>0){
                 if(StringUtils.equals(vendorModelList.get(0).getName(), vendorModel.getName())){
-                    oldVendor = vendorModelList.get(0);
+                    //oldVendor = vendorModelList.get(0);
                     vendorModel = this.update(vendorModel,oldVendor);
                     if (vendorModel != null) {
                         responseMessage.message = "Vendor update successfully!";
@@ -171,7 +171,7 @@ public class VendorService extends BaseService<Vendor> {
                 //this.commit();
             } else {
                 responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY.value();
-                responseMessage.message = "Failed to deleted vendor";
+                responseMessage.message = "Failed to deleted Vendor";
                 //this.rollBack();
             }
         } catch (Exception ex) {
@@ -194,10 +194,10 @@ public class VendorService extends BaseService<Vendor> {
 
             if (responseMessage.data != null) {
                 responseMessage.httpStatus = HttpStatus.OK.value();
-                responseMessage.message = "Get requested vendor successfully";
+                responseMessage.message = "Get requested Vendor successfully";
             } else {
                 responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
-                responseMessage.message = "Failed to requested vendor";
+                responseMessage.message = "Failed to requested Vendor";
             }
 
         } catch (Exception ex) {

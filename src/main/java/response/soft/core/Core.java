@@ -97,10 +97,17 @@ public abstract class Core {
     public static int comparePropertyValueDifference(Object newObject, Object oldObject){
         //List<Change> changeList;
         int changeCount,result;
-        int baseEntityPropertyCount=3;
+        int baseEntityPropertyCount=5;
         Diff diff= Core.compareObject.compare(newObject,oldObject);
         changeCount = diff.getChanges().size();
-        //changeList = diff.getChanges();
+
+       /*
+        changeList = diff.getChanges();
+        for(Change change: changeList){
+            System.out.printf(change.toString());
+        }
+
+        */
 
         result = Math.abs(baseEntityPropertyCount-changeCount);
         return result;
