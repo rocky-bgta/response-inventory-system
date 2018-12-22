@@ -226,7 +226,7 @@ public class StoreService extends BaseService<Store> {
             Core.processRequestMessage(requestMessage);
 
             dataTableRequest = requestMessage.dataTableRequest;
-            if (dataTableRequest != null) {
+            if (dataTableRequest != null && dataTableRequest.length!=null) {
                 searchKey = dataTableRequest.search.value;
                 searchKey = searchKey.trim().toLowerCase();
             }
@@ -269,23 +269,20 @@ public class StoreService extends BaseService<Store> {
 
             responseMessage = this.buildResponseMessage(list);
 
-           /*
-
             if (responseMessage.data != null) {
+                responseMessage.httpStatus = HttpStatus.FOUND.value();
                 responseMessage.message = "Get all Store successfully";
                 //this.commit();
             } else {
-                responseMessage.message = "Failed to get Store!!!";
+                responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
+                responseMessage.message = "Failed to get Store";
                 //this.rollBack();
             }
-            */
-
-            responseMessage.httpStatus = HttpStatus.OK.value();
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
             ex.printStackTrace();
             //this.rollBack();
-            log.error("getAllVendor -> save got exception");
+            log.error("getAllVendor -> getAllVendor got exception");
         }
         return responseMessage;
     }

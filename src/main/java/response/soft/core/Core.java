@@ -224,7 +224,7 @@ public abstract class Core {
             if (requestMessage.data != null && !ObjectUtils.isEmpty(requestMessage.data)) {
                 requestData = requestMessage.data;
             }
-            if (requestMessage.dataTableRequest != null && requestMessage.dataTableRequest.length!=0) {
+            if (requestMessage.dataTableRequest != null && requestMessage.dataTableRequest.length!=null && requestMessage.dataTableRequest.length!=0) {
                 Core.isDataTablePagination.set(true);
                 Core.pageOffset.set(requestMessage.dataTableRequest.start);
                 Core.pageSize.set(requestMessage.dataTableRequest.length);

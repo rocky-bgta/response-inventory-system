@@ -256,7 +256,7 @@ public class ProductService extends BaseService<Product> {
                 responseMessage.httpStatus = HttpStatus.OK.value();
                 responseMessage.message = "Get requested Product successfully";
             } else {
-                responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
+                responseMessage.httpStatus = HttpStatus.CONFLICT.value();
                 responseMessage.message = "Failed to requested Product";
             }
 
