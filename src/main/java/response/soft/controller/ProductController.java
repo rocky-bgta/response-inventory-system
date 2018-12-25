@@ -42,21 +42,21 @@ public class ProductController {
 
     @ApiOperation(value ="", response = Object.class)
     @ResponseStatus(HttpStatus.OK)
-    @RequestMapping(value = "barcode/{barcode}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/barcode/{barcode}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseMessage getByBarcode(@PathVariable String barcode){
         ResponseMessage responseMessage;
         responseMessage = this.productService.getByProductBarcode(barcode);
         return responseMessage;
     }
 
-    @ApiOperation(value ="", response = Object.class)
+   /* @ApiOperation(value ="", response = Object.class)
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "/{barcode}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseMessage getProductByBarcode(@PathVariable String barcode){
         ResponseMessage responseMessage;
         responseMessage = this.productService.getProductByBarcode(barcode);
         return responseMessage;
-    }
+    }*/
 
 
     @ApiOperation(value ="", response = ProductModel.class)
