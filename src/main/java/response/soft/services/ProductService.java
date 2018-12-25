@@ -270,6 +270,36 @@ public class ProductService extends BaseService<Product> {
         return responseMessage;
     }
 
+    public ResponseMessage getByProductBarcode(String barcode) {
+        ResponseMessage responseMessage=null;
+        ProductModel productModel, whereCondition;
+        List<ProductModel> productModelList;
+        //String base64textString[];
+
+        try {
+            whereCondition = new ProductModel();
+            whereCondition.setBarcode(barcode);
+            productModelList = this.getAllByConditionWithActive(whereCondition);
+
+            if(productModelList.size()>0){
+                productModel = productModelList.get(0);
+                responseMessage = buildResponseMessage(productModel);
+                responseMessage.httpStatus=HttpStatus.FOUND.value();
+                responseMessage.message="Requested product found";
+            }else {
+                responseMessage = buildFailedResponseMessage("Requested product not found");
+                responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
+            }
+
+        } catch (Exception ex) {
+            responseMessage = this.buildFailedResponseMessage();
+            //this.rollBack();
+            ex.printStackTrace();
+            log.error("getByProductId -> got exception");
+        }
+        return responseMessage;
+    }
+
 
     public ResponseMessage getAllProduct(RequestMessage requestMessage) {
         ResponseMessage responseMessage;
