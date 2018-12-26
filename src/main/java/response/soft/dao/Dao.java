@@ -87,7 +87,7 @@ public class Dao<T> extends BaseDao {
             session.beginTransaction();
 
 
-            insertDataInHistory=false;
+            //insertDataInHistory=false;
             //================ code regarding history table======================
             if (insertDataInHistory) {
                 // Find previous row's primary key before update
@@ -95,7 +95,7 @@ public class Dao<T> extends BaseDao {
                 oldEntity = getById(primaryKeyValue);
 
                 historyEntity = buildHistoryEntity(oldEntity, SqlEnum.QueryType.Update.get());
-                session.update(historyEntity);
+                session.save(historyEntity);
                 session.flush();
             }
             //===================================================================
