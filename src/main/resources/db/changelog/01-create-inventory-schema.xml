@@ -489,7 +489,7 @@
         <sqlFile
                  encoding="utf8"
                  endDelimiter="\nGO"
-                 path="seed/category.sql"
+                 path="seed/brand.sql"
                  relativeToChangelogFile="true"
                  splitStatements="true"
                  stripComments="true"/>
@@ -497,7 +497,7 @@
         <sqlFile
                 encoding="utf8"
                 endDelimiter="\nGO"
-                path="seed/store.sql"
+                path="seed/category.sql"
                 relativeToChangelogFile="true"
                 splitStatements="true"
                 stripComments="true"/>
@@ -505,7 +505,7 @@
         <sqlFile
                 encoding="utf8"
                 endDelimiter="\nGO"
-                path="seed/brand.sql"
+                path="seed/customer.sql"
                 relativeToChangelogFile="true"
                 splitStatements="true"
                 stripComments="true"/>
@@ -521,7 +521,7 @@
         <sqlFile
                 encoding="utf8"
                 endDelimiter="\nGO"
-                path="seed/customer.sql"
+                path="seed/store.sql"
                 relativeToChangelogFile="true"
                 splitStatements="true"
                 stripComments="true"/>
