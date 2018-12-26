@@ -15,9 +15,9 @@ public class StoreInProductsViewModel {
     private UUID productId;
     private String barcode;
     private String serialNo;
-    private String price;
-    private String quantity;
-    private String totalPrice;
+    private Double price;
+    private Integer quantity;
+    private Double totalPrice;
     private Date entryDate;
     private Date manufacturingDate;
     private Date expirationDate;
