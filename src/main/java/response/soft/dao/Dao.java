@@ -734,7 +734,7 @@ public class Dao<T> extends BaseDao {
         }
 
         */
-            session = sessionFactory.openSession();
+            //session = sessionFactory.openSession();
         } catch (HibernateException ex) {
             ex.printStackTrace();
             throw ex;
