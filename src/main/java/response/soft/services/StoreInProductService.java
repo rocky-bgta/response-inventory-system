@@ -17,6 +17,7 @@ import response.soft.core.RequestMessage;
 import response.soft.core.ResponseMessage;
 import response.soft.core.datatable.model.DataTableRequest;
 import response.soft.entities.StoreInProduct;
+import response.soft.model.ProductModel;
 import response.soft.model.StockModel;
 import response.soft.model.StoreInProductModel;
 import response.soft.model.view.StoreInProductsViewModel;
@@ -256,7 +257,6 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
         return responseMessage;
     }
 
-
     public ResponseMessage deleteStoreInProducts(UUID id) {
         ResponseMessage responseMessage;
         StoreInProductModel storeInProductModel;
@@ -321,7 +321,6 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
 
         return responseMessage;
     }
-
 
     public ResponseMessage getAllStoreInProducts(RequestMessage requestMessage) {
         ResponseMessage responseMessage;
@@ -398,5 +397,56 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
         return responseMessage;
     }
 
+    public ResponseMessage getProductListByStoreId(UUID storeId){
+        ResponseMessage responseMessage;
+        List<ProductModel> productModelList=null;
+        //List<StoreInProductModel> storeInProductModelList=null;
+        //StoreInProductModel whereConditionStoreInProductModel;
+
+        StringBuilder queryBuilder = new StringBuilder();
+        String hql;
+        try {
+            if(storeId!=null){
+
+              queryBuilder.append("SELECT p.id,  ")
+                      .append("p.name, ")
+                      .append("p.categoryId, ")
+                      .append("p.brandId, ")
+                      .append("p.modelNo, ")
+                      .append("sip.price, ")
+                      .append("p.description, ")
+                      .append("p.barcode, ")
+                      .append("p.image ")
+              .append("FROM StoreInProduct  sip ")
+              .append("INNER JOIN Product p ON p.id = sip.productId ")
+              .append("WHERE sip.status = 1 AND sip.storeId = '")
+              .append(storeId+"' ")
+              .append("ORDER BY sip.storeId");
+
+              hql = queryBuilder.toString();
+
+              productModelList = this.executeHqlQuery(hql,ProductModel.class,SqlEnum.QueryType.Join.get());
+            }
+
+            if(productModelList!=null){
+                responseMessage = buildResponseMessage(productModelList);
+                responseMessage.httpStatus = HttpStatus.FOUND.value();
+                responseMessage.message = "Retrieve all available product";
+            }else {
+                responseMessage = buildResponseMessage();
+                responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
+                responseMessage.message = "No available product in this store";
+            }
+
+        } catch (Exception ex) {
+            responseMessage = this.buildFailedResponseMessage();
+            //this.rollBack();
+            ex.printStackTrace();
+            log.error("getByStockId -> got exception");
+        }
+
+        return responseMessage;
+
+    }
 
 }

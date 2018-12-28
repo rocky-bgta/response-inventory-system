@@ -68,4 +68,13 @@ public class StoreInProductsController {
         responseMessage = this.storeInProductService.deleteStoreInProducts(id);
         return new ResponseEntity(responseMessage,HttpStatus.OK);
     }
+
+    @ApiOperation(value ="", response = Object.class)
+    @ResponseStatus(HttpStatus.OK)
+    @RequestMapping(value = "/store-id/{id}",method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ResponseMessage> getProductListByStoreId(@PathVariable UUID id) {
+        ResponseMessage responseMessage;
+        responseMessage = this.storeInProductService.getProductListByStoreId(id);
+        return new ResponseEntity(responseMessage,HttpStatus.OK);
+    }
 }

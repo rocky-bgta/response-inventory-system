@@ -151,7 +151,6 @@ public class StoreService extends BaseService<Store> {
         return responseMessage;
     }
 
-
     public ResponseMessage deleteStore(UUID id) {
         ResponseMessage responseMessage;
         StoreModel storeModel;
@@ -213,7 +212,6 @@ public class StoreService extends BaseService<Store> {
 
         return responseMessage;
     }
-
 
     public ResponseMessage getAllStore(RequestMessage requestMessage) {
         ResponseMessage responseMessage;
