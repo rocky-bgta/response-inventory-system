@@ -9,15 +9,12 @@ import java.util.UUID;
 
 @Data
 @EqualsAndHashCode
-public class StoreOutProductsModel extends BaseModel {
+public class StoreOutProductModel extends BaseModel {
     private UUID id;
     private UUID stockId;
     private UUID storeId;
+    private UUID storeInProductId;
     private UUID productId;
-    private UUID vendorId;
-    private Double price;
-    private Double salesPrice;
-    private Double benefit;
     private Date date;
-    private Integer warrantGuaranteePeriod;
+
 }

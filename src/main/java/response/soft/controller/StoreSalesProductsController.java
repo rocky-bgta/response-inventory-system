@@ -9,8 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import response.soft.core.RequestMessage;
 import response.soft.core.ResponseMessage;
-import response.soft.model.StoreOutProductsModel;
-import response.soft.services.StoreSalesProductsService;
+import response.soft.model.StoreOutProductModel;
+import response.soft.services.StoreSalesProductService;
 
 import java.util.UUID;
 
@@ -20,7 +20,7 @@ import java.util.UUID;
 public class StoreSalesProductsController {
 
     @Autowired
-    private StoreSalesProductsService storeSalesProductsService;
+    private StoreSalesProductService storeSalesProductService;
 
 
     @ApiOperation(value ="", response = Object.class)
@@ -28,7 +28,7 @@ public class StoreSalesProductsController {
     @RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseMessage getAll(@RequestBody RequestMessage requestMessage){
         ResponseMessage responseMessage;
-        responseMessage = this.storeSalesProductsService.getAllStoreSalesProducts(requestMessage);
+        responseMessage = this.storeSalesProductService.getAllStoreSalesProducts(requestMessage);
         return responseMessage;
     }
 
@@ -37,34 +37,34 @@ public class StoreSalesProductsController {
     @RequestMapping(value = "{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseMessage getById(@PathVariable UUID id){
         ResponseMessage responseMessage;
-        responseMessage = this.storeSalesProductsService.getByStoreSalesProductsId(id);
+        responseMessage = this.storeSalesProductService.getByStoreSalesProductsId(id);
         return responseMessage;
     }
 
-    @ApiOperation(value ="", response = StoreOutProductsModel.class)
+    @ApiOperation(value ="", response = StoreOutProductModel.class)
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseMessage save(@RequestBody RequestMessage requestMessage) {
         ResponseMessage responseMessage;
-        responseMessage = this.storeSalesProductsService.saveStoreSalesProducts(requestMessage);
+        responseMessage = this.storeSalesProductService.saveStoreSalesProducts(requestMessage);
         return responseMessage;
     }
 
-    @ApiOperation(value ="", response = StoreOutProductsModel.class)
+    @ApiOperation(value ="", response = StoreOutProductModel.class)
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseMessage update(@RequestBody RequestMessage requestMessage) {
         ResponseMessage responseMessage;
-        responseMessage = this.storeSalesProductsService.updateStoreSalesProducts(requestMessage);
+        responseMessage = this.storeSalesProductService.updateStoreSalesProducts(requestMessage);
         return responseMessage;
     }
 
-    @ApiOperation(value ="", response = StoreOutProductsModel.class)
+    @ApiOperation(value ="", response = StoreOutProductModel.class)
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "{id}",method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseMessage> delete(@PathVariable UUID id) {
         ResponseMessage responseMessage;
-        responseMessage = this.storeSalesProductsService.deleteStoreSalesProducts(id);
+        responseMessage = this.storeSalesProductService.deleteStoreSalesProducts(id);
         return new ResponseEntity(responseMessage,HttpStatus.OK);
     }
 }

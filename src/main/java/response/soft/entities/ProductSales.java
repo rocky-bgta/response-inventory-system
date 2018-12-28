@@ -53,7 +53,7 @@ public class ProductSales extends BaseEntity {
     @NotNull
     private Date date;
 
-    @Column(name = "support_period")
-    private Integer supportPeriod;
+    @Column(name = "support_period_in_month")
+    private Integer supportPeriodInMonth;
 
 }

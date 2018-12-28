@@ -33,45 +33,16 @@ public class StoreOutProduct extends BaseEntity {
     @NotNull
     private UUID storeId;
 
-    @Column(name = "store_in_id")
+    @Column(name = "store_in_product_id")
     @NotNull
-    private UUID storeInId;
+    private UUID storeInProductId;
 
     @Column(name = "product_id")
     @NotNull
     private UUID productId;
 
-    /*
-    @Column(name = "vendor_id")
-    @NotNull
-    private UUID vendorId;
-    */
-
-    /*
-    @Column(name = "price")
-    @NotNull
-    private Double price;
-    */
-
-   /*
-   @Column(name = "sales_price")
-    @NotNull
-    private Double salesPrice;
-    */
-
-   /*
-    @Column(name = "benefit")
-    @NotNull
-    private Double benefit;*/
-
     @Column(name = "date")
     @NotNull
     private Date date;
-
-/*
-
-    @Column(name = "warrant_guarantee_period")
-    private Integer warrantGuaranteePeriod;
-*/
 
 }

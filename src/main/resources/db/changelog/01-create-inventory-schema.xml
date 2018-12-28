@@ -276,7 +276,7 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="store_in_id" type="UUID">
+            <column name="store_in_product_id" type="UUID">
                 <constraints nullable="false"/>
             </column>
             <column name="product_id" type="UUID">
@@ -352,7 +352,7 @@
             <column name="date" type="datetime">
                 <constraints nullable="false"/>
             </column>
-            <column name="support_period" type="integer">
+            <column name="support_period_in_month" type="integer">
                 <constraints nullable="true"/>
             </column>
 
