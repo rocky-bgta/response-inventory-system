@@ -293,13 +293,15 @@ public class CustomerService extends BaseService<Customer> {
             responseMessage = this.buildResponseMessage(list);
 
             if (responseMessage.data != null) {
-                responseMessage.message = "Get all vendor successfully";
+                responseMessage.message = "Get all customer successfully";
+                responseMessage.httpStatus = HttpStatus.FOUND.value();
                 //this.commit();
             } else {
-                responseMessage.message = "Failed to get vendor";
+                responseMessage.message = "Failed to get customer";
+                responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
                 //this.rollBack();
             }
-            responseMessage.httpStatus = HttpStatus.OK.value();
+
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
             ex.printStackTrace();
