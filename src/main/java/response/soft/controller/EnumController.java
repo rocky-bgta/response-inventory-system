@@ -24,7 +24,7 @@ public class EnumController {
 
     @ApiOperation(value ="", response = Object.class)
     @ResponseStatus(HttpStatus.OK)
-    @RequestMapping(value = "/payment-method", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/payment-method", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseMessage getPaymentMethods(){
         ResponseMessage responseMessage;
         Map<String,Integer> salesMethods;
@@ -37,6 +37,7 @@ public class EnumController {
                 keyValueModelList =AppUtils.getKeyValueFromMap(salesMethods);
                 responseMessage.data =keyValueModelList;
                 responseMessage.httpStatus = HttpStatus.FOUND.value();
+                responseMessage.totalRow= (long) keyValueModelList.size();
                 responseMessage.message = "Get all Sales method successfully";
             }else {
                 responseMessage.httpStatus=HttpStatus.NOT_FOUND.value();
