@@ -176,6 +176,7 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
         storeInProductModel.setProductId(storeInProductsViewModel.getProductId());
         storeInProductModel.setVendorId(storeInProductsViewModel.getVendorId());
         storeInProductModel.setPrice(storeInProductsViewModel.getPrice());
+        storeInProductModel.setSerialNo(storeInProductsViewModel.getSerialNo());
         storeInProductModel.setProductStatus(InventoryEnum.ProductStatus.AVAILABLE.get());
         storeInProductModel.setEntryDate(storeInProductsViewModel.getEntryDate());
         storeInProductModel.setManufacturingDate(storeInProductsViewModel.getManufacturingDate());

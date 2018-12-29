@@ -45,6 +45,9 @@ public class StoreInProduct extends BaseEntity {
     @NotNull
     private Double price;
 
+    @Column(name = "serial_no")
+    private String serialNo;
+
     @Column(name = "product_status")
     @NotNull
     private Integer productStatus;

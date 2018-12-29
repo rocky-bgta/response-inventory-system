@@ -11,7 +11,7 @@ import java.util.UUID;
 @EqualsAndHashCode
 public class ProductViewModel extends BaseModel {
     private UUID productId;
-    private String available;
+    private Integer available;
     private String productName;
     private String categoryName;
     private String brandName;

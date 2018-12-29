@@ -246,6 +246,9 @@
             <column name="price" type="double">
                 <constraints nullable="false"/>
             </column>
+            <column name="serial_no" type="varchar">
+                <constraints nullable="true"/>
+            </column>
             <column name="product_status" type="integer">
                 <constraints nullable="false"/>
             </column>
