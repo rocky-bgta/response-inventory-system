@@ -358,6 +358,9 @@
             <column name="support_period_in_month" type="integer">
                 <constraints nullable="true"/>
             </column>
+            <column name="serial_no" type="varchar">
+                <constraints nullable="true"/>
+            </column>
 
 
             <column name="created_by" type="varchar"></column>

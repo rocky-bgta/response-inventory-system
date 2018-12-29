@@ -56,4 +56,7 @@ public class ProductSales extends BaseEntity {
     @Column(name = "support_period_in_month")
     private Integer supportPeriodInMonth;
 
+    @Column(name = "serial_no")
+    private String serialNo;
+
 }
