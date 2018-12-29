@@ -8,7 +8,6 @@
  */
 package response.soft.core;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,7 +17,6 @@ import com.google.gson.GsonBuilder;
 import org.hibernate.SessionFactory;
 import org.javers.core.Javers;
 import org.javers.core.JaversBuilder;
-import org.javers.core.diff.Change;
 import org.javers.core.diff.Diff;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -28,9 +26,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
+import response.soft.Utils.AppUtils;
 import response.soft.appenum.SqlEnum;
 import response.soft.core.datatable.model.DataTableResponse;
-import response.soft.utils.AppUtils;
 
 import javax.validation.Validation;
 import javax.validation.Validator;

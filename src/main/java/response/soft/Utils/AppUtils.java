@@ -1,4 +1,4 @@
-package response.soft.utils;
+package response.soft.Utils;
 
 //import com.nybsys.tillboxweb.dbConfig.PersistenceConfig;
 
@@ -14,6 +14,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import response.soft.constant.DbConstant;
+import response.soft.core.KeyValueModel;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -21,9 +22,8 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.Date;
-import java.util.Properties;
-import java.util.UUID;
 
 import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
 
@@ -349,5 +349,18 @@ public final class AppUtils {
         mailSender.send(message);
     }
 
+    public static List getKeyValueFromMap(Map<String,Integer> map){
+        List<KeyValueModel> keyValueModelList = new ArrayList<>();
+        KeyValueModel keyValueModel;
 
+        for ( Map.Entry<String, Integer> entry : map.entrySet()) {
+            keyValueModel = new KeyValueModel();
+            String  key = entry.getKey();
+            Integer value = entry.getValue();
+            keyValueModel.key = key;
+            keyValueModel.value = value;
+            keyValueModelList.add(keyValueModel);
+        }
+        return keyValueModelList;
+    }
 }
