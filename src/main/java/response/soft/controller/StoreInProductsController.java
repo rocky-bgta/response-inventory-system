@@ -71,8 +71,8 @@ public class StoreInProductsController {
 
     @ApiOperation(value ="", response = Object.class)
     @ResponseStatus(HttpStatus.OK)
-    @RequestMapping(value = "/store-id/{id}",method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseMessage> getProductListByStoreId(@PathVariable UUID id) {
+    @RequestMapping(value = "/store-id/{id}",method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ResponseMessage> getProductListByStoreId(@RequestBody RequestMessage requestMessage, @PathVariable UUID id) {
         ResponseMessage responseMessage;
         responseMessage = this.storeInProductService.getProductListByStoreId(id);
         return new ResponseEntity(responseMessage,HttpStatus.OK);
