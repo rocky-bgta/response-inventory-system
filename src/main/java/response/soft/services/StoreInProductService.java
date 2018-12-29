@@ -20,6 +20,7 @@ import response.soft.entities.StoreInProduct;
 import response.soft.model.ProductModel;
 import response.soft.model.StockModel;
 import response.soft.model.StoreInProductModel;
+import response.soft.model.view.ProductViewModel;
 import response.soft.model.view.StoreInProductsViewModel;
 
 import java.util.*;
@@ -399,7 +400,7 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
 
     public ResponseMessage getProductListByStoreId(UUID storeId){
         ResponseMessage responseMessage;
-        List<ProductModel> productModelList=null;
+        List<ProductViewModel> productViewModelList=null;
         //List<StoreInProductModel> storeInProductModelList=null;
         //StoreInProductModel whereConditionStoreInProductModel;
 
@@ -408,28 +409,42 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
         try {
             if(storeId!=null){
 
-              queryBuilder.append("SELECT p.id,  ")
-                      .append("p.name, ")
-                      .append("p.categoryId, ")
-                      .append("p.brandId, ")
+              queryBuilder.append("SELECT p.id AS productId,  ")
+                      .append("count(sip.productId) AS available, ")
+                      .append("p.name AS productName, ")
+                      .append("cat.name AS categoryName, ")
+                      .append("brn.name AS brandName, ")
                       .append("p.modelNo, ")
-                      .append("sip.price, ")
+                      .append("sip.price AS buyPrice, ")
                       .append("p.description, ")
                       .append("p.barcode, ")
                       .append("p.image ")
               .append("FROM StoreInProduct  sip ")
               .append("INNER JOIN Product p ON p.id = sip.productId ")
-              .append("WHERE sip.status = 1 AND sip.storeId = '")
+              .append("INNER JOIN Category cat ON p.categoryId = cat.id ")
+              .append("INNER JOIN Brand brn ON p.brandId = brn.id ")
+              .append("WHERE sip.status = "+ InventoryEnum.ProductStatus.AVAILABLE.get() +" AND sip.storeId = '")
               .append(storeId+"' ")
+              .append("GROUP BY " +
+                      "p.id , " +
+                      "p.name, " +
+                      "cat.name, " +
+                      "brn.name, " +
+                      "p.modelNo, " +
+                      "sip.price, " +
+                      "p.description, " +
+                      "p.barcode, " +
+                      "p.image, " +
+                      "sip.storeId ")
               .append("ORDER BY sip.storeId");
 
               hql = queryBuilder.toString();
 
-              productModelList = this.executeHqlQuery(hql,ProductModel.class,SqlEnum.QueryType.Join.get());
+              productViewModelList = this.executeHqlQuery(hql,ProductViewModel.class,SqlEnum.QueryType.Join.get());
             }
 
-            if(productModelList!=null){
-                responseMessage = buildResponseMessage(productModelList);
+            if(productViewModelList!=null){
+                responseMessage = buildResponseMessage(productViewModelList);
                 responseMessage.httpStatus = HttpStatus.FOUND.value();
                 responseMessage.message = "Retrieve all available product";
             }else {

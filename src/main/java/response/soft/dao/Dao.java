@@ -629,7 +629,10 @@ public class Dao<T> extends BaseDao {
             if(result!=null && (SqlEnum.QueryType.Join.get()==queryType || SqlEnum.QueryType.Select.get()==queryType))
                 Core.recordsFilteredCount.set((long) result.size());
 
-            this.setTotalActiveRecordCount(clazz);
+            if(result.size()>0 && SqlEnum.QueryType.Join.get()==queryType)
+                Core.totalRowCount.set((long)result.size());
+
+            // this.setTotalActiveRecordCount(clazz);
             //========== set search count for data table =======================
 
 
