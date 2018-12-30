@@ -2,6 +2,7 @@ package response.soft.core;
 
 
 
+import io.swagger.models.auth.In;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,8 +60,12 @@ public abstract class BaseService<T extends BaseEntity> extends Core {
         return modelList;
     }
 
-    //type                return type
     public <M extends BaseModel> List<M> getAllByConditions(M whereCondition) throws Exception {
+        return this.getAllByConditions(whereCondition,null);
+    }
+
+    //type                return type
+    public <M extends BaseModel> List<M> getAllByConditions(M whereCondition,Integer limit) throws Exception {
         initEntityModel();
         Map<Object, Object> keyValueParis;
         List<T> entityList;
@@ -71,7 +76,7 @@ public abstract class BaseService<T extends BaseEntity> extends Core {
         try {
             hql = this.queryBuilder(whereCondition, queryType);
             keyValueParis = Core.getKeyValuePairFromObject(whereCondition,queryType);
-            entityList = this.dao.getAllByConditions(hql, keyValueParis);
+            entityList = this.dao.getAllByConditions(hql, keyValueParis,limit);
             if (entityList.size() > 0) {
                 modelList = new ArrayList<>();
                 for (T entity : entityList) {
@@ -91,6 +96,11 @@ public abstract class BaseService<T extends BaseEntity> extends Core {
 
     //type                return type
     public <M extends BaseModel> List<M> getAllByConditionWithActive(M whereCondition) throws Exception {
+        return this.getAllByConditionWithActive(whereCondition,null);
+    }
+
+    //type                return type
+    public <M extends BaseModel> List<M> getAllByConditionWithActive(M whereCondition,Integer limit) throws Exception {
         initEntityModel();
         Map<Object, Object> keyValueParis;
         List<T> entityList;
@@ -102,7 +112,7 @@ public abstract class BaseService<T extends BaseEntity> extends Core {
             whereCondition.setStatus(SqlEnum.Status.Active.get());
             hql = this.queryBuilder(whereCondition,queryType);
             keyValueParis = Core.getKeyValuePairFromObject(whereCondition,queryType);
-            entityList = this.dao.getAllByConditions(hql, keyValueParis);
+            entityList = this.dao.getAllByConditions(hql, keyValueParis, limit);
             if (entityList.size() > 0) {
                 modelList = new ArrayList<>();
                 for (T entity : entityList) {

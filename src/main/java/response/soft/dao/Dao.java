@@ -214,6 +214,10 @@ public class Dao<T> extends BaseDao {
     }*/
 
     public List<T> getAllByConditions(String hql, Map<Object, Object> keyValueParis) throws HibernateException {
+        return this.getAllByConditions(hql,keyValueParis,null);
+    }
+
+    public List<T> getAllByConditions(String hql, Map<Object, Object> keyValueParis,Integer limit) throws HibernateException {
         List<T> list = null;
         String key;
         Object value;
@@ -234,6 +238,12 @@ public class Dao<T> extends BaseDao {
                     q.setParameter(key,value);
                 }
             }
+
+            if (limit != null) {
+                q.setFirstResult(0);
+                q.setMaxResults(limit);
+            }
+
             list = q.getResultList();
 
             session.getTransaction().commit();

@@ -1,8 +1,10 @@
 package response.soft.services;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -13,9 +15,15 @@ import response.soft.core.Core;
 import response.soft.core.RequestMessage;
 import response.soft.core.ResponseMessage;
 import response.soft.core.datatable.model.DataTableRequest;
+import response.soft.entities.StoreInProduct;
 import response.soft.entities.StoreOutProduct;
+import response.soft.model.StoreInProductModel;
 import response.soft.model.StoreOutProductModel;
+import response.soft.model.view.SalesProductViewModel;
+import response.soft.model.view.StoreInProductsViewModel;
+import response.soft.model.view.StoreSalesProductViewModel;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -33,40 +41,47 @@ public class StoreSalesProductService extends BaseService<StoreOutProduct> {
         Core.runTimeModelType.set(StoreOutProductModel.class);
     }
 
+    @Autowired
+    private StoreInProductService storeInProductService;
+
     public ResponseMessage saveStoreSalesProducts(RequestMessage requestMessage) {
         ResponseMessage responseMessage;// = new ResponseMessage();
-        StoreOutProductModel stockInModel;
-        //byte[] imageByte;
-        StoreOutProductModel searchDuplicateStoreOutProductModel;
-        List<StoreOutProductModel> foundDuplicateStoreOutProductModelList;
+        StoreSalesProductViewModel storeSalesProductViewModel;
+        List<SalesProductViewModel> salesProductViewModelList;
+
+        List<StoreInProductModel> storeInProductModelList;
+        StoreInProductModel whereConditionSIN,updateSIN;
+
+
         try {
-            stockInModel = Core.processRequestMessage(requestMessage, StoreOutProductModel.class);
-            // "name", "category_id", "model_no", "brand", "barcode"
-            // search for duplicate product
+            storeSalesProductViewModel = Core.processRequestMessage(requestMessage, StoreSalesProductViewModel.class);
 
-            /*
-            if (stockInModel != null && !ObjectUtils.isEmpty(stockInModel)) {
-                searchDuplicateStockModel = new StoreOutProductModel();
-                searchDuplicateStockModel.setName(stockInModel.getName());
-                searchDuplicateStockModel.setCategoryId(stockInModel.getCategoryId());
-                searchDuplicateStockModel.setBrandId(stockInModel.getBrandId());
-                searchDuplicateStockModel.setModelNo(stockInModel.getModelNo());
-                searchDuplicateStockModel.setBarcode(stockInModel.getBarcode());
+            String jsonString = Core.jsonMapper.writeValueAsString(requestMessage.list);
 
-                foundDuplicateStock = this.getAllByConditionWithActive(searchDuplicateStockModel);
-                if (foundDuplicateStock.size() != 0) {
-                    responseMessage = this.buildResponseMessage();
-                    responseMessage.httpStatus = HttpStatus.CONFLICT.value();
-                    responseMessage.message = "Duplicate product found";
-                    return responseMessage;
+
+            salesProductViewModelList = jsonMapper.readValue(
+                    jsonString, new TypeReference<List<SalesProductViewModel>>() {});
+            Integer salesQty;
+            for(SalesProductViewModel salesProductViewModel: salesProductViewModelList){
+
+                salesQty = salesProductViewModel.getSalesQty();
+
+                whereConditionSIN = new StoreInProductModel();
+                whereConditionSIN.setProductId(salesProductViewModel.getProductId());
+                whereConditionSIN.setProductStatus(InventoryEnum.ProductStatus.AVAILABLE.get());
+
+                storeInProductModelList =  this.storeInProductService.getAllByConditionWithActive(whereConditionSIN,salesQty);
+
+                for(StoreInProductModel storeInProductModel: storeInProductModelList){
+                    StoreInProductModel updateStoreInProductModel = storeInProductModel;
+                    updateStoreInProductModel.setProductStatus(InventoryEnum.ProductStatus.SOLD.get());
+                    this.storeInProductService.update(updateStoreInProductModel);
                 }
-            }*/
 
-/*
-            if (stockInModel.getBase64ImageString() != null && stockInModel.getBase64ImageString().length() > 0) {
-                imageByte = Base64.decodeBase64(stockInModel.getBase64ImageString());
-                stockInModel.setImage(imageByte);
-            }*/
+
+            }
+
+
 
             /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(stockInModel);
             for (ConstraintViolation<CountryModel> violation : violations) {
@@ -74,10 +89,10 @@ public class StoreSalesProductService extends BaseService<StoreOutProduct> {
             }*/
 
             //stockInModel = Core.getTrimmedModel(stockInModel);
-            stockInModel = this.save(stockInModel);
+            //stockInModel = this.save(stockInModel);
             //stockInModel.setBase64ImageString(new String(stockInModel.getImage()));
-            responseMessage = this.buildResponseMessage(stockInModel);
-
+            responseMessage = this.buildResponseMessage();
+/*
             if (stockInModel != null) {
                 responseMessage.httpStatus = HttpStatus.CREATED.value();
                 responseMessage.message = "StoreOutProduct save successfully!";
@@ -86,7 +101,7 @@ public class StoreSalesProductService extends BaseService<StoreOutProduct> {
                 responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY.value();
                 responseMessage.message = "Failed to save StoreOutProduct";
                 //this.rollBack();
-            }
+            }*/
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
             ex.printStackTrace();
