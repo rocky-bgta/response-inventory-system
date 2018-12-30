@@ -17,10 +17,9 @@ import response.soft.core.RequestMessage;
 import response.soft.core.ResponseMessage;
 import response.soft.core.datatable.model.DataTableRequest;
 import response.soft.entities.StoreInProduct;
-import response.soft.model.ProductModel;
 import response.soft.model.StockModel;
 import response.soft.model.StoreInProductModel;
-import response.soft.model.view.ProductViewModel;
+import response.soft.model.view.SalesProductViewModel;
 import response.soft.model.view.StoreInProductsViewModel;
 
 import java.util.*;
@@ -401,7 +400,7 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
 
     public ResponseMessage getProductListByIdentificationIds(RequestMessage requestMessage,UUID storeId, String barcode, String serialNo){
         ResponseMessage responseMessage;
-        List<ProductViewModel> productViewModelList=null;
+        List<SalesProductViewModel> salesProductViewModelList =null;
         //List<StoreInProductModel> storeInProductModelList=null;
         //StoreInProductModel whereConditionStoreInProductModel;
 
@@ -467,11 +466,11 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
 
               hql = queryBuilder.toString();
 
-              productViewModelList = this.executeHqlQuery(hql,ProductViewModel.class,SqlEnum.QueryType.Join.get());
+              salesProductViewModelList = this.executeHqlQuery(hql,SalesProductViewModel.class,SqlEnum.QueryType.Join.get());
             }
 
-            if(productViewModelList!=null){
-                responseMessage = buildResponseMessage(productViewModelList);
+            if(salesProductViewModelList !=null){
+                responseMessage = buildResponseMessage(salesProductViewModelList);
                 responseMessage.httpStatus = HttpStatus.FOUND.value();
                 responseMessage.message = "Retrieve all available product";
             }else {
