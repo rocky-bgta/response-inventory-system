@@ -22,6 +22,8 @@ public class ProductViewModel extends BaseModel {
     private String image;
     private Double salesPrice;
     private Integer salesQty;
+    private String serialNo;
+    private Integer supportPeriodInMonth;
     private Double totalPrice;
 }
 
