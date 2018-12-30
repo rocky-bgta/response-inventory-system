@@ -576,16 +576,16 @@ public class Dao<T> extends BaseDao {
             session.beginTransaction();
             Query q = session.createQuery(hql);
 
-            /*
-            if (Core.pageOffset.get() != 0 && Core.pageOffset.get() != null) {
-                q.setFirstResult(Core.pageOffset.get());
-            }
-
-            if (Core.pageSize.get() != 0 && Core.pageSize.get() != null) {
-                q.setMaxResults(Core.pageSize.get());
-            }*/
-
             if (SqlEnum.QueryType.Join.get() == queryType) {
+
+                if (Core.pageOffset.get() != 0 && Core.pageOffset.get() != null) {
+                    q.setFirstResult(Core.pageOffset.get());
+                }
+
+                if (Core.pageSize.get() != 0 && Core.pageSize.get() != null) {
+                    q.setMaxResults(Core.pageSize.get());
+                }
+
                 result = q.getResultList();
 
                 if (result.size() > 0) {
@@ -626,11 +626,10 @@ public class Dao<T> extends BaseDao {
             }
 
             //========== set search count for data table =======================
-            if(result!=null && (SqlEnum.QueryType.Join.get()==queryType || SqlEnum.QueryType.Select.get()==queryType))
-                Core.recordsFilteredCount.set((long) result.size());
-
-            if(result.size()>0 && SqlEnum.QueryType.Join.get()==queryType)
+            if(result!=null && (SqlEnum.QueryType.Join.get()==queryType || SqlEnum.QueryType.Select.get()==queryType)){
                 Core.totalRowCount.set((long)result.size());
+                Core.recordsFilteredCount.set((long) result.size());
+            }
 
             // this.setTotalActiveRecordCount(clazz);
             //========== set search count for data table =======================

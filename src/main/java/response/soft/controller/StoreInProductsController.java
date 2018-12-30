@@ -77,7 +77,7 @@ public class StoreInProductsController {
                                                                    @PathVariable String barcode ,
                                                                    @PathVariable String serialNo) {
         ResponseMessage responseMessage;
-        responseMessage = this.storeInProductService.getProductListByIdentificationIds(storeId,barcode,serialNo);
+        responseMessage = this.storeInProductService.getProductListByIdentificationIds(requestMessage,storeId,barcode,serialNo);
         return new ResponseEntity(responseMessage,HttpStatus.OK);
     }
 }

@@ -399,15 +399,18 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
         return responseMessage;
     }
 
-    public ResponseMessage getProductListByIdentificationIds(UUID storeId, String barcode, String serialNo){
+    public ResponseMessage getProductListByIdentificationIds(RequestMessage requestMessage,UUID storeId, String barcode, String serialNo){
         ResponseMessage responseMessage;
         List<ProductViewModel> productViewModelList=null;
         //List<StoreInProductModel> storeInProductModelList=null;
         //StoreInProductModel whereConditionStoreInProductModel;
 
+
         StringBuilder queryBuilder = new StringBuilder();
         String hql;
         try {
+            Core.processRequestMessage(requestMessage);
+
             if(storeId!=null){
 
               queryBuilder.append("SELECT p.id AS productId,  ")
@@ -445,7 +448,18 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
                       "p.barcode, " +
                       "p.image, " +
                       "sip.storeId ")
-              .append("ORDER BY sip.storeId");
+              .append("ORDER BY sip.storeId ");
+
+
+                //for the time being omit this portion of data table
+               /*
+                if (Core.shortColumnName.get() != null && Core.shortColumnName.get() != ""){
+                  queryBuilder.append(", p."+ Core.shortColumnName.get() + " " + Core.shortDirection.get().toUpperCase());
+                }
+
+                */
+
+
 
               hql = queryBuilder.toString();
 
