@@ -11,6 +11,8 @@ import java.util.UUID;
 @EqualsAndHashCode
 public class ProductViewModel extends BaseModel {
     private UUID productId;
+    private UUID stockId;
+    private UUID stockInProductId;
     private Integer available;
     private String productName;
     private String categoryName;
@@ -20,10 +22,15 @@ public class ProductViewModel extends BaseModel {
     private String description;
     private String barcode;
     private String image;
+
+    //=========================
     private Double salesPrice;
     private Integer salesQty;
     private String serialNo;
     private Integer supportPeriodInMonth;
     private Double totalPrice;
+
+
+
 }
 

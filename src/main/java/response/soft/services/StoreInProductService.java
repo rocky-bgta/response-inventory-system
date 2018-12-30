@@ -414,6 +414,8 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
             if(storeId!=null){
 
               queryBuilder.append("SELECT p.id AS productId,  ")
+                      .append("sip.stockId, ")
+                      .append("sip.id as stockInProductId, ")
                       .append("count(sip.productId) AS available, ")
                       .append("p.name AS productName, ")
                       .append("cat.name AS categoryName, ")
@@ -447,7 +449,9 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
                       "p.description, " +
                       "p.barcode, " +
                       "p.image, " +
-                      "sip.storeId ")
+                      "sip.storeId, "+
+                      "sip.stockId, "+
+                      "sip.id ")
               .append("ORDER BY sip.storeId ");
 
 
