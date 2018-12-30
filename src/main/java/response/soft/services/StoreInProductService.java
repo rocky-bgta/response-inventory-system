@@ -399,7 +399,7 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
         return responseMessage;
     }
 
-    public ResponseMessage getProductListByStoreId(UUID storeId){
+    public ResponseMessage getProductListByIdentificationIds(UUID storeId, String barcode, String serialNo){
         ResponseMessage responseMessage;
         List<ProductViewModel> productViewModelList=null;
         //List<StoreInProductModel> storeInProductModelList=null;
@@ -425,8 +425,16 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
               .append("INNER JOIN Category cat ON p.categoryId = cat.id ")
               .append("INNER JOIN Brand brn ON p.brandId = brn.id ")
               .append("WHERE sip.status = "+ InventoryEnum.ProductStatus.AVAILABLE.get() +" AND sip.storeId = '")
-              .append(storeId+"' ")
-              .append("GROUP BY " +
+              .append(storeId+"' ");
+
+              if(!StringUtils.isEmpty(barcode)  && !StringUtils.equals(barcode,"undefined"))
+                queryBuilder.append("AND p.barcode = '" + barcode+"' ");
+
+              if(!StringUtils.isEmpty(serialNo) && !StringUtils.equals(serialNo,"undefined"))
+                  queryBuilder.append("AND sip.serialNo = '"+ serialNo+"' ");
+
+
+                  queryBuilder.append("GROUP BY " +
                       "p.id , " +
                       "p.name, " +
                       "cat.name, " +

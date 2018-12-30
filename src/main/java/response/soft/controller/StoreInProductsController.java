@@ -71,10 +71,13 @@ public class StoreInProductsController {
 
     @ApiOperation(value ="", response = Object.class)
     @ResponseStatus(HttpStatus.OK)
-    @RequestMapping(value = "/store-id/{id}",method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseMessage> getProductListByStoreId(@RequestBody RequestMessage requestMessage, @PathVariable UUID id) {
+    @RequestMapping(value = "/identification-ids/{storeId}/{barcode}/{serialNo}",method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ResponseMessage> getProductListByIdentificationIds(@RequestBody RequestMessage requestMessage,
+                                                                   @PathVariable UUID storeId,
+                                                                   @PathVariable String barcode ,
+                                                                   @PathVariable String serialNo) {
         ResponseMessage responseMessage;
-        responseMessage = this.storeInProductService.getProductListByStoreId(id);
+        responseMessage = this.storeInProductService.getProductListByIdentificationIds(storeId,barcode,serialNo);
         return new ResponseEntity(responseMessage,HttpStatus.OK);
     }
 }

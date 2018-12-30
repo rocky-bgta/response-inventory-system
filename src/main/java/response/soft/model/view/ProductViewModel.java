@@ -20,5 +20,8 @@ public class ProductViewModel extends BaseModel {
     private String description;
     private String barcode;
     private String image;
+    private Double salesPrice;
+    private Integer salesQty;
+    private Double totalPrice;
 }
 
