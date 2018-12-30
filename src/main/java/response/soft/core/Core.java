@@ -218,6 +218,13 @@ public abstract class Core {
         String shortColumnName;
         String shortDirection;
 
+        Core.isDataTablePagination.remove();
+        Core.pageOffset.remove();
+        Core.pageSize.remove();
+        Core.dataTableDraw.remove();
+        Core.shortDirection.remove();
+        Core.shortColumnName.remove();
+
         try {
             if (requestMessage.data != null && !ObjectUtils.isEmpty(requestMessage.data)) {
                 requestData = requestMessage.data;
