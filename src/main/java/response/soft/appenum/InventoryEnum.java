@@ -78,4 +78,29 @@ public class InventoryEnum {
         }
 
     }
+
+    public enum PaymentStatus {
+        PAID(1),
+        PARTIAL(2),
+        DUE(3);
+        private int enumOrdinalValue;
+        PaymentStatus(int enumOrdinalValue){
+            this.enumOrdinalValue=enumOrdinalValue;
+        }
+        public int get() {
+            return this.enumOrdinalValue;
+        }
+
+        private static final Map<String, Integer> MAP = new TreeMap<>();
+
+        static {
+            for (PaymentStatus kv : PaymentStatus.values()) {
+                MAP.put(kv.name(), kv.get());
+            }
+        }
+        public static Map<String, Integer> getMAP() {
+            return MAP;
+        }
+
+    }
 }

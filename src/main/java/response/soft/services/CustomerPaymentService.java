@@ -9,7 +9,7 @@ import response.soft.entities.CustomerPayment;
 import response.soft.model.CustomerPaymentModel;
 
 @Service
-public class DuePaymentService extends BaseService<CustomerPayment> {
+public class CustomerPaymentService extends BaseService<CustomerPayment> {
     private static final Logger log = LoggerFactory.getLogger(StoreInProductService.class);
 
     @Override

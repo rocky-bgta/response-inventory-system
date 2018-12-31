@@ -18,7 +18,7 @@ import java.util.UUID;
 @DynamicInsert
 @DynamicUpdate
 @Table(name = "invoice_balance")
-public class Invoice_Balance extends BaseEntity {
+public class InvoiceBalance extends BaseEntity {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")

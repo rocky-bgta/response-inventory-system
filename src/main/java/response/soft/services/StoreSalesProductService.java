@@ -17,9 +17,7 @@ import response.soft.core.ResponseMessage;
 import response.soft.core.datatable.model.DataTableRequest;
 import response.soft.entities.StoreInProduct;
 import response.soft.entities.StoreOutProduct;
-import response.soft.model.ProductSalesModel;
-import response.soft.model.StoreInProductModel;
-import response.soft.model.StoreOutProductModel;
+import response.soft.model.*;
 import response.soft.model.view.SalesProductViewModel;
 import response.soft.model.view.StoreInProductsViewModel;
 import response.soft.model.view.StoreSalesProductViewModel;
@@ -43,6 +41,9 @@ public class StoreSalesProductService extends BaseService<StoreOutProduct> {
     }
 
     @Autowired
+    private StockService stockService;
+
+    @Autowired
     private StoreInProductService storeInProductService;
 
     @Autowired
@@ -51,34 +52,52 @@ public class StoreSalesProductService extends BaseService<StoreOutProduct> {
     @Autowired
     private ProductSalesService productSalesService;
 
+    @Autowired
+    private InvoiceBalanceService invoiceBalanceService;
+
+    @Autowired
+    private CustomerPaymentService customerPaymentService;
+
     public ResponseMessage saveStoreSalesProducts(RequestMessage requestMessage) {
-        ResponseMessage responseMessage;// = new ResponseMessage();
+        ResponseMessage responseMessage;
         StoreSalesProductViewModel storeSalesProductViewModel;
         List<SalesProductViewModel> salesProductViewModelList;
 
         List<StoreInProductModel> storeInProductModelList;
-        StoreInProductModel whereConditionSIN,updateSIN;
+        StoreInProductModel whereConditionSIN;
+        Integer salesQty;
 
-        List<StoreOutProductModel> savedStoreOutProductModelList;
+        //List<StoreOutProductModel> savedStoreOutProductModelList;
+        UUID storeId;
         UUID customerId;
         Integer salesMethod;
+        String invoiceNo;
+        InvoiceBalanceModel invoiceBalanceModel;
+        CustomerPaymentModel customerPaymentModel;
+        StockModel stockModel;
+
+        StoreOutProductModel storeOutProductModel,savedStoreOutProductModel;
+        StoreInProductModel updatedStoreInProductModel;
+        ProductSalesModel productSalesModel;
 
         try {
+
+            invoiceNo = "inv-"+UUID.randomUUID().toString();
+
             storeSalesProductViewModel = Core.processRequestMessage(requestMessage, StoreSalesProductViewModel.class);
 
             salesProductViewModelList = storeSalesProductViewModel.getSalesProductViewModelList();
+            storeId = storeSalesProductViewModel.getStoreId();
             customerId = storeSalesProductViewModel.getCustomerId();
             salesMethod = storeSalesProductViewModel.getSalesMethod();
 
             Date invoiceDate = new Date();
+            Double paidAmount = storeSalesProductViewModel.getPaidAmount();
+            Double dueAmount = storeSalesProductViewModel.getDueAmount();
+            Double grandTotal = storeSalesProductViewModel.getGrandTotal();
 
-//
-//            String jsonString = Core.jsonMapper.writeValueAsString(storeSalesProductViewModel.getSalesProductViewModelList());
-//            salesProductViewModelList = jsonMapper.readValue(
-//                    jsonString, new TypeReference<List<SalesProductViewModel>>() {});
-//
 
-            Integer salesQty;
+
             for(SalesProductViewModel salesProductViewModel: salesProductViewModelList){
 
                 salesQty = salesProductViewModel.getSalesQty();
@@ -92,10 +111,20 @@ public class StoreSalesProductService extends BaseService<StoreOutProduct> {
 
 
 
-                StoreOutProductModel storeOutProductModel,savedStoreOutProductModel;
-                StoreInProductModel updatedStoreInProductModel;
-                ProductSalesModel productSalesModel;
+
                 for(StoreInProductModel storeInProductModel: storeInProductModelList){
+
+                    /*insert out record into stock*/
+                    stockModel = new StockModel();
+                    stockModel.setStoreId(storeId);
+                    stockModel.setProductId(storeInProductModel.getProductId());
+                    stockModel.setInOut(InventoryEnum.Stock.STOCK_OUT.get());
+                    stockModel.setQuantity(1);
+                    stockModel.setUnitPrice(storeInProductModel.getPrice());
+                    stockModel.setTotal(storeInProductModel.getPrice());
+                    this.stockService.save(stockModel);
+
+
                     /* update store-in product */
                     StoreInProductModel changeProductStatusStoreInProductModel = storeInProductModel;
                     changeProductStatusStoreInProductModel.setProductStatus(InventoryEnum.ProductStatus.SOLD.get());
@@ -123,16 +152,32 @@ public class StoreSalesProductService extends BaseService<StoreOutProduct> {
                     productSalesModel.setDate(invoiceDate);
                     productSalesModel.setSupportPeriodInMonth(salesProductViewModel.getSupportPeriodInMonth());
                     productSalesModel.setSerialNo(salesProductViewModel.getSerialNo());
+                    productSalesModel.setInvoiceNo(invoiceNo);
                     this.productSalesService.save(productSalesModel);
 
                 }
+                // insert data into invoice balance
+                invoiceBalanceModel = new InvoiceBalanceModel();
+                invoiceBalanceModel.setInvoiceNo(invoiceNo);
+                invoiceBalanceModel.setPaidAmount(paidAmount);
+                invoiceBalanceModel.setDueAmount(dueAmount);
+                invoiceBalanceModel.setGrandTotal(grandTotal);
+                invoiceBalanceModel.setDate(invoiceDate);
+                this.invoiceBalanceService.save(invoiceBalanceModel);
 
-                // insert data to store out table
 
-                //savedStoreOutProductModelList = this.storeOutProductService.saveStoreOutProduct(storeInProductModelList);
+                // insert data into customer payment
+                customerPaymentModel = new CustomerPaymentModel();
+                customerPaymentModel.setCustomerId(customerId);
+                customerPaymentModel.setInvoiceNo(invoiceNo);
+                customerPaymentModel.setPaidAmount(paidAmount);
+                customerPaymentModel.setDueAmount(dueAmount);
+                customerPaymentModel.setGrandTotal(grandTotal);
 
-                //saveStoreOutProductModel = this.save(storeOutProductModel);
+                customerPaymentModel.setPaidStatus(InventoryEnum.PaymentStatus.PAID.get());
 
+                customerPaymentModel.setDate(invoiceDate);
+                this.customerPaymentService.save(customerPaymentModel);
 
 
 

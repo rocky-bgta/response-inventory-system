@@ -13,6 +13,7 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import response.soft.appenum.InventoryEnum;
 import response.soft.constant.DbConstant;
 import response.soft.core.KeyValueModel;
 
@@ -363,4 +364,10 @@ public final class AppUtils {
         }
         return keyValueModelList;
     }
+
+  /*  public static Integer getPaymentStatus(Double paid, Double due, Double grandTotal){
+        if(paid==due){
+            return InventoryEnum.PaymentStatus.PAID.get();
+        }else if(paid<du)
+    }*/
 }
