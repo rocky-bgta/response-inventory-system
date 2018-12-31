@@ -254,14 +254,14 @@ public abstract class Core {
 
             if (clazz != null) {
                 convertedObject = Core.jsonMapper.convertValue(requestData, clazz);
-                trimmedObject = Core.getTrimmedModel(convertedObject);
+                //trimmedObject = Core.getTrimmedModel(convertedObject);
             }
 
         } catch (Exception ex) {
             ex.printStackTrace();
             throw ex;
         }
-        return (T) trimmedObject;
+        return (T) convertedObject;
     }
 
     public ResponseMessage buildFailedResponseMessage() {

@@ -56,11 +56,13 @@ public class StoreSalesProductService extends BaseService<StoreOutProduct> {
         try {
             storeSalesProductViewModel = Core.processRequestMessage(requestMessage, StoreSalesProductViewModel.class);
 
-            String jsonString = Core.jsonMapper.writeValueAsString(requestMessage.list);
+            salesProductViewModelList = storeSalesProductViewModel.getSalesProductViewModelList();
+//
+//            String jsonString = Core.jsonMapper.writeValueAsString(storeSalesProductViewModel.getSalesProductViewModelList());
+//            salesProductViewModelList = jsonMapper.readValue(
+//                    jsonString, new TypeReference<List<SalesProductViewModel>>() {});
+//
 
-
-            salesProductViewModelList = jsonMapper.readValue(
-                    jsonString, new TypeReference<List<SalesProductViewModel>>() {});
             Integer salesQty;
             for(SalesProductViewModel salesProductViewModel: salesProductViewModelList){
 

@@ -13,7 +13,6 @@ import response.soft.core.datatable.model.DataTableRequest;
 public class RequestMessage {
     public String token;
     public Object data;
-    public Object list;
     public Integer pageOffset;
     public Integer pageSize;
 
