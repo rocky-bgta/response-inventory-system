@@ -365,9 +365,15 @@ public final class AppUtils {
         return keyValueModelList;
     }
 
-  /*  public static Integer getPaymentStatus(Double paid, Double due, Double grandTotal){
-        if(paid==due){
-            return InventoryEnum.PaymentStatus.PAID.get();
-        }else if(paid<du)
-    }*/
+    public static Integer getPaymentStatus(Double paid, Double grandTotal){
+        Integer paymentStatus=0;
+        if(paid==grandTotal){
+            paymentStatus = InventoryEnum.PaymentStatus.PAID.get();
+        }else if(paid==0){
+            paymentStatus = InventoryEnum.PaymentStatus.DUE.get();
+        }else if(paid<grandTotal){
+            paymentStatus = InventoryEnum.PaymentStatus.PARTIAL.get();
+        }
+        return paymentStatus;
+    }
 }

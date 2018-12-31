@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import response.soft.Utils.AppUtils;
 import response.soft.appenum.InventoryEnum;
 import response.soft.appenum.SqlEnum;
 import response.soft.core.BaseService;
@@ -74,7 +75,12 @@ public class StoreSalesProductService extends BaseService<StoreOutProduct> {
         String invoiceNo;
         InvoiceBalanceModel invoiceBalanceModel;
         CustomerPaymentModel customerPaymentModel;
-        StockModel stockModel;
+
+        //===== stock variable ========================
+        StockModel stockModel, whereConditionStockModel;
+        //List<StockModel> stockModelList;
+        Double unitPrice,totalPrice;
+        //=============================================
 
         StoreOutProductModel storeOutProductModel,savedStoreOutProductModel;
         StoreInProductModel updatedStoreInProductModel;
@@ -90,6 +96,7 @@ public class StoreSalesProductService extends BaseService<StoreOutProduct> {
             storeId = storeSalesProductViewModel.getStoreId();
             customerId = storeSalesProductViewModel.getCustomerId();
             salesMethod = storeSalesProductViewModel.getSalesMethod();
+            Integer paymentStatus;
 
             Date invoiceDate = new Date();
             Double paidAmount = storeSalesProductViewModel.getPaidAmount();
@@ -102,30 +109,40 @@ public class StoreSalesProductService extends BaseService<StoreOutProduct> {
 
                 salesQty = salesProductViewModel.getSalesQty();
 
+                // =========== First update stock =========================================================
+                whereConditionStockModel = new StockModel();
+                whereConditionStockModel.setStoreId(storeId);
+                whereConditionStockModel.setProductId(salesProductViewModel.getProductId());
+                stockModel = this.stockService.getAllByConditionWithActive(whereConditionStockModel).get(0);
+                unitPrice = stockModel.getUnitPrice();
+
+                totalPrice = unitPrice*salesQty;
+
+                stockModel = new StockModel();
+                stockModel.setStoreId(storeId);
+                stockModel.setProductId(salesProductViewModel.getProductId());
+                stockModel.setInOut(InventoryEnum.Stock.STOCK_OUT.get());
+                stockModel.setQuantity(salesQty);
+                stockModel.setUnitPrice(unitPrice);
+                stockModel.setTotal(totalPrice);
+                this.stockService.save(stockModel);
+                // =========== First update stock end =========================================================
+
+
+                // get available required products from stock ==========================================
                 whereConditionSIN = new StoreInProductModel();
                 whereConditionSIN.setProductId(salesProductViewModel.getProductId());
                 whereConditionSIN.setProductStatus(InventoryEnum.ProductStatus.AVAILABLE.get());
 
                 storeInProductModelList =
                         this.storeInProductService.getAllByConditionWithActive(whereConditionSIN,salesQty);
-
+                //========================================================================================
 
 
 
                 for(StoreInProductModel storeInProductModel: storeInProductModelList){
 
-                    /*insert out record into stock*/
-                    stockModel = new StockModel();
-                    stockModel.setStoreId(storeId);
-                    stockModel.setProductId(storeInProductModel.getProductId());
-                    stockModel.setInOut(InventoryEnum.Stock.STOCK_OUT.get());
-                    stockModel.setQuantity(1);
-                    stockModel.setUnitPrice(storeInProductModel.getPrice());
-                    stockModel.setTotal(storeInProductModel.getPrice());
-                    this.stockService.save(stockModel);
-
-
-                    /* update store-in product */
+                    /* update store-in product to sold product */
                     StoreInProductModel changeProductStatusStoreInProductModel = storeInProductModel;
                     changeProductStatusStoreInProductModel.setProductStatus(InventoryEnum.ProductStatus.SOLD.get());
                     changeProductStatusStoreInProductModel.setSerialNo(salesProductViewModel.getSerialNo());
@@ -174,38 +191,19 @@ public class StoreSalesProductService extends BaseService<StoreOutProduct> {
                 customerPaymentModel.setDueAmount(dueAmount);
                 customerPaymentModel.setGrandTotal(grandTotal);
 
-                customerPaymentModel.setPaidStatus(InventoryEnum.PaymentStatus.PAID.get());
+                paymentStatus = AppUtils.getPaymentStatus(paidAmount,grandTotal);
+
+                customerPaymentModel.setPaidStatus(paymentStatus);
 
                 customerPaymentModel.setDate(invoiceDate);
                 this.customerPaymentService.save(customerPaymentModel);
 
-
-
-
-
             }
 
-
-
-            /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(stockInModel);
-            for (ConstraintViolation<CountryModel> violation : violations) {
-                log.error(violation.getMessage());
-            }*/
-
-            //stockInModel = Core.getTrimmedModel(stockInModel);
-            //stockInModel = this.save(stockInModel);
-            //stockInModel.setBase64ImageString(new String(stockInModel.getImage()));
             responseMessage = this.buildResponseMessage();
-/*
-            if (stockInModel != null) {
-                responseMessage.httpStatus = HttpStatus.CREATED.value();
-                responseMessage.message = "StoreOutProduct save successfully!";
-                //this.commit();
-            } else {
-                responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY.value();
-                responseMessage.message = "Failed to save StoreOutProduct";
-                //this.rollBack();
-            }*/
+            responseMessage.httpStatus = HttpStatus.CREATED.value();
+            responseMessage.message="Sales Invoice generated successfully";
+
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
             ex.printStackTrace();
