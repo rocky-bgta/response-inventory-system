@@ -124,6 +124,7 @@ public class StoreSalesProductService extends BaseService<StoreOutProduct> {
                 stockModel.setInOut(InventoryEnum.Stock.STOCK_OUT.get());
                 stockModel.setQuantity(salesQty);
                 stockModel.setUnitPrice(unitPrice);
+                stockModel.setDate(invoiceDate);
                 stockModel.setTotal(totalPrice);
                 this.stockService.save(stockModel);
                 // =========== First update stock end =========================================================
@@ -131,6 +132,7 @@ public class StoreSalesProductService extends BaseService<StoreOutProduct> {
 
                 // get available required products from stock ==========================================
                 whereConditionSIN = new StoreInProductModel();
+                whereConditionSIN.setStoreId(storeId);
                 whereConditionSIN.setProductId(salesProductViewModel.getProductId());
                 whereConditionSIN.setProductStatus(InventoryEnum.ProductStatus.AVAILABLE.get());
 
@@ -173,32 +175,34 @@ public class StoreSalesProductService extends BaseService<StoreOutProduct> {
                     this.productSalesService.save(productSalesModel);
 
                 }
-                // insert data into invoice balance
-                invoiceBalanceModel = new InvoiceBalanceModel();
-                invoiceBalanceModel.setInvoiceNo(invoiceNo);
-                invoiceBalanceModel.setPaidAmount(paidAmount);
-                invoiceBalanceModel.setDueAmount(dueAmount);
-                invoiceBalanceModel.setGrandTotal(grandTotal);
-                invoiceBalanceModel.setDate(invoiceDate);
-                this.invoiceBalanceService.save(invoiceBalanceModel);
-
-
-                // insert data into customer payment
-                customerPaymentModel = new CustomerPaymentModel();
-                customerPaymentModel.setCustomerId(customerId);
-                customerPaymentModel.setInvoiceNo(invoiceNo);
-                customerPaymentModel.setPaidAmount(paidAmount);
-                customerPaymentModel.setDueAmount(dueAmount);
-                customerPaymentModel.setGrandTotal(grandTotal);
-
-                paymentStatus = AppUtils.getPaymentStatus(paidAmount,grandTotal);
-
-                customerPaymentModel.setPaidStatus(paymentStatus);
-
-                customerPaymentModel.setDate(invoiceDate);
-                this.customerPaymentService.save(customerPaymentModel);
 
             }
+
+            // insert data into invoice balance
+            invoiceBalanceModel = new InvoiceBalanceModel();
+            invoiceBalanceModel.setInvoiceNo(invoiceNo);
+            invoiceBalanceModel.setPaidAmount(paidAmount);
+            invoiceBalanceModel.setDueAmount(dueAmount);
+            invoiceBalanceModel.setGrandTotal(grandTotal);
+            invoiceBalanceModel.setDate(invoiceDate);
+            this.invoiceBalanceService.save(invoiceBalanceModel);
+
+
+            // insert data into customer payment
+            customerPaymentModel = new CustomerPaymentModel();
+            customerPaymentModel.setCustomerId(customerId);
+            customerPaymentModel.setInvoiceNo(invoiceNo);
+            customerPaymentModel.setPaidAmount(paidAmount);
+            customerPaymentModel.setDueAmount(dueAmount);
+            customerPaymentModel.setGrandTotal(grandTotal);
+
+            paymentStatus = AppUtils.getPaymentStatus(paidAmount,grandTotal);
+
+            customerPaymentModel.setPaidStatus(paymentStatus);
+
+            customerPaymentModel.setDate(invoiceDate);
+            this.customerPaymentService.save(customerPaymentModel);
+
 
             responseMessage = this.buildResponseMessage();
             responseMessage.httpStatus = HttpStatus.CREATED.value();
