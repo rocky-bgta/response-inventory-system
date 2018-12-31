@@ -17,6 +17,7 @@ public class StoreSalesProductViewModel extends BaseModel {
     private String barcode;
     private String serialNo;
     private Integer salesMethod;
+    private Double paidAmount;
 
 
 }

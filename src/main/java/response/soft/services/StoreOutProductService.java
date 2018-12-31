@@ -6,7 +6,12 @@ import org.springframework.stereotype.Service;
 import response.soft.core.BaseService;
 import response.soft.core.Core;
 import response.soft.entities.StoreOutProduct;
+import response.soft.model.StoreInProductModel;
 import response.soft.model.StoreOutProductModel;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Service
 public class StoreOutProductService extends BaseService<StoreOutProduct> {
@@ -18,5 +23,29 @@ public class StoreOutProductService extends BaseService<StoreOutProduct> {
         Core.runTimeEntityType.remove();
         Core.runTimeEntityType.set(StoreOutProduct.class);
         Core.runTimeModelType.set(StoreOutProductModel.class);
+    }
+
+    public List<StoreOutProductModel> saveStoreOutProduct(List<StoreInProductModel> storeInProductModelList) throws Exception{
+
+        StoreOutProductModel storeOutProductModel,saveStoreOutProductModel;
+        List<StoreOutProductModel> savedStoreOutProductModelList = new ArrayList<>();
+
+        try {
+            for(StoreInProductModel storeInProductModel: storeInProductModelList){
+                storeOutProductModel = new StoreOutProductModel();
+                storeOutProductModel.setStockId(storeInProductModel.getStockId());
+                storeOutProductModel.setStoreId(storeInProductModel.getStoreId());
+                storeOutProductModel.setStoreInProductId(storeInProductModel.getId());
+                storeOutProductModel.setProductId(storeInProductModel.getProductId());
+                storeOutProductModel.setDate(new Date());
+                saveStoreOutProductModel = this.save(storeOutProductModel);
+                savedStoreOutProductModelList.add(saveStoreOutProductModel);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+
+        return savedStoreOutProductModelList;
     }
 }

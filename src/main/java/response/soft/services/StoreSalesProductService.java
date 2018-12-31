@@ -17,6 +17,7 @@ import response.soft.core.ResponseMessage;
 import response.soft.core.datatable.model.DataTableRequest;
 import response.soft.entities.StoreInProduct;
 import response.soft.entities.StoreOutProduct;
+import response.soft.model.ProductSalesModel;
 import response.soft.model.StoreInProductModel;
 import response.soft.model.StoreOutProductModel;
 import response.soft.model.view.SalesProductViewModel;
@@ -44,6 +45,12 @@ public class StoreSalesProductService extends BaseService<StoreOutProduct> {
     @Autowired
     private StoreInProductService storeInProductService;
 
+    @Autowired
+    private StoreOutProductService storeOutProductService;
+
+    @Autowired
+    private ProductSalesService productSalesService;
+
     public ResponseMessage saveStoreSalesProducts(RequestMessage requestMessage) {
         ResponseMessage responseMessage;// = new ResponseMessage();
         StoreSalesProductViewModel storeSalesProductViewModel;
@@ -52,11 +59,19 @@ public class StoreSalesProductService extends BaseService<StoreOutProduct> {
         List<StoreInProductModel> storeInProductModelList;
         StoreInProductModel whereConditionSIN,updateSIN;
 
+        List<StoreOutProductModel> savedStoreOutProductModelList;
+        UUID customerId;
+        Integer salesMethod;
 
         try {
             storeSalesProductViewModel = Core.processRequestMessage(requestMessage, StoreSalesProductViewModel.class);
 
             salesProductViewModelList = storeSalesProductViewModel.getSalesProductViewModelList();
+            customerId = storeSalesProductViewModel.getCustomerId();
+            salesMethod = storeSalesProductViewModel.getSalesMethod();
+
+            Date invoiceDate = new Date();
+
 //
 //            String jsonString = Core.jsonMapper.writeValueAsString(storeSalesProductViewModel.getSalesProductViewModelList());
 //            salesProductViewModelList = jsonMapper.readValue(
@@ -72,13 +87,55 @@ public class StoreSalesProductService extends BaseService<StoreOutProduct> {
                 whereConditionSIN.setProductId(salesProductViewModel.getProductId());
                 whereConditionSIN.setProductStatus(InventoryEnum.ProductStatus.AVAILABLE.get());
 
-                storeInProductModelList =  this.storeInProductService.getAllByConditionWithActive(whereConditionSIN,salesQty);
+                storeInProductModelList =
+                        this.storeInProductService.getAllByConditionWithActive(whereConditionSIN,salesQty);
 
+
+
+                StoreOutProductModel storeOutProductModel,savedStoreOutProductModel;
+                StoreInProductModel updatedStoreInProductModel;
+                ProductSalesModel productSalesModel;
                 for(StoreInProductModel storeInProductModel: storeInProductModelList){
-                    StoreInProductModel updateStoreInProductModel = storeInProductModel;
-                    updateStoreInProductModel.setProductStatus(InventoryEnum.ProductStatus.SOLD.get());
-                    this.storeInProductService.update(updateStoreInProductModel);
+                    /* update store-in product */
+                    StoreInProductModel changeProductStatusStoreInProductModel = storeInProductModel;
+                    changeProductStatusStoreInProductModel.setProductStatus(InventoryEnum.ProductStatus.SOLD.get());
+                    changeProductStatusStoreInProductModel.setSerialNo(salesProductViewModel.getSerialNo());
+                    updatedStoreInProductModel = this.storeInProductService.update(changeProductStatusStoreInProductModel);
+
+
+                    /* insert data to store out table */
+                    storeOutProductModel = new StoreOutProductModel();
+                    storeOutProductModel.setStockId(updatedStoreInProductModel.getStockId());
+                    storeOutProductModel.setStoreId(updatedStoreInProductModel.getStoreId());
+                    storeOutProductModel.setStoreInProductId(updatedStoreInProductModel.getId());
+                    storeOutProductModel.setProductId(updatedStoreInProductModel.getProductId());
+                    storeOutProductModel.setDate(new Date());
+                    savedStoreOutProductModel = this.storeOutProductService.save(storeOutProductModel);
+
+                    // insert data into product sales table
+                    productSalesModel = new ProductSalesModel();
+                    productSalesModel.setStoreOutId(savedStoreOutProductModel.getId());
+                    productSalesModel.setProductId(savedStoreOutProductModel.getProductId());
+                    productSalesModel.setCustomerId(customerId);
+                    productSalesModel.setBuyPrice(updatedStoreInProductModel.getPrice());
+                    productSalesModel.setSalesPrice(salesProductViewModel.getSalesPrice());
+                    productSalesModel.setSalesType(salesMethod);
+                    productSalesModel.setDate(invoiceDate);
+                    productSalesModel.setSupportPeriodInMonth(salesProductViewModel.getSupportPeriodInMonth());
+                    productSalesModel.setSerialNo(salesProductViewModel.getSerialNo());
+                    this.productSalesService.save(productSalesModel);
+
                 }
+
+                // insert data to store out table
+
+                //savedStoreOutProductModelList = this.storeOutProductService.saveStoreOutProduct(storeInProductModelList);
+
+                //saveStoreOutProductModel = this.save(storeOutProductModel);
+
+
+
+
 
 
             }
