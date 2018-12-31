@@ -26,4 +26,5 @@ public class ProductSalesModel extends BaseModel {
     private Date date;
     private Integer supportPeriodInMonth;
     private String serialNo;
+    private String invoiceNo;
 }

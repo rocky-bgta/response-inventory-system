@@ -17,29 +17,35 @@ import java.util.UUID;
 @EqualsAndHashCode
 @DynamicInsert
 @DynamicUpdate
-@Table(name = "sales_balance")
-public class SalesBalance extends BaseEntity {
+@Table(name = "customer_payment")
+public class CustomerPayment extends BaseEntity {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @Column(name = "id", unique = true, nullable = false)
     private UUID id;
 
-    @Column(name = "product_sales_id")
+    @Column(name = "customer_id")
     @NotNull
-    private UUID productSalesId;
+    private UUID customerId;
 
-    @Column(name = "product_id")
+    @Column(name = "invoice_no")
     @NotNull
-    private UUID productId;
+    private String invoiceNo;
 
-    @Column(name = "paid")
-    @NotNull
-    private Double paid;
+    @Column(name = "paid_amount")
+    private Double paidAmount;
 
-    @Column(name = "due")
+    @Column(name = "due_amount")
+    private Double dueAmount;
+
+    @Column(name = "grand_amount")
     @NotNull
-    private Double due;
+    private Double grandTotal;
+
+    @Column(name = "paid_status")
+    @NotNull
+    private Integer paidStatus;
 
     @Column(name = "date")
     @NotNull

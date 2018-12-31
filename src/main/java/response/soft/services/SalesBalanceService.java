@@ -5,20 +5,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import response.soft.core.BaseService;
 import response.soft.core.Core;
-import response.soft.entities.ProductSales;
-import response.soft.entities.SalesBalance;
-import response.soft.model.ProductSalesModel;
+import response.soft.entities.Invoice_Balance;
 import response.soft.model.SalesBalanceModel;
 
 @Service
-public class SalesBalanceService extends BaseService<SalesBalance> {
+public class SalesBalanceService extends BaseService<Invoice_Balance> {
     private static final Logger log = LoggerFactory.getLogger(StoreInProductService.class);
 
     @Override
     protected void initEntityModel() {
         Core.runTimeModelType.remove();
         Core.runTimeEntityType.remove();
-        Core.runTimeEntityType.set(SalesBalance.class);
+        Core.runTimeEntityType.set(Invoice_Balance.class);
         Core.runTimeModelType.set(SalesBalanceModel.class);
     }
 }

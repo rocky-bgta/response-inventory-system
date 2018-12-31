@@ -15,15 +15,13 @@ import java.util.UUID;
 
 @Data
 @EqualsAndHashCode
-public class DuePaymentModel extends BaseModel {
-
+public class CustomerPaymentModel extends BaseModel {
     private UUID id;
-    private UUID salesBalanceId;
     private UUID customerId;
-    private UUID productId;
-    private Double due;
-    private Double paid;
+    private String invoiceNo;
+    private Double paidAmount;
+    private Double dueAmount;
+    private Double grandTotal;
     private Integer paidStatus;
     private Date date;
-
 }

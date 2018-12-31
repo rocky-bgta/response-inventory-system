@@ -362,6 +362,10 @@
                 <constraints nullable="true"/>
             </column>
 
+            <column name="invoice_no" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+
 
             <column name="created_by" type="varchar"></column>
             <column name="updated_by" type="varchar"></column>
@@ -370,20 +374,20 @@
             <column name="status" type="integer"></column>
         </createTable>
 
-        <createTable tableName="sales_balance" remarks="A table to contain all the product sales balance information">
+        <createTable tableName="invoice_balance" remarks="A table to contain all Invoice balance information">
             <column name="id" type="UUID">
                 <constraints nullable="false" unique="true" primaryKey="true"/>
             </column>
-            <column name="product_sales_id" type="UUID">
+            <column name="invoice_no" type="varchar">
                 <constraints nullable="false"/>
             </column>
-            <column name="product_id" type="UUID">
-                <constraints nullable="false"/>
+            <column name="paid_amount" type="double">
+                <constraints nullable="true"/>
             </column>
-            <column name="paid" type="double">
-                <constraints nullable="false"/>
+            <column name="due_amount" type="double">
+                <constraints nullable="true"/>
             </column>
-            <column name="due" type="double">
+            <column name="grand_total" type="double">
                 <constraints nullable="false"/>
             </column>
             <column name="date" type="datetime">
@@ -397,28 +401,30 @@
             <column name="status" type="integer"></column>
         </createTable>
 
-        <createTable tableName="due_payment" remarks="A table to contain all the product payment due information">
+        <createTable tableName="customer_payment" remarks="A table to contain all the customer payment information">
             <column name="id" type="UUID">
                 <constraints nullable="false" unique="true" primaryKey="true"/>
-            </column>
-            <column name="sales_balance_id" type="UUID">
-                <constraints nullable="false"/>
             </column>
             <column name="customer_id" type="UUID">
                 <constraints nullable="false"/>
             </column>
-            <column name="product_id" type="UUID">
+            <column name="invoice_no" type="varchar">
                 <constraints nullable="false"/>
             </column>
-            <column name="due" type="double">
-                <constraints nullable="false"/>
-            </column>
-            <column name="paid" type="double">
+            <column name="paid_amount" type="double">
                 <constraints nullable="true"/>
             </column>
+            <column name="due_amount" type="double">
+                <constraints nullable="true"/>
+            </column>
+            <column name="grand_amount" type="double">
+                <constraints nullable="false"/>
+            </column>
+
             <column name="paid_status" type="integer">
-                <constraints nullable="true"/>
+                <constraints nullable="false"/>
             </column>
+
             <column name="date" type="datetime">
                 <constraints nullable="false"/>
             </column>

@@ -59,4 +59,8 @@ public class ProductSales extends BaseEntity {
     @Column(name = "serial_no")
     private String serialNo;
 
+    @Column(name="invoice_no")
+    @NotNull
+    private String invoiceNo;
+
 }
