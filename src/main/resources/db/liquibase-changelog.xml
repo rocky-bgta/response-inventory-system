@@ -7,9 +7,13 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
   <include file="changelog/01-create-inventory-schema.xml" relativeToChangelogFile="true"/>
+
+
+  <include file="changelog/view-create-inventory-schema.xml" relativeToChangelogFile="true"/>
+
   <!--<include file="changelog/02-insert-data-authors.xml" relativeToChangelogFile="true"/>-->
   <!--<include file="changelog/02-insert-data-books.xml" relativeToChangelogFile="true"/>-->
-    <include file="changelog/category.cvs" relativeToChangelogFile="true"/>
+   <!-- <include file="changelog/category.cvs" relativeToChangelogFile="true"/>-->
 
 
 </databaseChangeLog>

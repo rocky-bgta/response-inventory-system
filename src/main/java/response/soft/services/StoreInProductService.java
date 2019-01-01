@@ -2,6 +2,8 @@ package response.soft.services;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +19,14 @@ import response.soft.core.RequestMessage;
 import response.soft.core.ResponseMessage;
 import response.soft.core.datatable.model.DataTableRequest;
 import response.soft.entities.StoreInProduct;
+import response.soft.entities.view.SalesProductView;
 import response.soft.model.StockModel;
 import response.soft.model.StoreInProductModel;
 import response.soft.model.view.SalesProductViewModel;
 import response.soft.model.view.StoreInProductsViewModel;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -40,6 +45,9 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
 
     @Autowired
     private StockService stockService;
+
+    @Autowired
+    EntityManagerFactory entityManagerFactory;
 
     @Transactional
     public ResponseMessage saveStoreInProducts(RequestMessage requestMessage) {
@@ -410,6 +418,14 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
         try {
             Core.processRequestMessage(requestMessage);
 
+            EntityManager entityManager = entityManagerFactory.createEntityManager();
+            SessionFactory sessionFactory;
+            Session session=null;
+
+                sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
+                session = sessionFactory.openSession();
+
+
             if(storeId!=null){
 
               queryBuilder.append("SELECT p.id AS productId, ")
@@ -461,6 +477,13 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
 
 
               hql = queryBuilder.toString();
+
+              List<SalesProductView> SalesProductViews;
+
+
+              SalesProductViews = session.createQuery("select v from SalesProductView v", SalesProductView.class).getResultList();
+
+                System.out.println(SalesProductViews);
 
               salesProductViewModelList = this.executeHqlQuery(hql,SalesProductViewModel.class,SqlEnum.QueryType.Join.get());
             }
