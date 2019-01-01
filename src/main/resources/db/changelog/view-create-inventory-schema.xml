@@ -14,14 +14,14 @@
                     schemaName="inventory"
                     viewName="sales_product_view">
             SELECT P
-            .ID as productId,
-            sip.store_id as storeId,
+            .ID as product_id,
+            sip.store_id as store_id,
             count(sip.product_id) as available,
-            P.NAME as productName,
-            cat.name as categoryName,
-            brn.name as brandName,
-            P.model_no as modelNo,
-            sip.price as buyPrice,
+            P.NAME as product_name,
+            cat.name as category_name,
+            brn.name as brand_name,
+            P.model_no,
+            sip.price as buy_price,
             P.description,
             P.barcode,
             P.image

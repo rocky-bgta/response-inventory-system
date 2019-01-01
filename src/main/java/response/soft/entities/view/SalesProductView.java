@@ -14,14 +14,14 @@ import java.util.UUID;
 @Table(name = "sales_product_view")
 public class SalesProductView {
     @Id
-    private UUID productid;
-    private UUID storeid;
+    private UUID product_id;
+    private UUID store_id;
     private Integer available;
-    private String productname;
-    private String categoryname;
-    private String brandname;
-    private String modelno;
-    private Double buyprice;
+    private String product_name;
+    private String category_name;
+    private String brand_name;
+    private String model_no;
+    private Double buy_price;
     private String description;
     private String barcode;
     private String image;
