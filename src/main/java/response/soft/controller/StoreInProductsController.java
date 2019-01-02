@@ -2,6 +2,7 @@ package response.soft.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,6 +23,9 @@ public class StoreInProductsController {
 
     @Autowired
     private StoreInProductService storeInProductService;
+
+    @Autowired
+    BeanFactory beanFactory;
 
 
     @ApiOperation(value ="", response = Object.class)
@@ -76,8 +80,10 @@ public class StoreInProductsController {
                                                                    @PathVariable UUID storeId,
                                                                    @PathVariable String barcode ,
                                                                    @PathVariable String serialNo) {
+
+        StoreInProductService storeInProductService = beanFactory.getBean(StoreInProductService.class);
         ResponseMessage responseMessage;
-        responseMessage = this.storeInProductService.getProductListByIdentificationIds(requestMessage,storeId,barcode,serialNo);
+        responseMessage = storeInProductService.getProductListByIdentificationIds(requestMessage,storeId,barcode,serialNo);
         return new ResponseEntity(responseMessage,HttpStatus.OK);
     }
 }
