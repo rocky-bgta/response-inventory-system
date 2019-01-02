@@ -31,7 +31,8 @@ public class SqlEnum {
         UpdateByConditions(7),
         CountRow(8),
         GetOne(9),
-        LikeOrSearch(10);
+        LikeOrSearch(10),
+        View(11);
 
         private int queryType;
 

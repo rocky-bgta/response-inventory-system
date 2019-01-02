@@ -480,10 +480,22 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
 
               List<SalesProductView> SalesProductViews;
 
+              StringBuilder testStringBuilder = new StringBuilder();
+                String testHql = "select v from SalesProductView v where v.storeId='"+storeId+"' ";
+                testStringBuilder.append(testHql);
 
-              SalesProductViews = session.createQuery("select v from SalesProductView v", SalesProductView.class).getResultList();
+                if(!StringUtils.isEmpty(barcode)  && !StringUtils.equals(barcode,"undefined"))
+                    testStringBuilder.append("AND v.barcode = '" + barcode+"' ");
 
-                System.out.println(SalesProductViews);
+                if(!StringUtils.isEmpty(serialNo) && !StringUtils.equals(serialNo,"undefined"))
+                    testStringBuilder.append("AND v.serialNo = '"+ serialNo+"' ");
+
+
+
+
+              SalesProductViews = session.createQuery(testStringBuilder.toString(), SalesProductView.class).getResultList();
+
+              System.out.println(SalesProductViews);
 
               salesProductViewModelList = this.executeHqlQuery(hql,SalesProductViewModel.class,SqlEnum.QueryType.Join.get());
             }
