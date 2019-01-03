@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="01" author="Salahin Rocky">
+        <createTable tableName="product" remarks="A table to contain all the product">
+            <column name="id" type="UUID">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="brand_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="model_no" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <!--<column name="serial_no" type="varchar"></column>-->
+            <column name="price" type="double">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="description" type="varchar"></column>
+            <column name="barcode" type="varchar">
+                <constraints nullable="true" unique="true"/>
+            </column>
+            <column name="image" type="text"></column>
+
+            <column name="created_by" type="varchar"></column>
+            <column name="updated_by" type="varchar"></column>
+            <column name="created_date" type="datetime"></column>
+            <column name="updated_date" type="datetime"></column>
+            <column name="status" type="integer"></column>
+        </createTable>
+        <addUniqueConstraint columnNames="name,category_id,model_no,brand_id,status"
+                             constraintName="unique Product by name, category_id, model_no, barcode,brand_id and status"
+                             schemaName="inventory"
+                             tableName="product"/>
+    </changeSet>
+</databaseChangeLog>

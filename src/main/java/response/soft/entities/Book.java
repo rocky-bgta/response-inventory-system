@@ -1,3 +1,4 @@
+/*
 package response.soft.entities;
 
 import javax.persistence.*;
@@ -48,3 +49,4 @@ public class Book {
         '}';
   }
 }
+*/

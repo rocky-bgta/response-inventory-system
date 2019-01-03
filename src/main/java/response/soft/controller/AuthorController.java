@@ -1,3 +1,4 @@
+/*
 package response.soft.controller;
 
 import io.swagger.annotations.Api;
@@ -30,3 +31,4 @@ public class AuthorController {
         return null;
     }
 }
+*/

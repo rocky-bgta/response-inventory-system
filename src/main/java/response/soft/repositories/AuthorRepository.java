@@ -1,3 +1,4 @@
+/*
 package response.soft.repositories;
 
 
@@ -7,3 +8,4 @@ import response.soft.entities.Author;
 public interface AuthorRepository extends CrudRepository<Author, Integer> {
 
 }
+*/

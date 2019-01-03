@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="01" author="Salahin Rocky">
+        <createTable tableName="store" remarks="A table to contain all the store">
+            <column name="id" type="UUID">
+                <constraints nullable="false" unique="true" primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="owner" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="phone_no" type="varchar">
+                <constraints nullable="true"/>
+            </column>
+            <column name="email" type="varchar">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="address" type="varchar">
+                <constraints nullable="true"/>
+            </column>
+            <column name="comment" type="varchar">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="created_by" type="varchar"></column>
+            <column name="updated_by" type="varchar"></column>
+            <column name="created_date" type="datetime"></column>
+            <column name="updated_date" type="datetime"></column>
+            <column name="status" type="integer"></column>
+        </createTable>
+        <addUniqueConstraint columnNames="name, status"
+                             constraintName="unique store name and status"
+                             schemaName="inventory"
+                             tableName="store"/>
+    </changeSet>
+</databaseChangeLog>

@@ -17,8 +17,8 @@ import java.util.UUID;
 @EqualsAndHashCode
 @DynamicInsert
 @DynamicUpdate
-@Table(name = "store_products_transfer")
-public class StoreProductsTransfer extends BaseEntity {
+@Table(name = "store_product_transfer")
+public class StoreProductTransfer extends BaseEntity {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")

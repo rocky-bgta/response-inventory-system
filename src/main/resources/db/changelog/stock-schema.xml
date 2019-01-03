@@ -7,8 +7,6 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="01" author="Salahin Rocky">
-       <!--
-
 
         <createTable tableName="books"
                      remarks="A table to contain all books">
@@ -32,8 +30,6 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-
-        -->
 
         <createTable tableName="file_upload" remarks="A table to contain all the Uploaded File">
             <column name="id" type="UUID">
@@ -487,7 +483,7 @@
         <!--referencedTableName="authors" referencedColumnNames="id"/>-->
 
 
-      <!--<loadData
+     <!--   <loadData
                 file="db/changelog/seed/category.sql"
                 separator=""
                 quotchar=','
@@ -502,7 +498,7 @@
             <column name="status" type="NUMERIC"></column>
         </loadData>-->
 
-
+        <!--
 
         <sqlFile
                  encoding="utf8"
@@ -550,7 +546,7 @@
                 path="seed/vendor.sql"
                 relativeToChangelogFile="true"
                 splitStatements="true"
-                stripComments="true"/>
+                stripComments="true"/>-->
 
     </changeSet>
 </databaseChangeLog>
