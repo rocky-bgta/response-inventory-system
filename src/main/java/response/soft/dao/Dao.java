@@ -17,7 +17,7 @@ import response.soft.constant.DbConstant;
 import response.soft.core.BaseDao;
 import response.soft.core.BaseHistoryEntity;
 import response.soft.core.Core;
-import response.soft.core.History;
+import response.soft.entities.History;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -46,7 +46,7 @@ public class Dao<T> extends BaseDao {
 
 
     public T save(T t, Boolean insertDataInHistory) throws Exception {
-        BaseHistoryEntity historyEntity;
+        History historyEntity;
         Session session=null;
         try {
             session = getSession();
@@ -80,7 +80,7 @@ public class Dao<T> extends BaseDao {
     public T update(T t, Boolean insertDataInHistory) throws Exception {
         Object primaryKeyValue;
         Object oldEntity;
-        BaseHistoryEntity historyEntity;
+        History historyEntity;
         Session session=null;
         try {
             session = getSession();
@@ -122,7 +122,7 @@ public class Dao<T> extends BaseDao {
 
 
     public Integer deleteSoft(Object id, Boolean insertDataInHistory) throws Exception {
-        BaseHistoryEntity historyEntity;
+        History historyEntity;
         StringBuilder queryBuilderString;
         String entityName,primaryKeyField;
         List selectedUpdateRowList;
@@ -431,7 +431,7 @@ public class Dao<T> extends BaseDao {
         Object value;
         List selectedUpdateRowList;
         String entityName;
-        BaseHistoryEntity historyEntity;
+        History historyEntity;
         Session session=null;
         try {
             session = getSession();
@@ -577,7 +577,7 @@ public class Dao<T> extends BaseDao {
         List<M> convertedModels = new ArrayList<>();
         String selectHql;
         List selectedUpdateRowList;
-        BaseHistoryEntity historyEntity;
+        History historyEntity;
         String entityName;
         Query selectQuery;
         Session session=null;
@@ -754,11 +754,11 @@ public class Dao<T> extends BaseDao {
         return session;
     }
 
-    private BaseHistoryEntity buildHistoryEntity(Object t, int QueryType) throws JsonProcessingException {
+    private History buildHistoryEntity(Object t, int QueryType) throws JsonProcessingException {
         return buildHistoryEntity(t, QueryType, null);
     }
 
-    private BaseHistoryEntity buildHistoryEntity(Object entity, int QueryType, String entityName) throws JsonProcessingException {
+    private History buildHistoryEntity(Object entity, int QueryType, String entityName) throws JsonProcessingException {
         String jsonString, entityClassPath;
         jsonString = Core.jsonMapper.writeValueAsString(entity);
         HistoryEntity = new History();

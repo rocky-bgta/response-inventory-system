@@ -33,6 +33,7 @@ import org.springframework.util.StringUtils;
 import response.soft.Utils.AppUtils;
 import response.soft.appenum.SqlEnum;
 import response.soft.core.datatable.model.DataTableResponse;
+import response.soft.entities.History;
 
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -74,7 +75,7 @@ public abstract class Core {
 
     //public CyclicBarrier barrier;
 
-    public static BaseHistoryEntity HistoryEntity = new History();
+    public static History HistoryEntity = new History();
     public static final ThreadLocal<String> messageId = new ThreadLocal<>();
 
   /*  public static final PublisherForRollBackAndCommit publisherForRollBackAndCommit

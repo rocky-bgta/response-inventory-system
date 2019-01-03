@@ -9,8 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.UUID;
 
-@Entity
 @Data
+@Entity
 @Immutable
 @Table(name = "sales_product_view")
 public class SalesProductView {

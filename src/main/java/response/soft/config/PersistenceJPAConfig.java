@@ -1,3 +1,4 @@
+/*
 package response.soft.config;
 
 
@@ -77,3 +78,4 @@ public class PersistenceJPAConfig {
     }
 }
 
+*/

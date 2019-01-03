@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+
+
+    <changeSet id="05" author="Salahin Rocky">
+
+        <createView replaceIfExists="true"
+                    schemaName="inventory"
+                    viewName="available_stock">
+            select
+            main_stock.store_id,
+            main_stock.product_id,
+            main_stock.product_name,
+            main_stock.total_price,
+            main_stock.available_qty
+            from (select
+            available_stock.store_id,
+            available_stock.ID as product_id,
+            available_stock.name as product_name,
+            sum(available_stock.in_sum) - sum(available_stock.out_sum) as total_price,
+            sum(available_stock.in_qty) - sum(available_stock.out_qty) as available_qty
+            from (
+            SELECT
+            P.ID,
+            P.name,
+            s.store_id,
+            case s.in_out when 1 then sum(s.total) else 0 end as in_sum,
+            case s.in_out when 2 then sum(s.total) else 0 end as out_sum,
+            case s.in_out when 1 then sum(s.quantity) else 0 end as in_qty,
+            case s.in_out when 2 then sum(s.quantity) else 0 end as out_qty
+            FROM inventory.stock s
+            INNER JOIN inventory.product p ON s.product_id = p.id
+            GROUP BY P.ID, p.name, s.in_out, s.store_id)
+            available_stock
+            GROUP BY available_stock.ID, available_stock.name,available_stock.store_id) main_stock
+        </createView>
+
+    </changeSet>
+</databaseChangeLog>
