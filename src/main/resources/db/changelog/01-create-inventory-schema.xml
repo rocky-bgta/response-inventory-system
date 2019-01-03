@@ -498,6 +498,8 @@
             <column name="status" type="NUMERIC"></column>
         </loadData>-->
 
+        <!--
+
         <sqlFile
                  encoding="utf8"
                  endDelimiter="\nGO"
@@ -544,7 +546,7 @@
                 path="seed/vendor.sql"
                 relativeToChangelogFile="true"
                 splitStatements="true"
-                stripComments="true"/>
+                stripComments="true"/>-->
 
     </changeSet>
 </databaseChangeLog>
