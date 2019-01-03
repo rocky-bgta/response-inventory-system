@@ -3,10 +3,8 @@ package response.soft.config;
 
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -29,7 +27,7 @@ public class PersistenceJPAConfig {
     private Environment env;
 
     @Bean
-    @Lazy
+    @Scope(value = BeanDefinition.SCOPE_PROTOTYPE)
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean em
                 = new LocalContainerEntityManagerFactoryBean();
@@ -44,7 +42,6 @@ public class PersistenceJPAConfig {
     }
 
     @Bean
-    @Lazy
     public DataSource dataSource() {
         HikariDataSource dataSource = new HikariDataSource();
         dataSource.setDriverClassName("org.postgresql.Driver");
@@ -55,7 +52,6 @@ public class PersistenceJPAConfig {
     }
 
     @Bean
-    @Lazy
     public PlatformTransactionManager transactionManager(
             EntityManagerFactory emf) {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
@@ -65,7 +61,6 @@ public class PersistenceJPAConfig {
     }
 
     @Bean
-    @Lazy
     public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
         return new PersistenceExceptionTranslationPostProcessor();
     }
