@@ -14,13 +14,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.javers.core.Javers;
 import org.javers.core.JaversBuilder;
 import org.javers.core.diff.Diff;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
@@ -44,6 +48,10 @@ import java.util.regex.Pattern;
 
 @Component
 public abstract class Core {
+
+    @Autowired
+    private ApplicationContext context;
+
     private static final Logger log = LoggerFactory.getLogger(Core.class);
     private static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     protected static final ObjectMapper jsonMapper = new ObjectMapper()
@@ -85,6 +93,9 @@ public abstract class Core {
     public static final ThreadLocal<String> shortDirection = new ThreadLocal<>();
     public static final ThreadLocal<String> shortColumnName = new ThreadLocal<>();
     public static final ThreadLocal<Boolean> isDataTablePagination = new ThreadLocal<>();
+
+    public static final ThreadLocal<Session> SESSION_THREAD_LOCAL = new ThreadLocal<>();
+    public static final ThreadLocal<Transaction> TRANSACTION_THREAD_LOCAL = new ThreadLocal<>();
 
 
     //==================== update validation lib ===============================
