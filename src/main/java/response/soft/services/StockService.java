@@ -1,8 +1,11 @@
 package response.soft.services;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import response.soft.appenum.SqlEnum;
@@ -12,8 +15,11 @@ import response.soft.core.RequestMessage;
 import response.soft.core.ResponseMessage;
 import response.soft.core.datatable.model.DataTableRequest;
 import response.soft.entities.Stock;
+import response.soft.entities.view.AvailableStockView;
 import response.soft.model.StockModel;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,23 +35,6 @@ public class StockService extends BaseService<Stock> {
         Core.runTimeEntityType.set(Stock.class);
         Core.runTimeModelType.set(StockModel.class);
     }
-
-   /* private ResponseMessage checkDuplicateStore(StockModel vendorModel) throws Exception {
-        ResponseMessage responseMessage;
-        StockModel searchDuplicateVendorModel;
-        List<StockModel> foundDuplicateVendor;
-        searchDuplicateVendorModel = new StockModel();
-        searchDuplicateVendorModel.setName(vendorModel.getName());
-        foundDuplicateVendor = this.getAllByConditionWithActive(searchDuplicateVendorModel);
-        if (foundDuplicateVendor.size() != 0) {
-            responseMessage = this.buildResponseMessage();
-            responseMessage.httpStatus = HttpStatus.CONFLICT.value();
-            responseMessage.message = "Same Stock name already exist";
-            return responseMessage;
-        } else {
-            return null;
-        }
-    }*/
 
     public ResponseMessage saveStock(RequestMessage requestMessage) {
         ResponseMessage responseMessage;
@@ -214,16 +203,15 @@ public class StockService extends BaseService<Stock> {
 
     public ResponseMessage getAllStock(RequestMessage requestMessage) {
         ResponseMessage responseMessage;
-        List<StockModel> list;
+        List<AvailableStockView> list;
         DataTableRequest dataTableRequest;
         String searchKey=null;
-        //StockModel brandSearchModel;
-        StringBuilder queryBuilderString;
+        StringBuilder queryBuilderString =new StringBuilder();
         try {
             Core.processRequestMessage(requestMessage);
 
             dataTableRequest = requestMessage.dataTableRequest;
-            if(dataTableRequest!=null) {
+            if(dataTableRequest!=null && !StringUtils.equals(dataTableRequest.search.value,"string")) {
                 searchKey = dataTableRequest.search.value;
                 searchKey = searchKey.trim().toLowerCase();
             }
@@ -239,7 +227,7 @@ public class StockService extends BaseService<Stock> {
 
             if (dataTableRequest != null && !StringUtils.isEmpty(searchKey)) {
 
-                queryBuilderString = new StringBuilder();
+                //queryBuilderString = new StringBuilder();
                 queryBuilderString.append("SELECT v.id, ")
                         .append("v.name, ")
                         .append("v.phoneNo, ")
@@ -258,22 +246,26 @@ public class StockService extends BaseService<Stock> {
                         .append(") ")
                         .append("AND v.status="+SqlEnum.Status.Active.get());
 
-                list = this.executeHqlQuery(queryBuilderString.toString(),StockModel.class,SqlEnum.QueryType.Join.get());
+                list = this.executeHqlQuery(queryBuilderString.toString(),AvailableStockView.class,SqlEnum.QueryType.Join.get());
                 //============ full text search ===========================================
             }else {
-                list = this.getAll();
+                queryBuilderString.setLength(0);
+                queryBuilderString.append("SELECT v FROM AvailableStockView v");
+
+                list = this.executeHqlQuery(queryBuilderString.toString(),AvailableStockView.class,SqlEnum.QueryType.View.get());
             }
 
             responseMessage = this.buildResponseMessage(list);
 
             if (responseMessage.data != null) {
+                responseMessage.httpStatus = HttpStatus.FOUND.value();
                 responseMessage.message = "Get all Stock successfully";
                 //this.commit();
             } else {
+                responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
                 responseMessage.message = "Failed to get Stock";
                 //this.rollBack();
             }
-            responseMessage.httpStatus = HttpStatus.OK.value();
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
             ex.printStackTrace();

@@ -12,7 +12,7 @@ import java.util.UUID;
 @Data
 @Entity
 @Immutable
-@Table(name = "available_stock_view")
+@Table(name = "available_stock")
 public class AvailableStockView {
     @Id
     @Column(name = "store_id")
@@ -20,9 +20,6 @@ public class AvailableStockView {
 
     @Column(name = "product_id")
     private UUID productId;
-
-    @Column(name = "available")
-    private Integer available;
 
     @Column(name = "product_name")
     private String productName;

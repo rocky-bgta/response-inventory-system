@@ -584,9 +584,28 @@ public class Dao<T> extends BaseDao {
         try {
             session = getSession();
             session.beginTransaction();
-            Query q = session.createQuery(hql);
+            Query q=null;
+
+
+            if(SqlEnum.QueryType.View.get() == queryType){
+
+                if (Core.shortColumnName.get() != null && Core.shortColumnName.get() != "")
+                    hql+= " ORDER BY v." + Core.shortColumnName.get() + " " + Core.shortDirection.get().toUpperCase();
+
+
+                if (Core.pageOffset.get() != null && Core.pageOffset.get() != 0) {
+                    convertedModels = (List<M>) session.createQuery(hql,clazz)
+                            .setFirstResult(Core.pageOffset.get())
+                            .setMaxResults(Core.pageSize.get());
+                }else {
+                    convertedModels =  session.createQuery(hql,clazz).getResultList();
+                    return convertedModels;
+                }
+
+            }
 
             if (SqlEnum.QueryType.Join.get() == queryType) {
+                q = session.createQuery(hql);
 
                 if (Core.pageOffset.get() != 0 && Core.pageOffset.get() != null) {
                     q.setFirstResult(Core.pageOffset.get());
@@ -604,11 +623,13 @@ public class Dao<T> extends BaseDao {
 
 
             } else if (SqlEnum.QueryType.Select.get() == queryType) {
+                q = session.createQuery(hql);
                 result = q.getResultList();
                 if (result.size() > 0) {
                     convertedModels = (List<M>) result;
                 }
             } else if (SqlEnum.QueryType.GetOne.get() == queryType) {
+                q = session.createQuery(hql);
                 q.setMaxResults(1);
                 result = q.getResultList();
                 if (result.size() > 0) {
@@ -636,7 +657,7 @@ public class Dao<T> extends BaseDao {
             }
 
             //========== set search count for data table =======================
-            if(result!=null && (SqlEnum.QueryType.Join.get()==queryType || SqlEnum.QueryType.Select.get()==queryType)){
+            if(result!=null && result.size()>0){
                 Core.totalRowCount.set((long)result.size());
                 Core.recordsFilteredCount.set((long) result.size());
             }
