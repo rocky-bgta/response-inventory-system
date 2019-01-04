@@ -599,9 +599,12 @@ public class Dao<T> extends BaseDao {
                             .setMaxResults(Core.pageSize.get());
                 }else {
                     convertedModels =  session.createQuery(hql,clazz).getResultList();
-                    return convertedModels;
                 }
-
+                if(convertedModels!=null && convertedModels.size()>0){
+                    Core.totalRowCount.set((long)convertedModels.size());
+                    Core.recordsFilteredCount.set((long) convertedModels.size());
+                }
+                return convertedModels;
             }
 
             if (SqlEnum.QueryType.Join.get() == queryType) {
