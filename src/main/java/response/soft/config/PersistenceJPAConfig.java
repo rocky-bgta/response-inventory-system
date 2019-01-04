@@ -1,7 +1,8 @@
-/*
+
 package response.soft.config;
 
 
+import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -26,6 +27,8 @@ public class PersistenceJPAConfig {
 
     @Autowired
     private Environment env;
+
+    private static HikariConfig config = new HikariConfig();
 
     @Bean
     @Scope(value = BeanDefinition.SCOPE_PROTOTYPE)
@@ -78,4 +81,4 @@ public class PersistenceJPAConfig {
     }
 }
 
-*/
+

@@ -124,6 +124,10 @@ public abstract class Core {
     }
 
 
+    /*public static void getEntityManger(){
+
+    }*/
+
     //public static final Map<String,SecurityResMessage> securityResponseCollection;
 
 

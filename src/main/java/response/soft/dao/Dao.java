@@ -11,6 +11,7 @@ import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Repository;
 import response.soft.appenum.SqlEnum;
 import response.soft.constant.DbConstant;
@@ -35,7 +36,10 @@ public class Dao<T> extends BaseDao {
     //private SessionFactory sessionFactory;
 
     @Autowired
-    EntityManagerFactory entityManagerFactory;
+    ApplicationContext applicationContext;
+
+    //@Autowired
+    //EntityManagerFactory entityManagerFactory;
 
     public Dao() {
         super();
@@ -754,6 +758,9 @@ public class Dao<T> extends BaseDao {
     }
 
     private Session getSession() throws HibernateException {
+        EntityManagerFactory entityManagerFactory;
+        entityManagerFactory = this.applicationContext.getBean("entityManagerFactory",EntityManagerFactory.class);
+
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         SessionFactory sessionFactory;
         Session session=null;
