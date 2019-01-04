@@ -227,8 +227,7 @@ public class StockService extends BaseService<Stock> {
 
             if (dataTableRequest != null && !StringUtils.isEmpty(searchKey)) {
 
-                //queryBuilderString = new StringBuilder();
-                queryBuilderString.append("SELECT v.id, ")
+               /* queryBuilderString.append("SELECT v.id, ")
                         .append("v.name, ")
                         .append("v.phoneNo, ")
                         .append("v.email, ")
@@ -246,7 +245,9 @@ public class StockService extends BaseService<Stock> {
                         .append(") ")
                         .append("AND v.status="+SqlEnum.Status.Active.get());
 
-                list = this.executeHqlQuery(queryBuilderString.toString(),AvailableStockView.class,SqlEnum.QueryType.Join.get());
+                */
+                queryBuilderString.append("SELECT v FROM AvailableStockView v");
+                list = this.executeHqlQuery(queryBuilderString.toString(),AvailableStockView.class,SqlEnum.QueryType.View.get());
                 //============ full text search ===========================================
             }else {
                 queryBuilderString.setLength(0);

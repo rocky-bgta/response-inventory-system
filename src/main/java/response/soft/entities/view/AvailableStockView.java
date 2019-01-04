@@ -15,11 +15,17 @@ import java.util.UUID;
 @Table(name = "available_stock")
 public class AvailableStockView {
     @Id
+    @Column(name = "product_id")
+    private UUID productId;
+
+
     @Column(name = "store_id")
     private UUID storeId;
 
-    @Column(name = "product_id")
-    private UUID productId;
+    @Column(name = "store_name")
+    private String storeName;
+
+
 
     @Column(name = "product_name")
     private String productName;
