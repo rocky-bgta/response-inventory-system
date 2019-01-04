@@ -28,10 +28,27 @@ public class PersistenceJPAConfig {
     @Autowired
     private Environment env;
 
-    private static HikariConfig config = new HikariConfig();
+    private static HikariConfig hikariConfig = new HikariConfig();
+    private static HikariDataSource hikariDataSource;
+    static {
+        hikariConfig.setDriverClassName("org.postgresql.Driver");
+        hikariConfig.setJdbcUrl( "jdbc:postgresql://localhost:5432/response_electronic" );
+        hikariConfig.setUsername( "postgres" );
+        hikariConfig.setPassword( "postgres" );
+        hikariConfig.setMaximumPoolSize(20);
+        hikariConfig.setMinimumIdle(10);
+        hikariConfig.setConnectionTimeout(2000);
+        hikariConfig.setIdleTimeout(300000);
+        //hikariConfig.setSchema("inventory");
+        //hikariConfig.setLeakDetectionThreshold(60000);
+        hikariConfig.addDataSourceProperty( "cachePrepStmts" , "true" );
+        hikariConfig.addDataSourceProperty( "prepStmtCacheSize" , "250" );
+        hikariConfig.addDataSourceProperty( "prepStmtCacheSqlLimit" , "2048");
+        hikariDataSource = new HikariDataSource(hikariConfig);
+    }
 
     @Bean
-    @Scope(value = BeanDefinition.SCOPE_PROTOTYPE)
+    //@Scope(value = BeanDefinition.SCOPE_PROTOTYPE)
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean em
                 = new LocalContainerEntityManagerFactoryBean();
@@ -47,11 +64,11 @@ public class PersistenceJPAConfig {
 
     @Bean
     public DataSource dataSource() {
-        HikariDataSource dataSource = new HikariDataSource();
-        dataSource.setDriverClassName("org.postgresql.Driver");
-        dataSource.setJdbcUrl("jdbc:postgresql://localhost:5432/response_electronic");
-        dataSource.setUsername("postgres");
-        dataSource.setPassword("postgres");
+        HikariDataSource dataSource = new HikariDataSource(hikariConfig);
+        //dataSource.setDriverClassName("org.postgresql.Driver");
+        //dataSource.setJdbcUrl("jdbc:postgresql://localhost:5432/response_electronic");
+        //dataSource.setUsername("postgres");
+        //dataSource.setPassword("postgres");
         return dataSource;
     }
 
