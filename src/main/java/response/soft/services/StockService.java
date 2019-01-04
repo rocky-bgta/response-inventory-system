@@ -201,7 +201,7 @@ public class StockService extends BaseService<Stock> {
     }
 
 
-    public ResponseMessage getAllStock(RequestMessage requestMessage) {
+    public ResponseMessage getAllStock(RequestMessage requestMessage, UUID storeId, UUID productId) {
         ResponseMessage responseMessage;
         List<AvailableStockView> list;
         DataTableRequest dataTableRequest;
@@ -225,7 +225,7 @@ public class StockService extends BaseService<Stock> {
 
             //============ full text search ===========================================
 
-            if (dataTableRequest != null && !StringUtils.isEmpty(searchKey)) {
+            if ((dataTableRequest != null && !StringUtils.isEmpty(searchKey))|| storeId!=null || productId!=null) {
 
                /* queryBuilderString.append("SELECT v.id, ")
                         .append("v.name, ")
@@ -246,7 +246,22 @@ public class StockService extends BaseService<Stock> {
                         .append("AND v.status="+SqlEnum.Status.Active.get());
 
                 */
-                queryBuilderString.append("SELECT v FROM AvailableStockView v");
+                Boolean isWhereAdded=false;
+                queryBuilderString.append("SELECT v FROM AvailableStockView v ");
+                if(storeId!=null &&  storeId instanceof UUID){
+                    queryBuilderString.append("WHERE v.storeId ='"+storeId+"' ");
+                    isWhereAdded=true;
+                }
+                if(productId!=null && storeId instanceof UUID){
+                    if(isWhereAdded){
+                        queryBuilderString.append("AND v.productId='"+productId+"'");
+                    }else {
+                        queryBuilderString.append("WHERE v.productId='"+productId+"'");
+                    }
+                }
+
+
+
                 list = this.executeHqlQuery(queryBuilderString.toString(),AvailableStockView.class,SqlEnum.QueryType.View.get());
                 //============ full text search ===========================================
             }else {
