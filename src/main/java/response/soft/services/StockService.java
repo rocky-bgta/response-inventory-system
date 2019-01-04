@@ -246,18 +246,18 @@ public class StockService extends BaseService<Stock> {
                         .append("AND v.status="+SqlEnum.Status.Active.get());
 
                 */
-                Boolean isWhereAdded=false;
-                queryBuilderString.append("SELECT v FROM AvailableStockView v ");
+                //Boolean isWhereAdded=false;
+                queryBuilderString.append("SELECT v FROM AvailableStockView v WHERE v.availableQty>0 ");
                 if(storeId!=null &&  storeId instanceof UUID){
-                    queryBuilderString.append("WHERE v.storeId ='"+storeId+"' ");
-                    isWhereAdded=true;
+                    queryBuilderString.append("AND v.storeId ='"+storeId+"' ");
+                    //isWhereAdded=true;
                 }
                 if(productId!=null && storeId instanceof UUID){
-                    if(isWhereAdded){
+                    //if(isWhereAdded){
                         queryBuilderString.append("AND v.productId='"+productId+"'");
-                    }else {
-                        queryBuilderString.append("WHERE v.productId='"+productId+"'");
-                    }
+                    //}else {
+                      //  queryBuilderString.append("WHERE v.productId='"+productId+"'");
+                   // }
                 }
 
 
@@ -266,7 +266,7 @@ public class StockService extends BaseService<Stock> {
                 //============ full text search ===========================================
             }else {
                 queryBuilderString.setLength(0);
-                queryBuilderString.append("SELECT v FROM AvailableStockView v");
+                queryBuilderString.append("SELECT v FROM AvailableStockView v WHERE v.availableQty>0");
 
                 list = this.executeHqlQuery(queryBuilderString.toString(),AvailableStockView.class,SqlEnum.QueryType.View.get());
             }

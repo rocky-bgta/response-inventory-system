@@ -35,9 +35,9 @@ public class PersistenceJPAConfig {
         hikariConfig.setJdbcUrl( "jdbc:postgresql://localhost:5432/response_electronic" );
         hikariConfig.setUsername( "postgres" );
         hikariConfig.setPassword( "postgres" );
-        hikariConfig.setMaximumPoolSize(20);
+        hikariConfig.setMaximumPoolSize(50);
         hikariConfig.setMinimumIdle(10);
-        hikariConfig.setConnectionTimeout(2000);
+        hikariConfig.setConnectionTimeout(50000);
         hikariConfig.setIdleTimeout(300000);
         //hikariConfig.setSchema("inventory");
         //hikariConfig.setLeakDetectionThreshold(60000);

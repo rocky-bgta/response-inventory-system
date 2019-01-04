@@ -604,7 +604,7 @@ public class Dao<T> extends BaseDao {
                 }else {
                     convertedModels =  session.createQuery(hql,clazz).getResultList();
                 }
-                if(convertedModels!=null && convertedModels.size()>0){
+                if(convertedModels!=null && convertedModels.size()>=0){
                     Core.totalRowCount.set((long)convertedModels.size());
                     Core.recordsFilteredCount.set((long) convertedModels.size());
                 }
@@ -664,7 +664,7 @@ public class Dao<T> extends BaseDao {
             }
 
             //========== set search count for data table =======================
-            if(convertedModels!=null && convertedModels.size()>0){
+            if(convertedModels!=null && convertedModels.size()>=0){
                 Core.totalRowCount.set((long)result.size());
                 Core.recordsFilteredCount.set((long) result.size());
             }
