@@ -379,11 +379,11 @@ public class Dao<T> extends BaseDao {
 
             Query q = session.createQuery(queryBuilderString.toString());
 
-            if (Core.pageOffset.get() != 0 && Core.pageOffset.get() != null) {
+            if (Core.pageOffset.get() != null && Core.pageOffset.get() != 0) {
                 q.setFirstResult(Core.pageOffset.get());
             }
 
-            if (Core.pageSize.get() != 0 && Core.pageSize.get() != null) {
+            if (Core.pageSize.get() != null && Core.pageSize.get() != 0) {
                 q.setMaxResults(Core.pageSize.get());
             }
 
@@ -610,11 +610,11 @@ public class Dao<T> extends BaseDao {
             if (SqlEnum.QueryType.Join.get() == queryType) {
                 q = session.createQuery(hql);
 
-                if (Core.pageOffset.get() != 0 && Core.pageOffset.get() != null) {
+                if (Core.pageOffset.get() != null && Core.pageOffset.get() != 0) {
                     q.setFirstResult(Core.pageOffset.get());
                 }
 
-                if (Core.pageSize.get() != 0 && Core.pageSize.get() != null) {
+                if (Core.pageSize.get() != null && Core.pageSize.get() != 0) {
                     q.setMaxResults(Core.pageSize.get());
                 }
 
@@ -660,7 +660,7 @@ public class Dao<T> extends BaseDao {
             }
 
             //========== set search count for data table =======================
-            if(result!=null && result.size()>0){
+            if(convertedModels!=null && convertedModels.size()>0){
                 Core.totalRowCount.set((long)result.size());
                 Core.recordsFilteredCount.set((long) result.size());
             }

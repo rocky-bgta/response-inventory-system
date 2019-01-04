@@ -86,4 +86,13 @@ public class StoreInProductsController {
         responseMessage = storeInProductService.getProductListByIdentificationIds(requestMessage,storeId,barcode,serialNo);
         return new ResponseEntity(responseMessage,HttpStatus.OK);
     }
+
+    @ApiOperation(value ="", response = UUID.class)
+    @ResponseStatus(HttpStatus.OK)
+    @RequestMapping(value = "/store/{storeId}",method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseMessage getStoreInProductsByStoreId(@PathVariable UUID storeId) {
+        ResponseMessage responseMessage;
+        responseMessage = this.storeInProductService.getStoreInProductsByStoreId(storeId);
+        return responseMessage;
+    }
 }

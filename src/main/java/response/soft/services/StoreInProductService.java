@@ -22,6 +22,7 @@ import response.soft.core.ResponseMessage;
 import response.soft.core.datatable.model.DataTableRequest;
 import response.soft.entities.StoreInProduct;
 import response.soft.entities.view.SalesProductView;
+import response.soft.model.ProductModel;
 import response.soft.model.StockModel;
 import response.soft.model.StoreInProductModel;
 import response.soft.model.view.SalesProductViewModel;
@@ -130,14 +131,14 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
 
                 quantity = storeInProductsViewModel.getQuantity();
 
-                for(int i=0; i<quantity; i++){
+                for (int i = 0; i < quantity; i++) {
                     this.saveStoreInProductsModel(savedStockModel.getId(), storeInProductsViewModel);
                 }
 
 
-               // if(quantity==1) {
+                // if(quantity==1) {
 
-                   // this.saveStoreInProductsModel(savedStockModel.getId(), storeInProductsViewModel);
+                // this.saveStoreInProductsModel(savedStockModel.getId(), storeInProductsViewModel);
 
                   /*  storeInProductsModel = new StoreInProductModel();
                     storeInProductsModel.setStockId(savedStockModel.getId());
@@ -161,13 +162,12 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
                 }*/
 
 
-
             }
 
 
             responseMessage = this.buildResponseMessage();
-            responseMessage.httpStatus=HttpStatus.CREATED.value();
-            responseMessage.message="Products successfully Entered into Stock";
+            responseMessage.httpStatus = HttpStatus.CREATED.value();
+            responseMessage.message = "Products successfully Entered into Stock";
 
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
@@ -409,9 +409,9 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
         return responseMessage;
     }
 
-    public ResponseMessage getProductListByIdentificationIds(RequestMessage requestMessage,UUID storeId, String barcode, String serialNo){
+    public ResponseMessage getProductListByIdentificationIds(RequestMessage requestMessage, UUID storeId, String barcode, String serialNo) {
         ResponseMessage responseMessage;
-        List<SalesProductViewModel> salesProductViewModelList =null;
+        List<SalesProductViewModel> salesProductViewModelList = null;
         //List<StoreInProductModel> storeInProductModelList=null;
         //StoreInProductModel whereConditionStoreInProductModel;
 
@@ -423,50 +423,50 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
 
             EntityManager entityManager = entityManagerFactory.createEntityManager();
             SessionFactory sessionFactory;
-            Session session=null;
+            Session session = null;
 
-                sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
-                session = sessionFactory.openSession();
-
-
-            if(storeId!=null){
-
-              queryBuilder.append("SELECT p.id AS productId, ")
-                      .append("count(sip.productId) AS available, ")
-                      .append("p.name AS productName, ")
-                      .append("cat.name AS categoryName, ")
-                      .append("brn.name AS brandName, ")
-                      .append("p.modelNo, ")
-                      .append("sip.price AS buyPrice, ")
-                      .append("p.description, ")
-                      .append("p.barcode, ")
-                      .append("p.image ")
-              .append("FROM StoreInProduct  sip ")
-              .append("INNER JOIN Product p ON p.id = sip.productId ")
-              .append("INNER JOIN Category cat ON p.categoryId = cat.id ")
-              .append("INNER JOIN Brand brn ON p.brandId = brn.id ")
-              .append("WHERE sip.productStatus = "+ InventoryEnum.ProductStatus.AVAILABLE.get() +" AND sip.storeId = '")
-              .append(storeId+"' ");
-
-              if(!StringUtils.isEmpty(barcode)  && !StringUtils.equals(barcode,"undefined"))
-                queryBuilder.append("AND p.barcode = '" + barcode+"' ");
-
-              if(!StringUtils.isEmpty(serialNo) && !StringUtils.equals(serialNo,"undefined"))
-                  queryBuilder.append("AND sip.serialNo = '"+ serialNo+"' ");
+            sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
+            session = sessionFactory.openSession();
 
 
-                  queryBuilder.append("GROUP BY " +
-                      "p.id , " +
-                      "p.name, " +
-                      "cat.name, " +
-                      "brn.name, " +
-                      "p.modelNo, " +
-                      "sip.price, " +
-                      "p.description, " +
-                      "p.barcode, " +
-                      "p.image, " +
-                      "sip.storeId ")
-              .append("ORDER BY sip.storeId ");
+            if (storeId != null) {
+
+                queryBuilder.append("SELECT p.id AS productId, ")
+                        .append("count(sip.productId) AS available, ")
+                        .append("p.name AS productName, ")
+                        .append("cat.name AS categoryName, ")
+                        .append("brn.name AS brandName, ")
+                        .append("p.modelNo, ")
+                        .append("sip.price AS buyPrice, ")
+                        .append("p.description, ")
+                        .append("p.barcode, ")
+                        .append("p.image ")
+                        .append("FROM StoreInProduct  sip ")
+                        .append("INNER JOIN Product p ON p.id = sip.productId ")
+                        .append("INNER JOIN Category cat ON p.categoryId = cat.id ")
+                        .append("INNER JOIN Brand brn ON p.brandId = brn.id ")
+                        .append("WHERE sip.productStatus = " + InventoryEnum.ProductStatus.AVAILABLE.get() + " AND sip.storeId = '")
+                        .append(storeId + "' ");
+
+                if (!StringUtils.isEmpty(barcode) && !StringUtils.equals(barcode, "undefined"))
+                    queryBuilder.append("AND p.barcode = '" + barcode + "' ");
+
+                if (!StringUtils.isEmpty(serialNo) && !StringUtils.equals(serialNo, "undefined"))
+                    queryBuilder.append("AND sip.serialNo = '" + serialNo + "' ");
+
+
+                queryBuilder.append("GROUP BY " +
+                        "p.id , " +
+                        "p.name, " +
+                        "cat.name, " +
+                        "brn.name, " +
+                        "p.modelNo, " +
+                        "sip.price, " +
+                        "p.description, " +
+                        "p.barcode, " +
+                        "p.image, " +
+                        "sip.storeId ")
+                        .append("ORDER BY sip.storeId ");
 
 
                 //for the time being omit this portion of data table
@@ -478,36 +478,33 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
                 */
 
 
+                hql = queryBuilder.toString();
 
-              hql = queryBuilder.toString();
+                List<SalesProductView> SalesProductViews;
 
-              List<SalesProductView> SalesProductViews;
-
-              StringBuilder testStringBuilder = new StringBuilder();
-                String testHql = "select v from SalesProductView v where v.storeId='"+storeId+"' ";
+                StringBuilder testStringBuilder = new StringBuilder();
+                String testHql = "select v from SalesProductView v where v.storeId='" + storeId + "' ";
                 testStringBuilder.append(testHql);
 
-                if(!StringUtils.isEmpty(barcode)  && !StringUtils.equals(barcode,"undefined"))
-                    testStringBuilder.append("AND v.barcode = '" + barcode+"' ");
+                if (!StringUtils.isEmpty(barcode) && !StringUtils.equals(barcode, "undefined"))
+                    testStringBuilder.append("AND v.barcode = '" + barcode + "' ");
 
-                if(!StringUtils.isEmpty(serialNo) && !StringUtils.equals(serialNo,"undefined"))
-                    testStringBuilder.append("AND v.serialNo = '"+ serialNo+"' ");
-
-
+                if (!StringUtils.isEmpty(serialNo) && !StringUtils.equals(serialNo, "undefined"))
+                    testStringBuilder.append("AND v.serialNo = '" + serialNo + "' ");
 
 
-              SalesProductViews = session.createQuery(testStringBuilder.toString(), SalesProductView.class).getResultList();
+                SalesProductViews = session.createQuery(testStringBuilder.toString(), SalesProductView.class).getResultList();
 
-              System.out.println(SalesProductViews);
+                System.out.println(SalesProductViews);
 
-              salesProductViewModelList = this.executeHqlQuery(hql,SalesProductViewModel.class,SqlEnum.QueryType.Join.get());
+                salesProductViewModelList = this.executeHqlQuery(hql, SalesProductViewModel.class, SqlEnum.QueryType.Join.get());
             }
 
-            if(salesProductViewModelList !=null){
+            if (salesProductViewModelList != null) {
                 responseMessage = buildResponseMessage(salesProductViewModelList);
                 responseMessage.httpStatus = HttpStatus.FOUND.value();
                 responseMessage.message = "Retrieve all available product";
-            }else {
+            } else {
                 responseMessage = buildResponseMessage();
                 responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
                 responseMessage.message = "No available product in this store";
@@ -522,6 +519,44 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
 
         return responseMessage;
 
+    }
+
+    public ResponseMessage getStoreInProductsByStoreId(UUID storeId) {
+        ResponseMessage responseMessage;
+        List<ProductModel> list;
+        StringBuilder queryBuilderString;
+
+        try {
+            queryBuilderString = new StringBuilder();
+            queryBuilderString.append("SELECT DISTINCT p.id, ")
+                    .append("p.name ")
+                    .append("FROM StoreInProduct sip ")
+                    .append("INNER JOIN Product p ON sip.productId = p.id ")
+                    .append("WHERE ")
+                    .append("sip.productStatus =" + InventoryEnum.ProductStatus.AVAILABLE.get() +" ")
+                    .append("AND sip.storeId = '" + storeId + "'");
+
+
+            list = this.executeHqlQuery(queryBuilderString.toString(), ProductModel.class, SqlEnum.QueryType.Join.get());
+
+            responseMessage = this.buildResponseMessage(list);
+
+            if (list != null && list.size()>0) {
+                responseMessage.httpStatus = HttpStatus.FOUND.value();
+                responseMessage.message = "Get all Product of selected store successfully";
+                //this.commit();
+            } else {
+                responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
+                responseMessage.message = "Failed to get selected Product of store";
+                //this.rollBack();
+            }
+        } catch (Exception ex) {
+            responseMessage = this.buildFailedResponseMessage();
+            ex.printStackTrace();
+            //this.rollBack();
+            log.error("getStoreInProductsByStoreId -> save got exception");
+        }
+        return responseMessage;
     }
 
 }
