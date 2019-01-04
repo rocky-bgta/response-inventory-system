@@ -11,6 +11,8 @@
 
   <include file="changelog/view/sales_product_view.xml" relativeToChangelogFile="true"/>
   <include file="changelog/view/available-stock-view.xml" relativeToChangelogFile="true"/>
+  <include file="changelog/history-schema.xml" relativeToChangelogFile="true"/>
+
 
 
   <!--<include file="changelog/02-insert-data-authors.xml" relativeToChangelogFile="true"/>-->

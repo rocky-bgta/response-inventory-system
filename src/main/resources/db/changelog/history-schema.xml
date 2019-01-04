@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="01" author="Salahin Rocky">
+        <createTable tableName="history" remarks="A table to history of All transaction">
+            <column name="id" type="UUID">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="entity_class_path" type="varchar"></column>
+            <column name="entity_name" type="varchar"></column>
+            <column name="action_type" type="integer"></column>
+            <column name="json_object" type="TEXT"></column>
+            <column name="message_id" type="varchar"></column>
+            <column name="date_time" type="datetime"></column>
+
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

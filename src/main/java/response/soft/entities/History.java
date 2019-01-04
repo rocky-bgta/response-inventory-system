@@ -19,8 +19,7 @@ import java.util.UUID;
 @Table(name = "history")
 public class History{
 
-    @Column(name = "message_id")
-    private String messageId;
+
 
     @Id
     @GeneratedValue(generator = "uuid2")
@@ -40,6 +39,9 @@ public class History{
 
     @Column(name="json_object", columnDefinition = "TEXT")
     private String jsonObject;
+
+    @Column(name = "message_id")
+    private String messageId;
 
     @Column(name = "date_time")
     private Date DateTime;
