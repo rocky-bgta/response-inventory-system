@@ -20,6 +20,7 @@ public class StoreSalesProductViewModel extends BaseModel {
     private Double paidAmount;
     private Double dueAmount;
     private Double grandTotal;
+    private String invoiceNo;
 
 
 }

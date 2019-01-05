@@ -68,7 +68,6 @@ public class StoreSalesProductService extends BaseService<StoreOutProduct> {
         StoreInProductModel whereConditionSIN;
         Integer salesQty;
 
-        //List<StoreOutProductModel> savedStoreOutProductModelList;
         UUID storeId;
         UUID customerId;
         Integer salesMethod;
@@ -78,7 +77,6 @@ public class StoreSalesProductService extends BaseService<StoreOutProduct> {
 
         //===== stock variable ========================
         StockModel stockModel, whereConditionStockModel;
-        //List<StockModel> stockModelList;
         Double unitPrice,totalPrice;
         //=============================================
 
@@ -88,8 +86,6 @@ public class StoreSalesProductService extends BaseService<StoreOutProduct> {
 
         try {
 
-            invoiceNo = "inv-"+UUID.randomUUID().toString();
-
             storeSalesProductViewModel = Core.processRequestMessage(requestMessage, StoreSalesProductViewModel.class);
 
             salesProductViewModelList = storeSalesProductViewModel.getSalesProductViewModelList();
@@ -98,11 +94,12 @@ public class StoreSalesProductService extends BaseService<StoreOutProduct> {
             salesMethod = storeSalesProductViewModel.getSalesMethod();
             Integer paymentStatus;
 
+
             Date invoiceDate = new Date();
             Double paidAmount = storeSalesProductViewModel.getPaidAmount();
             Double dueAmount = storeSalesProductViewModel.getDueAmount();
             Double grandTotal = storeSalesProductViewModel.getGrandTotal();
-
+            invoiceNo = storeSalesProductViewModel.getInvoiceNo();
 
 
             for(SalesProductViewModel salesProductViewModel: salesProductViewModelList){
