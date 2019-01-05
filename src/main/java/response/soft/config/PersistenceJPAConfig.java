@@ -36,18 +36,18 @@ public class PersistenceJPAConfig {
         hikariConfig.setJdbcUrl( "jdbc:postgresql://localhost:5432/response_electronic" );
         hikariConfig.setUsername( "postgres" );
         hikariConfig.setPassword( "postgres" );
-        hikariConfig.setMaximumPoolSize(2000);
+        hikariConfig.setMaximumPoolSize(10000);
         hikariConfig.setMinimumIdle(10);
         hikariConfig.setValidationTimeout(3000);
         hikariConfig.setMaxLifetime(60000);
-        hikariConfig.setConnectionTimeout(60000);
+        hikariConfig.setConnectionTimeout(600000);
         hikariConfig.setIdleTimeout(60000);
 
-        //hikariConfig.setSchema("inventory");
+        hikariConfig.setSchema("inventory");
         //hikariConfig.setLeakDetectionThreshold(60000);
         hikariConfig.addDataSourceProperty( "cachePrepStmts" , "true" );
-        hikariConfig.addDataSourceProperty( "prepStmtCacheSize" , "250" );
-        hikariConfig.addDataSourceProperty( "prepStmtCacheSqlLimit" , "2048");
+        hikariConfig.addDataSourceProperty( "prepStmtCacheSize" , "450" );
+        hikariConfig.addDataSourceProperty( "prepStmtCacheSqlLimit" , "4048");
         hikariDataSource = new HikariDataSource(hikariConfig);
     }
 
