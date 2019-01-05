@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+
+
+    <changeSet id="05" author="Salahin Rocky">
+
+        <createView replaceIfExists="true"
+                    schemaName="inventory"
+                    viewName="product_sales_report">
+            SELECT
+            sales.invoice_no,
+            sales.product_id,
+            sales.product_name,
+            sales.customer_id,
+            sales.customer_name,
+            sales.buy_price,
+            sales.sales_price,
+            sales.profit,
+            sales.date
+            FROM
+            (
+            SELECT
+            ps.product_id,
+            p."name" as product_name,
+            ps.invoice_no,
+            ps.customer_id,
+            c.name as customer_name,
+            sum(ps.buy_price) as buy_price,
+            sum(ps.sales_price) as sales_price,
+            sum(ps.sales_price) - sum(ps.buy_price) as profit,
+            ps.date
+
+            FROM inventory.product_sales ps
+            INNER JOIN inventory.product p ON ps.product_id = p.id
+            INNER JOIN inventory.customer c ON ps.customer_id = c.id
+
+            GROUP BY
+            ps.invoice_no,
+            ps.product_id,
+            p.name,
+            ps.customer_id,
+            c.name,ps.date
+            ) sales
+
+            <!--WHERE sales.date::DATE BETWEEN '2019-01-05' AND '2019-01-06'-->
+
+            <!--WHERE d.date BETWEEN '2019-01-05 00:00:00' AND '2019-01-06 23:59:59.999999'-->
+        </createView>
+
+    </changeSet>
+</databaseChangeLog>
