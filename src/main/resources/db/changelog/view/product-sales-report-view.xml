@@ -12,7 +12,7 @@
 
         <createView replaceIfExists="true"
                     schemaName="inventory"
-                    viewName="product_sales_report">
+                    viewName="product_sales_report_view">
             SELECT
             sales.invoice_no,
             sales.product_id,
