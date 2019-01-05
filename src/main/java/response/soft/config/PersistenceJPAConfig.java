@@ -5,9 +5,11 @@ package response.soft.config;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.Scope;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -36,10 +38,13 @@ public class PersistenceJPAConfig {
         hikariConfig.setJdbcUrl( "jdbc:postgresql://localhost:5432/response_electronic" );
         hikariConfig.setUsername( "postgres" );
         hikariConfig.setPassword( "postgres" );
-        hikariConfig.setMaximumPoolSize(50);
+        hikariConfig.setMaximumPoolSize(2000);
         hikariConfig.setMinimumIdle(10);
-        hikariConfig.setConnectionTimeout(50000);
-        hikariConfig.setIdleTimeout(300000);
+        hikariConfig.setValidationTimeout(3000);
+        hikariConfig.setMaxLifetime(60000);
+        hikariConfig.setConnectionTimeout(60000);
+        hikariConfig.setIdleTimeout(60000);
+
         //hikariConfig.setSchema("inventory");
         //hikariConfig.setLeakDetectionThreshold(60000);
         hikariConfig.addDataSourceProperty( "cachePrepStmts" , "true" );
