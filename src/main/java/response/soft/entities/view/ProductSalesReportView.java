@@ -16,11 +16,11 @@ import java.util.UUID;
 @Table(name = "product_sales_report_view")
 public class ProductSalesReportView {
     @Id
-    @Column(name = "invoice_no")
-    private String invoiceNo;
-
     @Column(name = "product_id")
     private UUID productId;
+
+    @Column(name = "invoice_no")
+    private String invoiceNo;
 
     @Column(name = "product_name")
     private String productName;

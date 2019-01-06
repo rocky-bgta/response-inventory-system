@@ -17,8 +17,11 @@ import response.soft.entities.view.AvailableStockView;
 import response.soft.entities.view.ProductSalesReportView;
 import response.soft.model.ProductSalesModel;
 import response.soft.model.StoreOutProductModel;
+import response.soft.model.view.ProductSalesReportViewModel;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,12 +39,18 @@ public class ProductSalesService extends BaseService<ProductSales> {
 
     public ResponseMessage getProductSalesReport(RequestMessage requestMessage) {
         ResponseMessage responseMessage;
+        ProductSalesReportViewModel productSalesReportViewModel;
         List<ProductSalesReportView> list;
         DataTableRequest dataTableRequest;
         String searchKey=null;
         StringBuilder queryBuilderString =new StringBuilder();
+        String fromDate, toDate;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
-            Core.processRequestMessage(requestMessage);
+            productSalesReportViewModel = Core.processRequestMessage(requestMessage,ProductSalesReportViewModel.class);
+
+            fromDate = dateFormat.format(productSalesReportViewModel.getFromDate());
+            toDate =  dateFormat.format(productSalesReportViewModel.getToDate());
 
             dataTableRequest = requestMessage.dataTableRequest;
             if(dataTableRequest!=null && !StringUtils.equals(dataTableRequest.search.value,"string")) {
@@ -91,7 +100,11 @@ public class ProductSalesService extends BaseService<ProductSales> {
                 //============ full text search ===========================================
             }else {
                 queryBuilderString.setLength(0);
-                queryBuilderString.append("SELECT v FROM ProductSalesReportView v");
+                queryBuilderString.append("SELECT v FROM ProductSalesReportView v ");
+
+                if(fromDate!=null && toDate!=null){
+                    queryBuilderString.append("WHERE v.date BETWEEN '" + fromDate+" 00:00:00' AND '"+toDate+" 23:59:59.999999'");
+                }
 
                 list = this.executeHqlQuery(queryBuilderString.toString(),ProductSalesReportView.class,SqlEnum.QueryType.View.get());
             }

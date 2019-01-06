@@ -14,8 +14,8 @@
                     schemaName="inventory"
                     viewName="product_sales_report_view">
             SELECT
-            sales.invoice_no,
             sales.product_id,
+            sales.invoice_no,
             sales.product_name,
             sales.customer_id,
             sales.customer_name,
