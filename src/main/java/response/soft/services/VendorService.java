@@ -37,11 +37,12 @@ public class VendorService extends BaseService<Vendor> {
         List<VendorModel> foundDuplicateVendor;
         searchDuplicateVendorModel = new VendorModel();
         searchDuplicateVendorModel.setName(vendorModel.getName());
+        searchDuplicateVendorModel.setPhoneNo1(vendorModel.getPhoneNo1());
         foundDuplicateVendor = this.getAllByConditionWithActive(searchDuplicateVendorModel);
         if (foundDuplicateVendor.size() != 0) {
             responseMessage = this.buildResponseMessage();
             responseMessage.httpStatus = HttpStatus.CONFLICT.value();
-            responseMessage.message = "Same Vendor name already exist";
+            responseMessage.message = "Same Vendor name with Phone no already exist";
             return responseMessage;
         } else {
             return null;

@@ -30,9 +30,12 @@ public class Vendor extends BaseEntity {
     @NotNull
     private String name;
 
-    @Column(name = "phone_no")
+    @Column(name = "phone_no1")
     @NotNull
-    private String phoneNo;
+    private String phoneNo1;
+
+    @Column(name = "phone_no2")
+    private String phoneNo2;
 
     @Column(name = "bank_ac_no")
     private String bankAccountNo;

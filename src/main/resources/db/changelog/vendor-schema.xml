@@ -15,9 +15,11 @@
             <column name="name" type="varchar">
                 <constraints nullable="false"/>
             </column>
-            <column name="phone_no" type="varchar">
+            <column name="phone_no1" type="varchar">
                 <constraints nullable="false"/>
             </column>
+            <column name="phone_no2" type="varchar"></column>
+
             <column name="bank_ac_no" type="varchar">
                 <constraints nullable="true"/>
             </column>
@@ -38,8 +40,8 @@
             <column name="updated_date" type="datetime"></column>
             <column name="status" type="integer"></column>
         </createTable>
-        <addUniqueConstraint columnNames="name, status"
-                             constraintName="unique vendor name and status"
+        <addUniqueConstraint columnNames="name, phone_no1"
+                             constraintName="unique vendor name and phone_no1"
                              schemaName="inventory"
                              tableName="vendor"/>
 

@@ -7,14 +7,19 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
   <include file="changelog/01-create-inventory-schema.xml" relativeToChangelogFile="true"/>
+  <include file="changelog/vendor-schema.xml" relativeToChangelogFile="true"/>
 
 
-    <include file="changelog/view/product-sales-report-view.xml" relativeToChangelogFile="true"/>
-    <include file="changelog/view/sales-product-view.xml" relativeToChangelogFile="true"/>
-    <include file="changelog/view/available-stock-view.xml" relativeToChangelogFile="true"/>
 
 
-    <include file="changelog/history-schema.xml" relativeToChangelogFile="true"/>
+
+
+  <include file="changelog/view/product-sales-report-view.xml" relativeToChangelogFile="true"/>
+  <include file="changelog/view/sales-product-view.xml" relativeToChangelogFile="true"/>
+  <include file="changelog/view/available-stock-view.xml" relativeToChangelogFile="true"/>
+
+
+  <include file="changelog/history-schema.xml" relativeToChangelogFile="true"/>
 
 
 

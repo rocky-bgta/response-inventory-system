@@ -11,7 +11,8 @@ import java.util.UUID;
 public class VendorModel extends BaseModel {
     private UUID id;
     private String name;
-    private String phoneNo;
+    private String phoneNo1;
+    private String phoneNo2;
     private String bankAccountNo;
     private String email;
     private String address;
