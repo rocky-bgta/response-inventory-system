@@ -242,7 +242,7 @@ public class VendorService extends BaseService<Vendor> {
                 queryBuilderString = new StringBuilder();
                 queryBuilderString.append("SELECT v.id, ")
                         .append("v.name, ")
-                        .append("v.phoneNo, ")
+                        .append("v.phoneNo1, ")
                         .append("v.email, ")
                         .append("v.address, ")
                         .append("v.description ")
@@ -250,7 +250,7 @@ public class VendorService extends BaseService<Vendor> {
                         .append("WHERE ")
                         .append("( ")
                         .append("lower(v.name) LIKE '%" + searchKey + "%' ")
-                        .append("OR lower(v.phoneNo) LIKE '%" + searchKey + "%' ")
+                        .append("OR lower(v.phoneNo1) LIKE '%" + searchKey + "%' ")
                         .append("OR lower(v.email) LIKE '%" + searchKey + "%' ")
                         .append("OR lower(v.address) LIKE '%" + searchKey + "%' ")
                         .append("OR lower(v.description) LIKE '%" + searchKey + "%' ")

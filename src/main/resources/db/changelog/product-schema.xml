@@ -18,13 +18,10 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="brand_id" type="UUID">
-                <constraints nullable="false"/>
-            </column>
+            <column name="brand_id" type="UUID"></column>
             <column name="model_no" type="varchar">
                 <constraints nullable="false"/>
             </column>
-            <!--<column name="serial_no" type="varchar"></column>-->
             <column name="price" type="double">
                 <constraints nullable="false"/>
             </column>
@@ -41,9 +38,20 @@
             <column name="updated_date" type="datetime"></column>
             <column name="status" type="integer"></column>
         </createTable>
-        <addUniqueConstraint columnNames="name,category_id,model_no,brand_id,status"
-                             constraintName="unique Product by name, category_id, model_no, barcode,brand_id and status"
+        <addUniqueConstraint columnNames="name,category_id,model_no,status"
+                             constraintName="unique Product by name, category_id, model_no, barcode and status"
                              schemaName="inventory"
                              tableName="product"/>
+
+        <sqlFile
+               encoding="utf8"
+               endDelimiter="\nGO"
+               path="seed/product.sql"
+               relativeToChangelogFile="true"
+               splitStatements="true"
+               stripComments="true"/>
+
     </changeSet>
+
+
 </databaseChangeLog>

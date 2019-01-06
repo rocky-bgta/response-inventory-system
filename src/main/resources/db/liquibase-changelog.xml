@@ -8,6 +8,7 @@
 
   <include file="changelog/01-create-inventory-schema.xml" relativeToChangelogFile="true"/>
   <include file="changelog/vendor-schema.xml" relativeToChangelogFile="true"/>
+    <include file="changelog/product-schema.xml" relativeToChangelogFile="true"/>
 
 
 

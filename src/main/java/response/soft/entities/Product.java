@@ -36,7 +36,6 @@ public class Product extends BaseEntity {
     private UUID categoryId;
 
     @Column(name = "brand_id")
-    @NotNull
     private UUID brandId;
 
     @Column(name = "model_no")
