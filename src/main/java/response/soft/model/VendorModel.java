@@ -12,9 +12,9 @@ public class VendorModel extends BaseModel {
     private UUID id;
     private String name;
     private String phoneNo1;
-    private String phoneNo2;
-    private String bankAccountNo;
     private String email;
     private String address;
     private String description;
+    private String phoneNo2;
+    private String bankAccountNo;
 }
