@@ -41,5 +41,15 @@
                              constraintName="unique store name and status"
                              schemaName="inventory"
                              tableName="store"/>
+
+
+        <sqlFile
+                encoding="utf8"
+                endDelimiter="\nGO"
+                path="seed/store.sql"
+                relativeToChangelogFile="true"
+                splitStatements="true"
+                stripComments="true"/>
+
     </changeSet>
 </databaseChangeLog>

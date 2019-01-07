@@ -60,20 +60,7 @@
             <column name="status" type="integer"></column>
         </createTable>
 
-        <createTable tableName="category" remarks="A table to contain all the category">
-            <column name="id" type="UUID">
-                <constraints nullable="false" primaryKey="true"/>
-            </column>
-            <column name="name" type="varchar(100)">
-                <constraints nullable="false" unique="true"/>
-            </column>
-            <column name="description" type="varchar(200)"></column>
-            <column name="created_by" type="varchar(50)"></column>
-            <column name="updated_by" type="varchar(50)"></column>
-            <column name="created_date" type="datetime"></column>
-            <column name="updated_date" type="datetime"></column>
-            <column name="status" type="integer"></column>
-        </createTable>
+<!--
 
         <createTable tableName="brand" remarks="A table to contain all the brand">
             <column name="id" type="UUID">
@@ -90,8 +77,9 @@
             <column name="status" type="integer"></column>
         </createTable>
 
+-->
 
-
+<!--
         <createTable tableName="store" remarks="A table to contain all the store">
             <column name="id" type="UUID">
                 <constraints nullable="false" unique="true" primaryKey="true"/>
@@ -125,39 +113,10 @@
         <addUniqueConstraint columnNames="name, status"
                              constraintName="unique store name and status"
                              schemaName="inventory"
-                             tableName="store"/>
+                             tableName="store"/>-->
 
-        <createTable tableName="stock" remarks="A table to contain all the stock">
-            <column name="id" type="UUID">
-                <constraints nullable="false" unique="true" primaryKey="true"/>
-            </column>
-            <column name="store_id" type="UUID">
-                <constraints nullable="false"/>
-            </column>
-            <column name="product_id" type="UUID">
-                <constraints nullable="false"/>
-            </column>
-            <column name="in_out" type="integer">
-                <constraints nullable="false"/>
-            </column>
-            <column name="quantity" type="integer">
-                <constraints nullable="false"/>
-            </column>
-            <column name="unit_price" type="double">
-                <constraints nullable="false"/>
-            </column>
-            <column name="total" type="double">
-                <constraints nullable="false"/>
-            </column>
-            <column name="date" type="datetime">
-                <constraints nullable="false"/>
-            </column>
-            <column name="created_by" type="varchar"></column>
-            <column name="updated_by" type="varchar"></column>
-            <column name="created_date" type="datetime"></column>
-            <column name="updated_date" type="datetime"></column>
-            <column name="status" type="integer"></column>
-        </createTable>
+<!--
+
 
         <createTable tableName="store_in_product" remarks="A table to contain all the stock in">
             <column name="id" type="UUID">
@@ -200,6 +159,10 @@
             <column name="status" type="integer"></column>
         </createTable>
 
+        -->
+
+       <!--
+
         <createTable tableName="store_out_product" remarks="A table to contain all the stock out">
             <column name="id" type="UUID">
                 <constraints nullable="false" unique="true" primaryKey="true"/>
@@ -227,6 +190,10 @@
             <column name="updated_date" type="datetime"></column>
             <column name="status" type="integer"></column>
         </createTable>
+
+        -->
+
+      <!--
 
         <createTable tableName="store_products_transfer" remarks="A table to contain all the product transfer between store">
             <column name="id" type="UUID">
@@ -261,6 +228,10 @@
             <column name="updated_date" type="datetime"></column>
             <column name="status" type="integer"></column>
         </createTable>
+
+      -->
+
+        <!--
 
         <createTable tableName="product_sales" remarks="A table to contain all the product sales information">
             <column name="id" type="UUID">
@@ -306,6 +277,10 @@
             <column name="status" type="integer"></column>
         </createTable>
 
+        -->
+
+        <!--
+
         <createTable tableName="invoice_balance" remarks="A table to contain all Invoice balance information">
             <column name="id" type="UUID">
                 <constraints nullable="false" unique="true" primaryKey="true"/>
@@ -332,6 +307,9 @@
             <column name="updated_date" type="datetime"></column>
             <column name="status" type="integer"></column>
         </createTable>
+
+        -->
+<!--
 
         <createTable tableName="customer_payment" remarks="A table to contain all the customer payment information">
             <column name="id" type="UUID">
@@ -369,7 +347,9 @@
             <column name="status" type="integer"></column>
         </createTable>
 
-        <createTable tableName="customer" remarks="A table to contain all customer information">
+        -->
+
+        <!--<createTable tableName="customer" remarks="A table to contain all customer information">
             <column name="id" type="UUID">
                 <constraints nullable="false" unique="true" primaryKey="true"/>
             </column>
@@ -405,7 +385,7 @@
         <addUniqueConstraint columnNames="name, phone_no1, address, status"
                              constraintName="unique Customer base on  name phone_no1 address and status"
                              schemaName="inventory"
-                             tableName="customer"/>
+                             tableName="customer"/>-->
 
 
 
@@ -432,39 +412,15 @@
 
 
 
-        <sqlFile
-                 encoding="utf8"
-                 endDelimiter="\nGO"
-                 path="seed/brand.sql"
-                 relativeToChangelogFile="true"
-                 splitStatements="true"
-                 stripComments="true"/>
-
-        <sqlFile
-                encoding="utf8"
-                endDelimiter="\nGO"
-                path="seed/category.sql"
-                relativeToChangelogFile="true"
-                splitStatements="true"
-                stripComments="true"/>
-
-        <sqlFile
-                encoding="utf8"
-                endDelimiter="\nGO"
-                path="seed/customer.sql"
-                relativeToChangelogFile="true"
-                splitStatements="true"
-                stripComments="true"/>
 
 
 
-        <sqlFile
-                encoding="utf8"
-                endDelimiter="\nGO"
-                path="seed/store.sql"
-                relativeToChangelogFile="true"
-                splitStatements="true"
-                stripComments="true"/>
+
+
+
+
+
+
 
 
     </changeSet>
