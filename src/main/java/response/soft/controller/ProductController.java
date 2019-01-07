@@ -33,6 +33,15 @@ public class ProductController {
 
     @ApiOperation(value ="", response = Object.class)
     @ResponseStatus(HttpStatus.OK)
+    @RequestMapping(value = "/list-view", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseMessage getProductViewList(@RequestBody RequestMessage requestMessage){
+        ResponseMessage responseMessage;
+        responseMessage = this.productService.getProductViewList(requestMessage);
+        return responseMessage;
+    }
+
+    @ApiOperation(value ="", response = Object.class)
+    @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseMessage getById(@PathVariable UUID id){
         ResponseMessage responseMessage;

@@ -27,6 +27,7 @@
 
 
 
+    <include file="changelog/view/product-view.xml" relativeToChangelogFile="true"/>
     <include file="changelog/view/product-sales-report-view.xml" relativeToChangelogFile="true"/>
     <include file="changelog/view/sales-product-view.xml" relativeToChangelogFile="true"/>
     <include file="changelog/view/available-stock-view.xml" relativeToChangelogFile="true"/>

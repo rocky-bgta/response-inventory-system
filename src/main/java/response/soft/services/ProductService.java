@@ -13,6 +13,7 @@ import response.soft.core.RequestMessage;
 import response.soft.core.ResponseMessage;
 import response.soft.core.datatable.model.DataTableRequest;
 import response.soft.entities.Product;
+import response.soft.entities.view.ProductView;
 import response.soft.model.ProductModel;
 
 import java.util.List;
@@ -301,6 +302,7 @@ public class ProductService extends BaseService<Product> {
     }
 
 
+
     public ResponseMessage getAllProduct(RequestMessage requestMessage) {
         ResponseMessage responseMessage;
         List<ProductModel> list;
@@ -375,6 +377,87 @@ public class ProductService extends BaseService<Product> {
         }
         return responseMessage;
     }
+
+    public ResponseMessage getProductViewList(RequestMessage requestMessage) {
+        ResponseMessage responseMessage;
+        List<ProductView> list;
+        DataTableRequest dataTableRequest;
+        String searchKey=null;
+        StringBuilder queryBuilderString =new StringBuilder();
+        try {
+            Core.processRequestMessage(requestMessage);
+
+            dataTableRequest = requestMessage.dataTableRequest;
+            if(dataTableRequest!=null && !StringUtils.equals(dataTableRequest.search.value,"string")) {
+                searchKey = dataTableRequest.search.value;
+                searchKey = searchKey.trim().toLowerCase();
+            }
+
+            /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(categoryModel);
+            for (ConstraintViolation<CountryModel> violation : violations) {
+                log.error(violation.getMessage());
+            }*/
+
+
+
+            //============ full text search ===========================================
+
+            if ((dataTableRequest != null && !StringUtils.isEmpty(searchKey))) {
+
+               /* queryBuilderString.append("SELECT v.id, ")
+                        .append("v.name, ")
+                        .append("v.phoneNo, ")
+                        .append("v.email, ")
+                        .append("v.address, ")
+                        .append("v.description ")
+                        .append("FROM Stock v ")
+                        .append("WHERE ")
+                        .append("( ")
+                        .append("lower(v.name) LIKE '%" + searchKey + "%' ")
+                        .append("OR lower(v.phoneNo) LIKE '%" + searchKey + "%' ")
+                        .append("OR lower(v.email) LIKE '%" + searchKey + "%' ")
+                        .append("OR lower(v.address) LIKE '%" + searchKey + "%' ")
+                        .append("OR lower(v.description) LIKE '%" + searchKey + "%' ")
+                        .append("OR lower(v.description) LIKE '%" + searchKey + "%' ")
+                        .append(") ")
+                        .append("AND v.status="+SqlEnum.Status.Active.get());
+
+                */
+                //Boolean isWhereAdded=false;
+                queryBuilderString.append("SELECT v FROM ProductView v ");
+
+
+
+
+                list = this.executeHqlQuery(queryBuilderString.toString(),ProductView.class,SqlEnum.QueryType.View.get());
+                //============ full text search ===========================================
+            }else {
+                queryBuilderString.setLength(0);
+                queryBuilderString.append("SELECT v FROM ProductView v ");
+
+                list = this.executeHqlQuery(queryBuilderString.toString(),ProductView.class,SqlEnum.QueryType.View.get());
+            }
+
+            responseMessage = this.buildResponseMessage(list);
+
+            if (list != null && list.size()>0) {
+                responseMessage.httpStatus = HttpStatus.FOUND.value();
+                responseMessage.message = "Get all Product View successfully";
+                //this.commit();
+            } else {
+                responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
+                responseMessage.message = "Failed to get Product View";
+                //this.rollBack();
+            }
+        } catch (Exception ex) {
+            responseMessage = this.buildFailedResponseMessage();
+            ex.printStackTrace();
+            //this.rollBack();
+            log.error("getProductViewList -> get product view got exception");
+        }
+        return responseMessage;
+    }
+
 
     /*public void saveImage(byte[] image) {
         ProductModel productModel = new ProductModel();

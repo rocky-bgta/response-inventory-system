@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+
+
+    <changeSet id="10" author="Salahin Rocky">
+
+        <createView replaceIfExists="true"
+                    schemaName="inventory"
+                    viewName="product_view">
+        SELECT
+        p.id,
+        p.name,
+        c.name as category,
+        b.name as brand,
+        p.model_no,
+        p.price,
+        p.image
+
+        FROM inventory.product p
+        LEFT JOIN inventory.category c ON p.category_id = c.id
+        LEFT JOIN inventory.brand b ON p.brand_id = b.id
+        WHERE p.status = 1
+        </createView>
+
+    </changeSet>
+</databaseChangeLog>
