@@ -20,6 +20,7 @@
     <include file="changelog/invoice-balance-schema.xml" relativeToChangelogFile="true"/>
     <include file="changelog/customer-payment-schema.xml" relativeToChangelogFile="true"/>
     <include file="changelog/customer-schema.xml" relativeToChangelogFile="true"/>
+    <include file="changelog/file-upload-schema.xml" relativeToChangelogFile="true"/>
 
 
 

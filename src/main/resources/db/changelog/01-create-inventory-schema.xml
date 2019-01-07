@@ -35,6 +35,8 @@
 
         -->
 
+
+<!--
         <createTable tableName="file_upload" remarks="A table to contain all the Uploaded File">
             <column name="id" type="UUID">
                 <constraints nullable="false" primaryKey="true"/>
@@ -59,6 +61,9 @@
             <column name="updated_date" type="datetime"></column>
             <column name="status" type="integer"></column>
         </createTable>
+
+        -->
+
 
 <!--
 
