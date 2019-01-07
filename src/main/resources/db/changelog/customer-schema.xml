@@ -45,13 +45,5 @@
                              schemaName="inventory"
                              tableName="customer"/>
 
-
-        <sqlFile
-                encoding="utf8"
-                endDelimiter="\nGO"
-                path="seed/customer.sql"
-                relativeToChangelogFile="true"
-                splitStatements="true"
-                stripComments="true"/>
     </changeSet>
 </databaseChangeLog>

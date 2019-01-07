@@ -43,14 +43,6 @@
                              schemaName="inventory"
                              tableName="product"/>
 
-        <sqlFile
-               encoding="utf8"
-               endDelimiter="\nGO"
-               path="seed/product.sql"
-               relativeToChangelogFile="true"
-               splitStatements="true"
-               stripComments="true"/>
-
     </changeSet>
 
 

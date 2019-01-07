@@ -22,14 +22,5 @@
             <column name="status" type="integer"></column>
         </createTable>
 
-
-        <sqlFile
-                encoding="utf8"
-                endDelimiter="\nGO"
-                path="seed/category.sql"
-                relativeToChangelogFile="true"
-                splitStatements="true"
-                stripComments="true"/>
-
     </changeSet>
 </databaseChangeLog>
