@@ -17,7 +17,7 @@ public class ProductView {
 
     @Id
     @Column(name = "id")
-    private UUID Id;
+    private UUID id;
 
     @Column(name = "name")
     private String name;
@@ -33,6 +33,9 @@ public class ProductView {
 
     @Column(name = "price")
     private Double price;
+
+    @Column(name = "description")
+    private String description;
 
     @Column(name = "image")
     private String image;

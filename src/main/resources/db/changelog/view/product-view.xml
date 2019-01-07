@@ -20,6 +20,7 @@
         b.name as brand,
         p.model_no,
         p.price,
+        p.description,
         p.image
 
         FROM inventory.product p
