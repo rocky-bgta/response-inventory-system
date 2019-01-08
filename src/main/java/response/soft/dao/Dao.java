@@ -585,11 +585,15 @@ public class Dao<T> extends BaseDao {
         String entityName;
         Query selectQuery;
         Session session=null;
+        StringBuilder queryBuilderString = new StringBuilder();
+        Long count;
         try {
             session = getSession();
             session.beginTransaction();
             Query q=null;
 
+            entityName = clazz.getName();
+            entityName = StringUtils.substringAfterLast(entityName, ".").trim();
 
             if(SqlEnum.QueryType.View.get() == queryType){
 
@@ -597,28 +601,28 @@ public class Dao<T> extends BaseDao {
                     hql+= " ORDER BY v." + Core.shortColumnName.get() + " " + Core.shortDirection.get().toUpperCase();
 
 
-                if (Core.pageOffset.get() != null && Core.pageOffset.get() != 0) {
-                    convertedModels = (List<M>) session.createQuery(hql,clazz)
+                if (Core.pageOffset.get() != null) {
+                    convertedModels = session.createQuery(hql,clazz)
                             .setFirstResult(Core.pageOffset.get())
-                            .setMaxResults(Core.pageSize.get());
+                            .setMaxResults(Core.pageSize.get()).getResultList();
                 }else {
                     convertedModels =  session.createQuery(hql,clazz).getResultList();
                 }
-                if(convertedModels!=null && convertedModels.size()>=0){
-                    Core.totalRowCount.set((long)convertedModels.size());
-                    Core.recordsFilteredCount.set((long) convertedModels.size());
-                }
-                return convertedModels;
+                //if(convertedModels!=null && convertedModels.size()>=0){
+                    //queryBuilderString.setLength(0);
+
+                //}
+                //return convertedModels;
             }
 
             if (SqlEnum.QueryType.Join.get() == queryType) {
                 q = session.createQuery(hql);
 
-                if (Core.pageOffset.get() != null && Core.pageOffset.get() != 0) {
+                if (Core.pageOffset.get() != null) {
                     q.setFirstResult(Core.pageOffset.get());
                 }
 
-                if (Core.pageSize.get() != null && Core.pageSize.get() != 0) {
+                if (Core.pageSize.get() != null) {
                     q.setMaxResults(Core.pageSize.get());
                 }
 
@@ -664,10 +668,22 @@ public class Dao<T> extends BaseDao {
             }
 
             //========== set search count for data table =======================
-            if(convertedModels!=null && convertedModels.size()>=0){
+            /*if(convertedModels!=null && convertedModels.size()>=0){
                 Core.totalRowCount.set((long)result.size());
                 Core.recordsFilteredCount.set((long) result.size());
-            }
+            }*/
+
+            queryBuilderString.append("SELECT COUNT(*) FROM ");
+            queryBuilderString.append("" + entityName + " t");
+
+            Query countQuery = session.createQuery(queryBuilderString.toString());
+
+            count = (Long) countQuery.getSingleResult();
+
+
+            Core.totalRowCount.set(count);
+            Core.recordsFilteredCount.set(count);
+
 
             // this.setTotalActiveRecordCount(clazz);
             //========== set search count for data table =======================
