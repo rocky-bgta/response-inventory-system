@@ -16,5 +16,5 @@ public class VendorModel extends BaseModel {
     private String address;
     private String description;
     private String phoneNo2;
-    private String bankAccountNo;
+    private String bankInfo;
 }

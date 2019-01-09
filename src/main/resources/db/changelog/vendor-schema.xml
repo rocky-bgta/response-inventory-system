@@ -20,7 +20,7 @@
             </column>
             <column name="phone_no2" type="varchar"></column>
 
-            <column name="bank_ac_no" type="varchar">
+            <column name="bank_info" type="varchar">
                 <constraints nullable="true"/>
             </column>
             <column name="email" type="varchar">

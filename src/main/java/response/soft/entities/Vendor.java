@@ -37,8 +37,8 @@ public class Vendor extends BaseEntity {
     @Column(name = "phone_no2")
     private String phoneNo2;
 
-    @Column(name = "bank_ac_no")
-    private String bankAccountNo;
+    @Column(name = "bank_info")
+    private String bankInfo;
 
     @Column(name = "email")
     @Email
