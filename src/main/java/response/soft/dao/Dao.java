@@ -16,7 +16,6 @@ import org.springframework.stereotype.Repository;
 import response.soft.appenum.SqlEnum;
 import response.soft.constant.DbConstant;
 import response.soft.core.BaseDao;
-import response.soft.core.BaseHistoryEntity;
 import response.soft.core.Core;
 import response.soft.entities.History;
 
@@ -630,6 +629,8 @@ public class Dao<T> extends BaseDao {
 
                 if (result.size() > 0) {
                     convertedModels = this.getObjectListFromObjectArray(result, clazz);
+                    Core.totalRowCount.set((long)convertedModels.size());
+                    Core.recordsFilteredCount.set((long)convertedModels.size());
                 }
 
 
@@ -673,16 +674,18 @@ public class Dao<T> extends BaseDao {
                 Core.recordsFilteredCount.set((long) result.size());
             }*/
 
-            queryBuilderString.append("SELECT COUNT(*) FROM ");
-            queryBuilderString.append("" + entityName + " t");
+            if(queryType==SqlEnum.QueryType.View.get()) {
+                queryBuilderString.append("SELECT COUNT(*) FROM ");
+                queryBuilderString.append("" + entityName + " t");
 
-            Query countQuery = session.createQuery(queryBuilderString.toString());
+                Query countQuery = session.createQuery(queryBuilderString.toString());
 
-            count = (Long) countQuery.getSingleResult();
+                count = (Long) countQuery.getSingleResult();
 
 
-            Core.totalRowCount.set(count);
-            Core.recordsFilteredCount.set(count);
+                Core.totalRowCount.set(count);
+                Core.recordsFilteredCount.set(count);
+            }
 
 
             // this.setTotalActiveRecordCount(clazz);

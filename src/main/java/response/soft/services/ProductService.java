@@ -406,28 +406,21 @@ public class ProductService extends BaseService<Product> {
 
                /* queryBuilderString.append("SELECT v.id, ")
                         .append("v.name, ")
-                        .append("v.phoneNo, ")
-                        .append("v.email, ")
-                        .append("v.address, ")
-                        .append("v.description ")
-                        .append("FROM Stock v ")
+                        .append("v.category, ")
+                        .append("v.brand, ")
+                        .append("v.modelNo, ")
+                        .append("v.price ")
+                        .append("FROM ProductView v ")
                         .append("WHERE ")
-                        .append("( ")
                         .append("lower(v.name) LIKE '%" + searchKey + "%' ")
-                        .append("OR lower(v.phoneNo) LIKE '%" + searchKey + "%' ")
-                        .append("OR lower(v.email) LIKE '%" + searchKey + "%' ")
-                        .append("OR lower(v.address) LIKE '%" + searchKey + "%' ")
-                        .append("OR lower(v.description) LIKE '%" + searchKey + "%' ")
-                        .append("OR lower(v.description) LIKE '%" + searchKey + "%' ")
-                        .append(") ")
-                        .append("AND v.status="+SqlEnum.Status.Active.get());
+                        .append("OR lower(v.category) LIKE '%" + searchKey + "%' ")
+                        .append("OR lower(v.brand) LIKE '%" + searchKey + "%' ")
+                        .append("OR lower(v.modelNo) LIKE '%" + searchKey + "%' ")
+                        .append("OR CAST(v.price AS string) LIKE '%" + searchKey + "%' ");
+*/
 
-                */
                 //Boolean isWhereAdded=false;
                 queryBuilderString.append("SELECT v FROM ProductView v ");
-
-
-
 
                 list = this.executeHqlQuery(queryBuilderString.toString(),ProductView.class,SqlEnum.QueryType.View.get());
                 //============ full text search ===========================================
