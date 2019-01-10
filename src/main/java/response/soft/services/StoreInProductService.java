@@ -442,9 +442,9 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
                         .append("p.barcode, ")
                         .append("p.image ")
                         .append("FROM StoreInProduct  sip ")
-                        .append("INNER JOIN Product p ON p.id = sip.productId ")
-                        .append("INNER JOIN Category cat ON p.categoryId = cat.id ")
-                        .append("INNER JOIN Brand brn ON p.brandId = brn.id ")
+                        .append("LEFT JOIN Product p ON  sip.productId = p.id ")
+                        .append("LEFT JOIN Category cat ON p.categoryId = cat.id ")
+                        .append("LEFT JOIN Brand brn ON p.brandId = brn.id ")
                         .append("WHERE sip.productStatus = " + InventoryEnum.ProductStatus.AVAILABLE.get() + " AND sip.storeId = '")
                         .append(storeId + "' ");
 
