@@ -3,6 +3,8 @@ package response.soft.services;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -16,6 +18,7 @@ import response.soft.entities.Product;
 import response.soft.entities.view.ProductView;
 import response.soft.model.ProductModel;
 
+import javax.persistence.EntityManagerFactory;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,6 +26,12 @@ import java.util.UUID;
 public class ProductService extends BaseService<Product> {
 
     private static final Logger log = LoggerFactory.getLogger(ProductService.class);
+
+    @Autowired
+    ApplicationContext applicationContext;
+
+    EntityManagerFactory entityManagerFactory;
+
 
     @Override
     protected void initEntityModel() {
@@ -385,6 +394,7 @@ public class ProductService extends BaseService<Product> {
         String searchKey=null;
         StringBuilder queryBuilderString =new StringBuilder();
         try {
+
             Core.processRequestMessage(requestMessage);
 
             dataTableRequest = requestMessage.dataTableRequest;
@@ -398,18 +408,11 @@ public class ProductService extends BaseService<Product> {
                 log.error(violation.getMessage());
             }*/
 
-
-
             //============ full text search ===========================================
 
             if ((dataTableRequest != null && !StringUtils.isEmpty(searchKey))) {
 
-               /* queryBuilderString.append("SELECT v.id, ")
-                        .append("v.name, ")
-                        .append("v.category, ")
-                        .append("v.brand, ")
-                        .append("v.modelNo, ")
-                        .append("v.price ")
+                queryBuilderString.append("SELECT v ")
                         .append("FROM ProductView v ")
                         .append("WHERE ")
                         .append("lower(v.name) LIKE '%" + searchKey + "%' ")
@@ -417,17 +420,12 @@ public class ProductService extends BaseService<Product> {
                         .append("OR lower(v.brand) LIKE '%" + searchKey + "%' ")
                         .append("OR lower(v.modelNo) LIKE '%" + searchKey + "%' ")
                         .append("OR CAST(v.price AS string) LIKE '%" + searchKey + "%' ");
-*/
-
-                //Boolean isWhereAdded=false;
-                queryBuilderString.append("SELECT v FROM ProductView v ");
 
                 list = this.executeHqlQuery(queryBuilderString.toString(),ProductView.class,SqlEnum.QueryType.View.get());
                 //============ full text search ===========================================
             }else {
                 queryBuilderString.setLength(0);
                 queryBuilderString.append("SELECT v FROM ProductView v ");
-
                 list = this.executeHqlQuery(queryBuilderString.toString(),ProductView.class,SqlEnum.QueryType.View.get());
             }
 

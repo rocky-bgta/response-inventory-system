@@ -607,11 +607,6 @@ public class Dao<T> extends BaseDao {
                 }else {
                     convertedModels =  session.createQuery(hql,clazz).getResultList();
                 }
-                //if(convertedModels!=null && convertedModels.size()>=0){
-                    //queryBuilderString.setLength(0);
-
-                //}
-                //return convertedModels;
             }
 
             if (SqlEnum.QueryType.Join.get() == queryType) {
