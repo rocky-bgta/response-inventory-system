@@ -151,7 +151,10 @@ public final class AppUtils {
                     }else {
                         id = new String((String) inputValue);
                         id = id.substring(1, id.length() - 1);
-                        result = UUID.fromString(id);
+                        id=id.replaceAll("\\s+","");
+                        if(!StringUtils.isEmpty(id))
+                            result = UUID.fromString(id);
+                        else result = null;
                     }
                 default:
                     break;
