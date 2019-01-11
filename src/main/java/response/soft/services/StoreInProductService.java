@@ -409,12 +409,11 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
         return responseMessage;
     }
 
-    public ResponseMessage getSalesProductListByStoreIdOrProductIdOrBarcodeOrSerialNo(
+    public ResponseMessage getSalesProductListByStoreIdOrProductIdOrBarcode(
             RequestMessage requestMessage,
-            UUID storeId,
-            UUID productId,
-            String barcode,
-            String serialNo)
+            String storeId,
+            String productId,
+            String barcode)
     {
 
         ResponseMessage responseMessage=null;
@@ -427,15 +426,15 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
             Core.processRequestMessage(requestMessage);
             queryBuilder.append("SELECT v FROM SalesProductView v WHERE v.storeId='" + storeId + "' " );
 
-            if (productId!=null)
+            if (!StringUtils.isEmpty(productId) && !StringUtils.equals(productId, "null"))
                 queryBuilder.append("AND v.productId = '" + productId + "' ");
 
-            if (!StringUtils.isEmpty(barcode) && !StringUtils.equals(barcode, "undefined"))
+            if (!StringUtils.isEmpty(barcode) && !StringUtils.equals(barcode, "null"))
                 queryBuilder.append("AND v.barcode = '" + barcode + "' ");
 
-            if (!StringUtils.isEmpty(serialNo) && !StringUtils.equals(serialNo, "undefined"))
+            /*if (!StringUtils.isEmpty(serialNo) && !StringUtils.equals(serialNo, "undefined"))
                 queryBuilder.append("AND v.serialNo = '" + serialNo + "' ");
-
+*/
 
             salesProductViewList = this.executeHqlQuery(queryBuilder.toString(),SalesProductView.class,SqlEnum.QueryType.View.get());
 

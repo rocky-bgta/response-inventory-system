@@ -1,6 +1,5 @@
 package response.soft.services;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,16 +15,13 @@ import response.soft.core.Core;
 import response.soft.core.RequestMessage;
 import response.soft.core.ResponseMessage;
 import response.soft.core.datatable.model.DataTableRequest;
-import response.soft.entities.StoreInProduct;
 import response.soft.entities.StoreOutProduct;
 import response.soft.model.*;
 import response.soft.model.view.SalesProductViewModel;
-import response.soft.model.view.StoreInProductsViewModel;
-import response.soft.model.view.StoreSalesProductViewModel;
+import response.soft.model.view.ProductSalesViewModel;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -61,7 +57,7 @@ public class StoreSalesProductService extends BaseService<StoreOutProduct> {
 
     public ResponseMessage saveStoreSalesProducts(RequestMessage requestMessage) {
         ResponseMessage responseMessage;
-        StoreSalesProductViewModel storeSalesProductViewModel;
+        ProductSalesViewModel productSalesViewModel;
         List<SalesProductViewModel> salesProductViewModelList;
 
         List<StoreInProductModel> storeInProductModelList;
@@ -69,8 +65,8 @@ public class StoreSalesProductService extends BaseService<StoreOutProduct> {
         Integer salesQty;
 
         UUID storeId;
-        UUID customerId;
-        Integer salesMethod;
+        UUID customerId = UUID.randomUUID() ;
+        Integer salesMethod=null;
         String invoiceNo;
         InvoiceBalanceModel invoiceBalanceModel;
         CustomerPaymentModel customerPaymentModel;
@@ -86,20 +82,24 @@ public class StoreSalesProductService extends BaseService<StoreOutProduct> {
 
         try {
 
-            storeSalesProductViewModel = Core.processRequestMessage(requestMessage, StoreSalesProductViewModel.class);
+            productSalesViewModel = Core.processRequestMessage(requestMessage, ProductSalesViewModel.class);
 
-            salesProductViewModelList = storeSalesProductViewModel.getSalesProductViewModelList();
-            storeId = storeSalesProductViewModel.getStoreId();
-            customerId = storeSalesProductViewModel.getCustomerId();
-            salesMethod = storeSalesProductViewModel.getSalesMethod();
+            salesProductViewModelList = productSalesViewModel.getSalesProductViewModelList();
+            storeId = productSalesViewModel.getStoreId();
+
+            if(productSalesViewModel.getCustomerId()!=null)
+                customerId = productSalesViewModel.getCustomerId();
+
+            if(productSalesViewModel.getSalesMethod()!=null)
+                salesMethod = productSalesViewModel.getSalesMethod();
             Integer paymentStatus;
 
 
             Date invoiceDate = new Date();
-            Double paidAmount = storeSalesProductViewModel.getPaidAmount();
-            Double dueAmount = storeSalesProductViewModel.getDueAmount();
-            Double grandTotal = storeSalesProductViewModel.getGrandTotal();
-            invoiceNo = storeSalesProductViewModel.getInvoiceNo();
+            Double paidAmount = productSalesViewModel.getPaidAmount();
+            Double dueAmount = productSalesViewModel.getDueAmount();
+            Double grandTotal = productSalesViewModel.getGrandTotal();
+            invoiceNo = productSalesViewModel.getInvoiceNo();
 
 
             for(SalesProductViewModel salesProductViewModel: salesProductViewModelList){
@@ -289,7 +289,6 @@ public class StoreSalesProductService extends BaseService<StoreOutProduct> {
         return responseMessage;
     }
 
-
     public ResponseMessage deleteStoreSalesProducts(UUID id) {
         ResponseMessage responseMessage;
         StoreOutProductModel stockInModel;
@@ -354,7 +353,6 @@ public class StoreSalesProductService extends BaseService<StoreOutProduct> {
 
         return responseMessage;
     }
-
 
     public ResponseMessage getAllStoreSalesProducts(RequestMessage requestMessage) {
         ResponseMessage responseMessage;

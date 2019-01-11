@@ -100,13 +100,12 @@ public class StoreInProductsController {
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "/available-products", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseMessage getAllAvailableProduct(@RequestBody RequestMessage requestMessage,
-                                  @RequestParam(value="storeId") UUID storeId,
-                                  @RequestParam(value="productId", required = false) UUID productId,
-                                  @RequestParam(value="barcode", required = false) String barcode,
-                                  @RequestParam(value="serialNo", required = false) String serialNo){
+                                  @RequestParam(value="storeId") String storeId,
+                                  @RequestParam(value="productId", required = false) String productId,
+                                  @RequestParam(value="barcode", required = false) String barcode){
         ResponseMessage responseMessage;
-        responseMessage = this.storeInProductService.getSalesProductListByStoreIdOrProductIdOrBarcodeOrSerialNo(
-                requestMessage,storeId,productId,barcode,serialNo);
+        responseMessage = this.storeInProductService.getSalesProductListByStoreIdOrProductIdOrBarcode(
+                requestMessage,storeId,productId,barcode);
         return responseMessage;
     }
 }

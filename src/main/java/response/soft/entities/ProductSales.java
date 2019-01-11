@@ -42,7 +42,6 @@ public class ProductSales extends BaseEntity {
     private Double buyPrice;
 
     @Column(name = "sales_type")
-    @NotNull
     private Integer salesType;
 
     @Column(name = "sales_price")

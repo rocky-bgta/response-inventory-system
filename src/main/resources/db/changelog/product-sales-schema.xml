@@ -23,9 +23,7 @@
             <column name="buy_price" type="double">
                 <constraints nullable="false"/>
             </column>
-            <column name="sales_type" type="integer">
-                <constraints nullable="false"/>
-            </column>
+            <column name="sales_type" type="integer"></column>
             <column name="sales_price" type="double">
                 <constraints nullable="false"/>
             </column>
