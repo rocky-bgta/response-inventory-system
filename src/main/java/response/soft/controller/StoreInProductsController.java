@@ -95,4 +95,18 @@ public class StoreInProductsController {
         responseMessage = this.storeInProductService.getStoreInProductsByStoreId(storeId);
         return responseMessage;
     }
+
+    @ApiOperation(value ="", response = Object.class)
+    @ResponseStatus(HttpStatus.OK)
+    @RequestMapping(value = "/available-products", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseMessage getAllAvailableProduct(@RequestBody RequestMessage requestMessage,
+                                  @RequestParam(value="storeId") UUID storeId,
+                                  @RequestParam(value="productId", required = false) UUID productId,
+                                  @RequestParam(value="barcode", required = false) String barcode,
+                                  @RequestParam(value="serialNo", required = false) String serialNo){
+        ResponseMessage responseMessage;
+        responseMessage = this.storeInProductService.getSalesProductListByStoreIdOrProductIdOrBarcodeOrSerialNo(
+                requestMessage,storeId,productId,barcode,serialNo);
+        return responseMessage;
+    }
 }

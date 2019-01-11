@@ -409,6 +409,55 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
         return responseMessage;
     }
 
+    public ResponseMessage getSalesProductListByStoreIdOrProductIdOrBarcodeOrSerialNo(
+            RequestMessage requestMessage,
+            UUID storeId,
+            UUID productId,
+            String barcode,
+            String serialNo)
+    {
+
+        ResponseMessage responseMessage=null;
+        //List<SalesProductViewModel> salesProductViewModelList = null;
+        List<SalesProductView> salesProductViewList;
+
+        StringBuilder queryBuilder = new StringBuilder();
+
+        try {
+            Core.processRequestMessage(requestMessage);
+            queryBuilder.append("SELECT v FROM SalesProductView v WHERE v.storeId='" + storeId + "' " );
+
+            if (!StringUtils.isEmpty(barcode) && !StringUtils.equals(barcode, "undefined"))
+                queryBuilder.append("AND v.productId = '" + productId + "' ");
+
+            if (!StringUtils.isEmpty(barcode) && !StringUtils.equals(barcode, "undefined"))
+                queryBuilder.append("AND v.barcode = '" + barcode + "' ");
+
+            if (!StringUtils.isEmpty(serialNo) && !StringUtils.equals(serialNo, "undefined"))
+                queryBuilder.append("AND v.serialNo = '" + serialNo + "' ");
+
+
+            salesProductViewList = this.executeHqlQuery(queryBuilder.toString(),SalesProductView.class,SqlEnum.QueryType.View.get());
+
+            responseMessage = this.buildResponseMessage();
+            if(salesProductViewList!=null && salesProductViewList.size()>0){
+                responseMessage.data = salesProductViewList;
+                responseMessage.httpStatus = HttpStatus.FOUND.value();
+                responseMessage.message = "Retrieve available product for sales successfully";
+            }else {
+                responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
+                responseMessage.message = "Failed to retrieve available product for sales";
+            }
+
+
+
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+
+        return responseMessage;
+    }
+
     public ResponseMessage getProductListByIdentificationIds(RequestMessage requestMessage, UUID storeId, String barcode, String serialNo) {
         ResponseMessage responseMessage;
         List<SalesProductViewModel> salesProductViewModelList = null;

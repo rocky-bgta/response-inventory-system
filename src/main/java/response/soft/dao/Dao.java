@@ -593,6 +593,8 @@ public class Dao<T> extends BaseDao {
 
             entityName = clazz.getName();
             entityName = StringUtils.substringAfterLast(entityName, ".").trim();
+            Integer pageOffset= Core.pageOffset.get();
+            Integer pageSize= Core.pageSize.get();
 
             if(SqlEnum.QueryType.View.get() == queryType){
 
@@ -600,7 +602,7 @@ public class Dao<T> extends BaseDao {
                     hql+= " ORDER BY v." + Core.shortColumnName.get() + " " + Core.shortDirection.get().toUpperCase();
 
 
-                if (Core.pageOffset.get() != null) {
+                if ((pageOffset != null && pageOffset>0) && (pageSize!=null && pageSize>0)) {
                     convertedModels = session.createQuery(hql,clazz)
                             .setFirstResult(Core.pageOffset.get())
                             .setMaxResults(Core.pageSize.get()).getResultList();
@@ -612,12 +614,12 @@ public class Dao<T> extends BaseDao {
             if (SqlEnum.QueryType.Join.get() == queryType) {
                 q = session.createQuery(hql);
 
-                Integer pageOffset= Core.pageOffset.get();
+                pageOffset= Core.pageOffset.get();
                 if (pageOffset != null && pageOffset>0) {
                     q.setFirstResult(pageOffset);
                 }
 
-                Integer pageSize= Core.pageSize.get();
+                pageSize= Core.pageSize.get();
                 if (pageSize != null && pageSize>0) {
                     q.setMaxResults(pageSize);
                 }

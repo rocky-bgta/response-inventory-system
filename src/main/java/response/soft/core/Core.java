@@ -247,8 +247,13 @@ public abstract class Core {
             }
             if (requestMessage.dataTableRequest != null && requestMessage.dataTableRequest.length!=null && requestMessage.dataTableRequest.length!=0) {
                 Core.isDataTablePagination.set(true);
-                Core.pageOffset.set(requestMessage.dataTableRequest.start);
-                Core.pageSize.set(requestMessage.dataTableRequest.length);
+                if(requestMessage.dataTableRequest.start!=null && requestMessage.dataTableRequest.start>0)
+                    Core.pageOffset.set(requestMessage.dataTableRequest.start);
+                else Core.pageOffset.set(null);
+                if(requestMessage.dataTableRequest.length!=null && requestMessage.dataTableRequest.length>0)
+                    Core.pageSize.set(requestMessage.dataTableRequest.length);
+                else Core.pageSize.set(null);
+
                 Core.dataTableDraw.set(requestMessage.dataTableRequest.draw);
 
 
