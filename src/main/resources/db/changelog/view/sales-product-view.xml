@@ -14,34 +14,33 @@
                     schemaName="inventory"
                     viewName="sales_product_view">
             SELECT P
-            .ID as product_id,
-            sip.store_id as store_id,
-            count(sip.product_id) as available,
-            P.NAME as product_name,
-            cat.name as category_name,
-            brn.name as brand_name,
+            .ID AS product_id,
+            sip.store_id AS store_id,
+            COUNT ( sip.product_id ) AS available,
+            P.NAME AS product_name,
+            cat.NAME AS category_name,
+            brn.NAME AS brand_name,
             P.model_no,
-            sip.price as buy_price,
+            sip.price AS buy_price,
             P.description,
             P.barcode,
             P.image
             FROM
             inventory.store_in_product sip
-            INNER JOIN inventory.product P ON P.ID = sip.product_id
-            INNER JOIN inventory.category cat ON p.category_id = cat.id
-            INNER JOIN inventory.brand brn ON p.brand_id = brn.id
+            LEFT JOIN inventory.product P ON  sip.product_id = P.ID
+            LEFT JOIN inventory.category cat ON P.category_id = cat.ID
+            LEFT JOIN inventory.brand brn ON P.brand_id = brn.ID
             GROUP BY
-            P.id ,
-            p."name",
-            cat.name,
-            brn.name,
-            p.model_no,
+            P.ID,
+            P.name,
+            cat.NAME,
+            brn.NAME,
+            P.model_no,
             sip.price,
-            p.description,
-            p.barcode,
-            p.image,
+            P.description,
+            P.barcode,
+            P.image,
             sip.store_id
-
             ORDER BY
             sip.store_id
 
