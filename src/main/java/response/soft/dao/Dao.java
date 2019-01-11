@@ -612,12 +612,14 @@ public class Dao<T> extends BaseDao {
             if (SqlEnum.QueryType.Join.get() == queryType) {
                 q = session.createQuery(hql);
 
-                if (Core.pageOffset.get() != null) {
-                    q.setFirstResult(Core.pageOffset.get());
+                Integer pageOffset= Core.pageOffset.get();
+                if (pageOffset != null && pageOffset>0) {
+                    q.setFirstResult(pageOffset);
                 }
 
-                if (Core.pageSize.get() != null) {
-                    q.setMaxResults(Core.pageSize.get());
+                Integer pageSize= Core.pageSize.get();
+                if (pageSize != null && pageSize>0) {
+                    q.setMaxResults(pageSize);
                 }
 
                 result = q.getResultList();
