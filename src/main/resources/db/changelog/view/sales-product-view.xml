@@ -30,6 +30,7 @@
             LEFT JOIN inventory.product P ON  sip.product_id = P.ID
             LEFT JOIN inventory.category cat ON P.category_id = cat.ID
             LEFT JOIN inventory.brand brn ON P.brand_id = brn.ID
+            WHERE sip.product_status = 1
             GROUP BY
             P.ID,
             P.name,

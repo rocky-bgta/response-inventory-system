@@ -427,7 +427,7 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
             Core.processRequestMessage(requestMessage);
             queryBuilder.append("SELECT v FROM SalesProductView v WHERE v.storeId='" + storeId + "' " );
 
-            if (!StringUtils.isEmpty(barcode) && !StringUtils.equals(barcode, "undefined"))
+            if (productId!=null)
                 queryBuilder.append("AND v.productId = '" + productId + "' ");
 
             if (!StringUtils.isEmpty(barcode) && !StringUtils.equals(barcode, "undefined"))

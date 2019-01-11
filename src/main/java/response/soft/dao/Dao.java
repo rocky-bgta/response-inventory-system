@@ -602,7 +602,7 @@ public class Dao<T> extends BaseDao {
                     hql+= " ORDER BY v." + Core.shortColumnName.get() + " " + Core.shortDirection.get().toUpperCase();
 
 
-                if ((pageOffset != null && pageOffset>0) && (pageSize!=null && pageSize>0)) {
+                if (pageOffset != null && (pageSize!=null && pageSize>0)) {
                     convertedModels = session.createQuery(hql,clazz)
                             .setFirstResult(Core.pageOffset.get())
                             .setMaxResults(Core.pageSize.get()).getResultList();
@@ -614,13 +614,8 @@ public class Dao<T> extends BaseDao {
             if (SqlEnum.QueryType.Join.get() == queryType) {
                 q = session.createQuery(hql);
 
-                pageOffset= Core.pageOffset.get();
-                if (pageOffset != null && pageOffset>0) {
+                if (pageOffset != null && pageSize>0) {
                     q.setFirstResult(pageOffset);
-                }
-
-                pageSize= Core.pageSize.get();
-                if (pageSize != null && pageSize>0) {
                     q.setMaxResults(pageSize);
                 }
 
