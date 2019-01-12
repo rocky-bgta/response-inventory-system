@@ -31,7 +31,7 @@ public class CustomerService extends BaseService<Customer> {
         Core.runTimeModelType.set(CustomerModel.class);
     }
 
-    private Boolean checkDuplicateModelFound(CustomerModel requestedCustomerModel) throws Exception {
+    public Boolean isCustomerAlreadyExist(CustomerModel requestedCustomerModel) throws Exception {
         Boolean isDuplicate;
         try {
             CustomerModel customerSearchCondition;
@@ -39,7 +39,7 @@ public class CustomerService extends BaseService<Customer> {
             customerSearchCondition = new CustomerModel();
             customerSearchCondition.setName(requestedCustomerModel.getName());
             customerSearchCondition.setPhoneNo1(requestedCustomerModel.getPhoneNo1());
-            customerSearchCondition.setAddress(requestedCustomerModel.getAddress());
+            //customerSearchCondition.setAddress(requestedCustomerModel.getAddress());
             foundDuplicateCustomer = this.getAllByConditionWithActive(customerSearchCondition);
             if (foundDuplicateCustomer.size() != 0) {
                 isDuplicate = true;
@@ -68,7 +68,7 @@ public class CustomerService extends BaseService<Customer> {
             // search for duplicate product
 
             if (requestCustomerModel != null && !ObjectUtils.isEmpty(requestCustomerModel)) {
-                checkDuplicateModel = this.checkDuplicateModelFound(requestCustomerModel);
+                checkDuplicateModel = this.isCustomerAlreadyExist(requestCustomerModel);
                 if(checkDuplicateModel){
                     responseMessage = this.buildResponseMessage();
                     responseMessage.httpStatus = HttpStatus.CONFLICT.value();
@@ -119,7 +119,7 @@ public class CustomerService extends BaseService<Customer> {
             // retrieved old vendor to update created and created date.
             oldCustomerModel = this.getByIdActiveStatus(requestedCustomerModel.getId());
 
-            checkDuplicateModel = this.checkDuplicateModelFound(requestedCustomerModel);
+            checkDuplicateModel = this.isCustomerAlreadyExist(requestedCustomerModel);
 
 /*
             customerSearchCondition = new CustomerModel();
