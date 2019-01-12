@@ -68,7 +68,7 @@ public class StoreSalesProductService extends BaseService<StoreOutProduct> {
         Integer salesQty;
 
         UUID storeId;
-        UUID customerId = UUID.randomUUID() ;
+        UUID customerId;// = UUID.randomUUID() ;
         Integer salesMethod=null;
         String invoiceNo;
         InvoiceBalanceModel invoiceBalanceModel;
@@ -90,7 +90,7 @@ public class StoreSalesProductService extends BaseService<StoreOutProduct> {
             productSalesViewModel = Core.processRequestMessage(requestMessage, ProductSalesViewModel.class);
 
             salesProductViewModelList = productSalesViewModel.getSalesProductViewModelList();
-            storeId = productSalesViewModel.getStoreId();
+            //storeId = productSalesViewModel.getStoreId();
 
             if(productSalesViewModel.getCustomerModel() !=null) {
                 requestedCustomerModel = productSalesViewModel.getCustomerModel();
@@ -125,6 +125,7 @@ public class StoreSalesProductService extends BaseService<StoreOutProduct> {
             for(SalesProductViewModel salesProductViewModel: salesProductViewModelList){
 
                 salesQty = salesProductViewModel.getSalesQty();
+                storeId = salesProductViewModel.getStoreId();
 
                 // =========== First update stock =========================================================
                 whereConditionStockModel = new StockModel();
