@@ -40,7 +40,6 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -54,12 +53,12 @@ public abstract class Core {
     private ApplicationContext context;
 
     private static final Logger log = LoggerFactory.getLogger(Core.class);
-    private static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    public static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     protected static final ObjectMapper jsonMapper = new ObjectMapper()
             .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
             .configure(DeserializationFeature.ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT.FAIL_ON_UNKNOWN_PROPERTIES, false)
-            .configure(JsonGenerator.Feature.WRITE_NUMBERS_AS_STRINGS,true);
-    //.setDateFormat(dateFormat);
+            .configure(JsonGenerator.Feature.WRITE_NUMBERS_AS_STRINGS,true)
+            .setDateFormat(dateFormat);
 
     protected static final ModelMapper modelMapper = new ModelMapper();
     private static GsonBuilder builder = new GsonBuilder();

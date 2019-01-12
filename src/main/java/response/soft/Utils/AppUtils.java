@@ -15,10 +15,12 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import response.soft.appenum.InventoryEnum;
 import response.soft.constant.DbConstant;
+import response.soft.core.Core;
 import response.soft.core.KeyValueModel;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -110,7 +112,7 @@ public final class AppUtils {
 
     public static <T extends Object> T castValue(String type, Object inputValue) {
         Object result = null;
-        String id; //UUID
+        String id,stringDate;
         try {
             switch (type) {
                 case "java.lang.Integer":
@@ -139,7 +141,10 @@ public final class AppUtils {
                     result = Long.parseLong(inputValue.toString());
                     break;
                 case "java.util.Date":
-                    result = (Date) inputValue;
+                    stringDate = new String((String) inputValue);
+                    stringDate = stringDate.substring(1, stringDate.length() - 1);
+                    stringDate= stringDate.replaceAll("\\s+","");
+                    result = stringDate;
                     break;
                 case "java.lang.String":
                     //result = "'" + inputValue + "'";
@@ -161,7 +166,6 @@ public final class AppUtils {
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            throw ex;
         }
         return (T) result;
     }
