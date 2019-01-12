@@ -55,6 +55,9 @@ public class StoreSalesProductService extends BaseService<StoreOutProduct> {
     @Autowired
     private CustomerPaymentService customerPaymentService;
 
+    @Autowired
+    private CustomerService customerService;
+
     public ResponseMessage saveStoreSalesProducts(RequestMessage requestMessage) {
         ResponseMessage responseMessage;
         ProductSalesViewModel productSalesViewModel;
@@ -79,6 +82,8 @@ public class StoreSalesProductService extends BaseService<StoreOutProduct> {
         StoreOutProductModel storeOutProductModel,savedStoreOutProductModel;
         StoreInProductModel updatedStoreInProductModel;
         ProductSalesModel productSalesModel;
+        CustomerModel requestedCustomerModel=null,createdCustomerModel;
+        Boolean isCustomerExist;
 
         try {
 
@@ -87,8 +92,23 @@ public class StoreSalesProductService extends BaseService<StoreOutProduct> {
             salesProductViewModelList = productSalesViewModel.getSalesProductViewModelList();
             storeId = productSalesViewModel.getStoreId();
 
+            if(productSalesViewModel.getCustomerModel() !=null) {
+                requestedCustomerModel = productSalesViewModel.getCustomerModel();
+                isCustomerExist = this.customerService.isCustomerAlreadyExist(requestedCustomerModel);
+                if(isCustomerExist){
+                    responseMessage = this.buildResponseMessage();
+                    responseMessage.message="Duplicate customer information found!!!";
+                    responseMessage.httpStatus = HttpStatus.IM_USED.value();
+                    return responseMessage;
+                }
+            }
+
             if(productSalesViewModel.getCustomerId()!=null)
                 customerId = productSalesViewModel.getCustomerId();
+            else {
+                createdCustomerModel =  this.customerService.save(requestedCustomerModel);
+                customerId = createdCustomerModel.getId();
+            }
 
             if(productSalesViewModel.getSalesMethod()!=null)
                 salesMethod = productSalesViewModel.getSalesMethod();

@@ -4,6 +4,7 @@ package response.soft.model.view;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import response.soft.core.BaseModel;
+import response.soft.model.CustomerModel;
 
 import java.util.List;
 import java.util.UUID;
@@ -21,7 +22,7 @@ public class ProductSalesViewModel extends BaseModel {
     private Double dueAmount;
     private Double grandTotal;
     private String invoiceNo;
-
+    private CustomerModel customerModel;
 
 }
 
