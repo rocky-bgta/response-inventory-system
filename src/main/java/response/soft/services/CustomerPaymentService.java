@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import response.soft.appenum.InventoryEnum;
 import response.soft.appenum.SqlEnum;
 import response.soft.core.BaseService;
 import response.soft.core.Core;
@@ -103,7 +104,8 @@ public class CustomerPaymentService extends BaseService<CustomerPayment> {
                         .append("cp.paymentDate, ")
                         .append("c.name as customerName ")
                 .append("FROM CustomerPayment cp ")
-                .append("INNER JOIN Customer c ON cp.customerId = c.id");
+                .append("INNER JOIN Customer c ON cp.customerId = c.id ")
+                .append("WHERE cp.paidStatus = "+InventoryEnum.PaymentStatus.PARTIAL.get());
 
                 list = this.executeHqlQuery(queryBuilderString.toString(),CustomerPaymentModel.class,SqlEnum.QueryType.Join.get());
             }
