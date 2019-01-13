@@ -47,8 +47,12 @@ public class CustomerPayment extends BaseEntity {
     @NotNull
     private Integer paidStatus;
 
-    @Column(name = "date")
+    @Column(name = "invoice_date")
     @NotNull
-    private Date date;
+    private Date invoiceDate;
+
+    @Column(name = "payment_date")
+    @NotNull
+    private Date payment_date;
 
 }

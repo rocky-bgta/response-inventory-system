@@ -218,7 +218,7 @@ public class StoreSalesProductService extends BaseService<StoreOutProduct> {
 
             customerPaymentModel.setPaidStatus(paymentStatus);
 
-            customerPaymentModel.setDate(invoiceDate);
+            customerPaymentModel.setInvoiceDate(invoiceDate);
             this.customerPaymentService.save(customerPaymentModel);
 
 
