@@ -57,17 +57,6 @@ public class CustomerPaymentService extends BaseService<CustomerPayment> {
 
             if ((dataTableRequest != null && !StringUtils.isEmpty(searchKey))) {
 
-
-             /*   queryBuilderString.append("SELECT cp.id, ")
-                        .append("cp.customerId, ")
-                        .append("cp.invoiceNo, ")
-                        .append("cp.paidAmount, ")
-                        .append("cp.dueAmount, ")
-                        .append("cp.grandTotal, ")
-                        .append("cp.paidStatus, ")
-                        .append("cp.invoiceDate, ")
-                        .append("c.name as customerName ")*/
-
                 queryBuilderString.append("SELECT cp.id, ")
                         .append("cp.customerId, ")
                         .append("cp.invoiceNo, ")
@@ -76,21 +65,23 @@ public class CustomerPaymentService extends BaseService<CustomerPayment> {
                         .append("cp.grandTotal, ")
                         .append("cp.paidStatus, ")
                         .append("cp.invoiceDate, ")
-                        .append("c.name as customerName")
+                        .append("cp.paymentDate, ")
+                        .append("c.name as customerName ")
+                        .append("FROM CustomerPayment cp ")
+                        .append("INNER JOIN Customer c ON cp.customerId = c.id ")
                         .append("WHERE ")
                         .append("( ")
-                        .append("OR lower(cp.invoiceNo) LIKE '%" + searchKey + "%' ")
-                        .append("OR lower(cp.paidAmount) LIKE '%" + searchKey + "%' ")
-                        .append("OR lower(cp.dueAmount) LIKE '%" + searchKey + "%' ")
-                        .append("OR lower(cp.grandTotal) LIKE '%" + searchKey + "%' ")
-                        .append("OR lower(cp.paidStatus) LIKE '%" + searchKey + "%' ")
-                        .append("OR lower(cp.date) LIKE '%" + searchKey + "%' ")
+                        .append("lower(cp.invoiceNo) LIKE '%" + searchKey + "%' ")
+                        .append("OR CAST(cp.paidAmount AS string) LIKE '%" + searchKey + "%' ")
+                        .append("OR CAST(cp.dueAmount AS string) LIKE '%" + searchKey + "%' ")
+                        .append("OR CAST(cp.grandTotal AS string) LIKE '%" + searchKey + "%' ")
+                        //.append("OR lower(cp.date) LIKE '%" + searchKey + "%' ")
                         .append("OR lower(c.name) LIKE '%" + searchKey + "%' ")
                         .append(") ")
-                        .append("AND v.status="+SqlEnum.Status.Active.get());
+                        .append("AND cp.paidStatus = "+InventoryEnum.PaymentStatus.PARTIAL.get());
 
 
-                //list = this.executeHqlQuery(queryBuilderString.toString(),AvailableStockView.class,SqlEnum.QueryType.View.get());
+                list = this.executeHqlQuery(queryBuilderString.toString(),CustomerPaymentModel.class,SqlEnum.QueryType.Join.get());
                 //============ full text search ===========================================
             }else {
                 queryBuilderString.setLength(0);
@@ -139,10 +130,7 @@ public class CustomerPaymentService extends BaseService<CustomerPayment> {
         CustomerPaymentModel requestedCustomerPaymentModel, createdCustomerPaymentModel;
         Integer paidStatus;
         Double currentPayment;
-        //Double grandTotalAmount;
         Double dueAmount;
-
-        Double totalPaidAmount;
 
         try {
 
@@ -152,12 +140,9 @@ public class CustomerPaymentService extends BaseService<CustomerPayment> {
             }*/
 
             requestedCustomerPaymentModel = Core.processRequestMessage(requestMessage,CustomerPaymentModel.class);
-            //paidAmount = requestedCustomerPaymentModel.getPaidAmount();
+
             dueAmount = requestedCustomerPaymentModel.getDueAmount();
             currentPayment = requestedCustomerPaymentModel.getCurrentPayment();
-            //grandTotalAmount = requestedCustomerPaymentModel.getGrandTotal();
-
-            //totalPaidAmount = paidAmount + dueAmount;
 
             dueAmount = dueAmount - currentPayment;
 
@@ -165,8 +150,6 @@ public class CustomerPaymentService extends BaseService<CustomerPayment> {
                 paidStatus = InventoryEnum.PaymentStatus.PAID.get();
             else
                 paidStatus = InventoryEnum.PaymentStatus.PARTIAL.get();
-
-            //dueAmount = dueAmount - currentPayment;
 
             requestedCustomerPaymentModel.setDueAmount(dueAmount);
             requestedCustomerPaymentModel.setPaidStatus(paidStatus);
