@@ -108,14 +108,16 @@ public class CustomerPaymentService extends BaseService<CustomerPayment> {
                 list = this.executeHqlQuery(queryBuilderString.toString(),CustomerPaymentModel.class,SqlEnum.QueryType.Join.get());
             }
 
-            responseMessage = this.buildResponseMessage();
+
 
             if (list != null && list.size()>0) {
+                responseMessage = this.buildResponseMessage(list);
                 responseMessage.data = list;
                 responseMessage.httpStatus = HttpStatus.FOUND.value();
                 responseMessage.message = "Get all Customer payment list successfully";
                 //this.commit();
             } else {
+                responseMessage = this.buildResponseMessage();
                 responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
                 responseMessage.message = "Failed to get Customer payment list";
                 //this.rollBack();
