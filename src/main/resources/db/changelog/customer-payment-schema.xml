@@ -35,9 +35,7 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="payment_date" type="datetime">
-                <constraints nullable="false"/>
-            </column>
+            <column name="payment_date" type="datetime"></column>
 
 
             <column name="created_by" type="varchar"></column>

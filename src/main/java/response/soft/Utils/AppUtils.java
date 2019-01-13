@@ -144,7 +144,9 @@ public final class AppUtils {
                     stringDate = new String((String) inputValue);
                     stringDate = stringDate.substring(1, stringDate.length() - 1);
                     stringDate= stringDate.replaceAll("\\s+","");
-                    result = stringDate;
+                    if(!StringUtils.isEmpty(stringDate))
+                        result = stringDate;
+                    else result = null;
                     break;
                 case "java.lang.String":
                     //result = "'" + inputValue + "'";
