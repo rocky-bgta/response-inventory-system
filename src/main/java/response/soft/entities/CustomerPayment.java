@@ -53,6 +53,6 @@ public class CustomerPayment extends BaseEntity {
 
     @Column(name = "payment_date")
     @NotNull
-    private Date payment_date;
+    private Date paymentDate;
 
 }

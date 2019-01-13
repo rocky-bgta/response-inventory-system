@@ -18,7 +18,7 @@ public class CustomerPaymentModel extends BaseModel {
     private Double grandTotal;
     private Integer paidStatus;
     private Date invoiceDate;
-    private Date payment_date;
+    private Date paymentDate;
 
     //========================
     private String customerName;
