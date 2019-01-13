@@ -88,7 +88,7 @@ public class CustomerPaymentService extends BaseService<CustomerPayment> {
                         .append("cp.dueAmount, ")
                         .append("cp.grandTotal, ")
                         .append("cp.paidStatus, ")
-                        .append("cp.date, ")
+                        .append("cp.invoiceDate, ")
                         .append("c.name as customerName ")
                 .append("FROM CustomerPayment cp ")
                 .append("INNER JOIN Customer c ON cp.customerId = c.id");
