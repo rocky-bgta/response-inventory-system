@@ -55,6 +55,17 @@ public class CustomerPaymentService extends BaseService<CustomerPayment> {
 
             if ((dataTableRequest != null && !StringUtils.isEmpty(searchKey))) {
 
+
+             /*   queryBuilderString.append("SELECT cp.id, ")
+                        .append("cp.customerId, ")
+                        .append("cp.invoiceNo, ")
+                        .append("cp.paidAmount, ")
+                        .append("cp.dueAmount, ")
+                        .append("cp.grandTotal, ")
+                        .append("cp.paidStatus, ")
+                        .append("cp.invoiceDate, ")
+                        .append("c.name as customerName ")*/
+
                queryBuilderString.append("SELECT cp.id, ")
                            .append("cp.customerId, ")
                            .append("cp.invoiceNo, ")
@@ -62,7 +73,7 @@ public class CustomerPaymentService extends BaseService<CustomerPayment> {
                            .append("cp.dueAmount, ")
                            .append("cp.grandTotal, ")
                            .append("cp.paidStatus, ")
-                           .append("cp.date, ")
+                           .append("cp.invoiceDate, ")
                            .append("c.name as customerName")
                         .append("WHERE ")
                         .append("( ")
