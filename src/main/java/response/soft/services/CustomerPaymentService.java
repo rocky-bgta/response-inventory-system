@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import response.soft.Utils.AppUtils;
 import response.soft.appenum.InventoryEnum;
 import response.soft.appenum.SqlEnum;
 import response.soft.core.BaseService;
@@ -67,15 +68,15 @@ public class CustomerPaymentService extends BaseService<CustomerPayment> {
                         .append("cp.invoiceDate, ")
                         .append("c.name as customerName ")*/
 
-               queryBuilderString.append("SELECT cp.id, ")
-                           .append("cp.customerId, ")
-                           .append("cp.invoiceNo, ")
-                           .append("cp.paidAmount, ")
-                           .append("cp.dueAmount, ")
-                           .append("cp.grandTotal, ")
-                           .append("cp.paidStatus, ")
-                           .append("cp.invoiceDate, ")
-                           .append("c.name as customerName")
+                queryBuilderString.append("SELECT cp.id, ")
+                        .append("cp.customerId, ")
+                        .append("cp.invoiceNo, ")
+                        .append("cp.paidAmount, ")
+                        .append("cp.dueAmount, ")
+                        .append("cp.grandTotal, ")
+                        .append("cp.paidStatus, ")
+                        .append("cp.invoiceDate, ")
+                        .append("c.name as customerName")
                         .append("WHERE ")
                         .append("( ")
                         .append("OR lower(cp.invoiceNo) LIKE '%" + searchKey + "%' ")
@@ -103,9 +104,9 @@ public class CustomerPaymentService extends BaseService<CustomerPayment> {
                         .append("cp.invoiceDate, ")
                         .append("cp.paymentDate, ")
                         .append("c.name as customerName ")
-                .append("FROM CustomerPayment cp ")
-                .append("INNER JOIN Customer c ON cp.customerId = c.id ")
-                .append("WHERE cp.paidStatus = "+InventoryEnum.PaymentStatus.PARTIAL.get());
+                        .append("FROM CustomerPayment cp ")
+                        .append("INNER JOIN Customer c ON cp.customerId = c.id ")
+                        .append("WHERE cp.paidStatus = "+InventoryEnum.PaymentStatus.PARTIAL.get());
 
                 list = this.executeHqlQuery(queryBuilderString.toString(),CustomerPaymentModel.class,SqlEnum.QueryType.Join.get());
             }
@@ -132,4 +133,64 @@ public class CustomerPaymentService extends BaseService<CustomerPayment> {
         }
         return responseMessage;
     }
+
+    public ResponseMessage updateCustomerPayment(RequestMessage requestMessage) {
+        ResponseMessage responseMessage;
+        CustomerPaymentModel requestedCustomerPaymentModel, createdCustomerPaymentModel;
+        Integer paidStatus;
+        Double currentPayment;
+        //Double grandTotalAmount;
+        Double dueAmount;
+
+        Double totalPaidAmount;
+
+        try {
+
+             /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(categoryModel);
+            for (ConstraintViolation<CountryModel> violation : violations) {
+                log.error(violation.getMessage());
+            }*/
+
+            requestedCustomerPaymentModel = Core.processRequestMessage(requestMessage,CustomerPaymentModel.class);
+            //paidAmount = requestedCustomerPaymentModel.getPaidAmount();
+            dueAmount = requestedCustomerPaymentModel.getDueAmount();
+            currentPayment = requestedCustomerPaymentModel.getCurrentPayment();
+            //grandTotalAmount = requestedCustomerPaymentModel.getGrandTotal();
+
+            //totalPaidAmount = paidAmount + dueAmount;
+
+            dueAmount = dueAmount - currentPayment;
+
+            if(dueAmount==0)
+                paidStatus = InventoryEnum.PaymentStatus.PAID.get();
+            else
+                paidStatus = InventoryEnum.PaymentStatus.PARTIAL.get();
+
+            //dueAmount = dueAmount - currentPayment;
+
+            requestedCustomerPaymentModel.setDueAmount(dueAmount);
+            requestedCustomerPaymentModel.setPaidStatus(paidStatus);
+            createdCustomerPaymentModel = this.update(requestedCustomerPaymentModel);
+
+
+            if (createdCustomerPaymentModel != null) {
+                responseMessage = this.buildResponseMessage(createdCustomerPaymentModel);
+                responseMessage.httpStatus = HttpStatus.OK.value();
+                responseMessage.message = "Customer payment update successfully";
+                //this.commit();
+            } else {
+                responseMessage = this.buildResponseMessage();
+                responseMessage.httpStatus = HttpStatus.CONFLICT.value();
+                responseMessage.message = "Failed to get Customer payment update !!!";
+                //this.rollBack();
+            }
+        } catch (Exception ex) {
+            responseMessage = this.buildFailedResponseMessage();
+            ex.printStackTrace();
+            //this.rollBack();
+            log.error("updateCustomerPayment -> save got exception");
+        }
+        return responseMessage;
+    }
+
 }

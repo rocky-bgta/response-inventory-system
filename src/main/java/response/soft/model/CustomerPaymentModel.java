@@ -22,4 +22,5 @@ public class CustomerPaymentModel extends BaseModel {
 
     //========================
     private String customerName;
+    private Double currentPayment;
 }

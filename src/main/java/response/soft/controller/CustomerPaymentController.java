@@ -27,4 +27,13 @@ public class CustomerPaymentController {
         responseMessage = this.customerPaymentService.getCustomerPaymentList(requestMessage);
         return responseMessage;
     }
+
+    @ApiOperation(value ="", response = Object.class)
+    @ResponseStatus(HttpStatus.OK)
+    @RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseMessage update(@RequestBody RequestMessage requestMessage){
+        ResponseMessage responseMessage;
+        responseMessage = this.customerPaymentService.updateCustomerPayment(requestMessage);
+        return responseMessage;
+    }
 }
