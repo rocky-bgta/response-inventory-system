@@ -390,25 +390,34 @@ public class Dao<T> extends BaseDao {
                 q.setMaxResults(Core.pageSize.get());
             }
 
-            queryBuilderString.setLength(0);
-            queryBuilderString.append("SELECT COUNT(*) FROM ");
-            queryBuilderString.append("" + entityName + " t");
-            queryBuilderString.append(" WHERE t.status=" + SqlEnum.Status.Active.get());
+            list = q.getResultList();
+            if(list!=null && list.size()>0) {
 
-            Query countQuery = session.createQuery(queryBuilderString.toString());
+                queryBuilderString.setLength(0);
+                queryBuilderString.append("SELECT COUNT(*) FROM ");
+                queryBuilderString.append("" + entityName + " t");
+                queryBuilderString.append(" WHERE t.status=" + SqlEnum.Status.Active.get());
 
-            count = (Long) countQuery.getSingleResult();
+                Query countQuery = session.createQuery(queryBuilderString.toString());
+
+                count = (Long) countQuery.getSingleResult();
+                Core.totalRowCount.set(count);
+                Core.recordsFilteredCount.set(count);
+            }else {
+                Core.totalRowCount.set(0l);
+                Core.recordsFilteredCount.set(0l);
+            }
 
           /*
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaQuery<Long> cq = cb.createQuery(Long.class);
             cq.select(cb.count(cq.from(clazz)));
             Long count = entityManager.createQuery(cq).getSingleResult();*/
-            Core.totalRowCount.set(count);
 
-            Core.recordsFilteredCount.set(count);
 
-            list = q.getResultList();
+
+
+
 
             session.getTransaction().commit();
             session.close();
@@ -625,6 +634,9 @@ public class Dao<T> extends BaseDao {
                     convertedModels = this.getObjectListFromObjectArray(result, clazz);
                     Core.totalRowCount.set((long)convertedModels.size());
                     Core.recordsFilteredCount.set((long)convertedModels.size());
+                }else {
+                    Core.totalRowCount.set(0l);
+                    Core.recordsFilteredCount.set(0l);
                 }
 
 
@@ -675,7 +687,6 @@ public class Dao<T> extends BaseDao {
                 Query countQuery = session.createQuery(queryBuilderString.toString());
 
                 count = (Long) countQuery.getSingleResult();
-
 
                 Core.totalRowCount.set(count);
                 Core.recordsFilteredCount.set(count);
