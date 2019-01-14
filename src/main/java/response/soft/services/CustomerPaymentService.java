@@ -3,6 +3,7 @@ package response.soft.services;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import response.soft.Utils.AppUtils;
@@ -14,14 +15,19 @@ import response.soft.core.RequestMessage;
 import response.soft.core.ResponseMessage;
 import response.soft.core.datatable.model.DataTableRequest;
 import response.soft.entities.CustomerPayment;
+import response.soft.model.CustomerDuePaymentHistoryModel;
 import response.soft.model.CustomerPaymentModel;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 @Service
 public class CustomerPaymentService extends BaseService<CustomerPayment> {
     private static final Logger log = LoggerFactory.getLogger(StoreInProductService.class);
+
+    @Autowired
+    CustomerDuePaymentHistoryService customerDuePaymentHistoryService;
 
     @Override
     protected void initEntityModel() {
@@ -78,7 +84,8 @@ public class CustomerPaymentService extends BaseService<CustomerPayment> {
                         //.append("OR lower(cp.date) LIKE '%" + searchKey + "%' ")
                         .append("OR lower(c.name) LIKE '%" + searchKey + "%' ")
                         .append(") ")
-                        .append("AND cp.paidStatus = "+InventoryEnum.PaymentStatus.PARTIAL.get());
+                        .append("AND ( cp.paidStatus = "+InventoryEnum.PaymentStatus.PARTIAL.get())
+                        .append(" OR cp.paidStatus = " + InventoryEnum.PaymentStatus.DUE.get() +" )");
 
 
                 list = this.executeHqlQuery(queryBuilderString.toString(),CustomerPaymentModel.class,SqlEnum.QueryType.Join.get());
@@ -97,7 +104,8 @@ public class CustomerPaymentService extends BaseService<CustomerPayment> {
                         .append("c.name as customerName ")
                         .append("FROM CustomerPayment cp ")
                         .append("INNER JOIN Customer c ON cp.customerId = c.id ")
-                        .append("WHERE cp.paidStatus = "+InventoryEnum.PaymentStatus.PARTIAL.get());
+                        .append("WHERE cp.paidStatus = "+InventoryEnum.PaymentStatus.PARTIAL.get())
+                        .append(" OR cp.paidStatus = " + InventoryEnum.PaymentStatus.DUE.get());
 
                 list = this.executeHqlQuery(queryBuilderString.toString(),CustomerPaymentModel.class,SqlEnum.QueryType.Join.get());
             }
@@ -131,6 +139,7 @@ public class CustomerPaymentService extends BaseService<CustomerPayment> {
         Integer paidStatus;
         Double currentPayment;
         Double dueAmount;
+        CustomerDuePaymentHistoryModel customerDuePaymentHistoryModel;
 
         try {
 
@@ -154,6 +163,12 @@ public class CustomerPaymentService extends BaseService<CustomerPayment> {
             requestedCustomerPaymentModel.setDueAmount(dueAmount);
             requestedCustomerPaymentModel.setPaidStatus(paidStatus);
             createdCustomerPaymentModel = this.update(requestedCustomerPaymentModel);
+
+            customerDuePaymentHistoryModel = new CustomerDuePaymentHistoryModel();
+            customerDuePaymentHistoryModel.setInvoiceNo(createdCustomerPaymentModel.getInvoiceNo());
+            customerDuePaymentHistoryModel.setPaidAmount(currentPayment);
+            customerDuePaymentHistoryModel.setPaymentDate(new Date());
+            this.customerDuePaymentHistoryService.save(customerDuePaymentHistoryModel);
 
 
             if (createdCustomerPaymentModel != null) {
