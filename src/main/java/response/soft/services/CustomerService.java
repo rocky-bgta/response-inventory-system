@@ -311,3 +311,24 @@ public class CustomerService extends BaseService<Customer> {
         return responseMessage;
     }
 }
+
+/*
+SELECT
+        sh.invoice_no,
+        s.ID AS store_id,
+        s.NAME AS store_name,
+        sh.customer_id,
+        C.NAME AS customer_name,
+        sh.product_id,
+        p.name as product_name,
+        sh.sales_price
+
+        FROM
+        sales_history sh
+        INNER JOIN store_out_product sop ON sh.store_out_id = sop.ID
+        INNER JOIN store s ON sop.store_id = s.ID
+        INNER JOIN customer C ON sh.customer_id = C.ID
+        INNER JOIN product p ON sh.product_id = p.id
+
+        WHERE
+        sh.invoice_no = 'INV-1547565521344'*/
