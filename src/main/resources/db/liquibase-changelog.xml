@@ -16,7 +16,7 @@
     <include file="changelog/store-in-product-schema.xml" relativeToChangelogFile="true"/>
     <include file="changelog/store-out-product-schema.xml" relativeToChangelogFile="true"/>
     <include file="changelog/store-product-transfer-schema.xml" relativeToChangelogFile="true"/>
-    <include file="changelog/product-sales-schema.xml" relativeToChangelogFile="true"/>
+    <include file="changelog/sales-history-schema.xml" relativeToChangelogFile="true"/>
     <include file="changelog/invoice-balance-schema.xml" relativeToChangelogFile="true"/>
     <include file="changelog/customer-payment-schema.xml" relativeToChangelogFile="true"/>
     <include file="changelog/customer-due-payment-history-schema.xml" relativeToChangelogFile="true"/>

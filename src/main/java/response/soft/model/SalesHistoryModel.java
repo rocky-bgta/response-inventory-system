@@ -15,7 +15,7 @@ import java.util.UUID;
 
 @Data
 @EqualsAndHashCode
-public class ProductSalesModel extends BaseModel {
+public class SalesHistoryModel extends BaseModel {
     private UUID id;
     private UUID storeOutId;
     private UUID productId;

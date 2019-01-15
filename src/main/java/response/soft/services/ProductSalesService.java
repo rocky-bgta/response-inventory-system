@@ -11,30 +11,24 @@ import response.soft.core.Core;
 import response.soft.core.RequestMessage;
 import response.soft.core.ResponseMessage;
 import response.soft.core.datatable.model.DataTableRequest;
-import response.soft.entities.ProductSales;
-import response.soft.entities.StoreOutProduct;
-import response.soft.entities.view.AvailableStockView;
+import response.soft.entities.SalesHistory;
 import response.soft.entities.view.ProductSalesReportView;
-import response.soft.model.ProductSalesModel;
-import response.soft.model.StoreOutProductModel;
+import response.soft.model.SalesHistoryModel;
 import response.soft.model.view.ProductSalesReportViewModel;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 @Service
-public class ProductSalesService extends BaseService<ProductSales> {
+public class ProductSalesService extends BaseService<SalesHistory> {
     private static final Logger log = LoggerFactory.getLogger(ProductSalesService.class);
 
     @Override
     protected void initEntityModel() {
         Core.runTimeModelType.remove();
         Core.runTimeEntityType.remove();
-        Core.runTimeEntityType.set(ProductSales.class);
-        Core.runTimeModelType.set(ProductSalesModel.class);
+        Core.runTimeEntityType.set(SalesHistory.class);
+        Core.runTimeModelType.set(SalesHistoryModel.class);
     }
 
     public ResponseMessage getProductSalesReport(RequestMessage requestMessage) {

@@ -26,26 +26,27 @@
             FROM
             (
             SELECT
-            ps.product_id,
+            sh.product_id,
             p."name" as product_name,
-            ps.invoice_no,
-            ps.customer_id,
+            sh.invoice_no,
+            sh.customer_id,
             c.name as customer_name,
-            sum(ps.buy_price) as buy_price,
-            sum(ps.sales_price) as sales_price,
-            sum(ps.sales_price) - sum(ps.buy_price) as profit,
-            ps.date
+            sum(sh.buy_price) as buy_price,
+            sum(sh.sales_price) as sales_price,
+            sum(sh.sales_price) - sum(sh.buy_price) as profit,
+            sh.date
 
-            FROM inventory.product_sales ps
-            INNER JOIN inventory.product p ON ps.product_id = p.id
-            INNER JOIN inventory.customer c ON ps.customer_id = c.id
+            FROM inventory.sales_history sh
+            INNER JOIN inventory.product p ON sh.product_id = p.id
+            INNER JOIN inventory.customer c ON sh.customer_id = c.id
 
             GROUP BY
-            ps.invoice_no,
-            ps.product_id,
+            sh.invoice_no,
+            sh.product_id,
             p.name,
-            ps.customer_id,
-            c.name,ps.date
+            sh.customer_id,
+            c.name,
+            sh.date
             ) sales
 
             <!--WHERE sales.date::DATE BETWEEN '2019-01-05' AND '2019-01-06'-->

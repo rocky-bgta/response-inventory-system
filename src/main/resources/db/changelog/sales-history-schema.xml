@@ -7,7 +7,7 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="01" author="Salahin Rocky">
-        <createTable tableName="product_sales" remarks="A table to contain all the product sales information">
+        <createTable tableName="sales_history" remarks="A table to contain all the product sales information">
             <column name="id" type="UUID">
                 <constraints nullable="false" unique="true" primaryKey="true"/>
             </column>

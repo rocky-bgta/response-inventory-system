@@ -81,7 +81,7 @@ public class StoreSalesProductService extends BaseService<StoreOutProduct> {
 
         StoreOutProductModel storeOutProductModel,savedStoreOutProductModel;
         StoreInProductModel updatedStoreInProductModel;
-        ProductSalesModel productSalesModel;
+        SalesHistoryModel salesHistoryModel;
         CustomerModel requestedCustomerModel=null,createdCustomerModel;
         Boolean isCustomerExist;
 
@@ -178,19 +178,19 @@ public class StoreSalesProductService extends BaseService<StoreOutProduct> {
                     storeOutProductModel.setDate(new Date());
                     savedStoreOutProductModel = this.storeOutProductService.save(storeOutProductModel);
 
-                    // insert data into product sales table
-                    productSalesModel = new ProductSalesModel();
-                    productSalesModel.setStoreOutId(savedStoreOutProductModel.getId());
-                    productSalesModel.setProductId(savedStoreOutProductModel.getProductId());
-                    productSalesModel.setCustomerId(customerId);
-                    productSalesModel.setBuyPrice(updatedStoreInProductModel.getPrice());
-                    productSalesModel.setSalesPrice(salesProductViewModel.getSalesPrice());
-                    productSalesModel.setSalesType(salesMethod);
-                    productSalesModel.setDate(invoiceDate);
-                    productSalesModel.setSupportPeriodInMonth(salesProductViewModel.getSupportPeriodInMonth());
-                    productSalesModel.setSerialNo(salesProductViewModel.getSerialNo());
-                    productSalesModel.setInvoiceNo(invoiceNo);
-                    this.productSalesService.save(productSalesModel);
+                    // insert data into sales history table
+                    salesHistoryModel = new SalesHistoryModel();
+                    salesHistoryModel.setStoreOutId(savedStoreOutProductModel.getId());
+                    salesHistoryModel.setProductId(savedStoreOutProductModel.getProductId());
+                    salesHistoryModel.setCustomerId(customerId);
+                    salesHistoryModel.setBuyPrice(updatedStoreInProductModel.getPrice());
+                    salesHistoryModel.setSalesPrice(salesProductViewModel.getSalesPrice());
+                    salesHistoryModel.setSalesType(salesMethod);
+                    salesHistoryModel.setDate(invoiceDate);
+                    salesHistoryModel.setSupportPeriodInMonth(salesProductViewModel.getSupportPeriodInMonth());
+                    salesHistoryModel.setSerialNo(salesProductViewModel.getSerialNo());
+                    salesHistoryModel.setInvoiceNo(invoiceNo);
+                    this.productSalesService.save(salesHistoryModel);
 
                 }
 
