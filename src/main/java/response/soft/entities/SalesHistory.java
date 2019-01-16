@@ -41,6 +41,9 @@ public class SalesHistory extends BaseEntity {
     @NotNull
     private Double buyPrice;
 
+    @Column(name = "discount")
+    private Double discount;
+
     @Column(name = "sales_type")
     private Integer salesType;
 

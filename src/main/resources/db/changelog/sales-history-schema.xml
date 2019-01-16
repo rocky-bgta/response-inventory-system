@@ -27,6 +27,7 @@
             <column name="sales_price" type="double">
                 <constraints nullable="false"/>
             </column>
+            <column name="discount" type="double"></column>
             <column name="date" type="datetime">
                 <constraints nullable="false"/>
             </column>

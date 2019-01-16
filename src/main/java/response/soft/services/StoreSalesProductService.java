@@ -186,6 +186,10 @@ public class StoreSalesProductService extends BaseService<StoreOutProduct> {
                     salesHistoryModel.setBuyPrice(updatedStoreInProductModel.getPrice());
                     salesHistoryModel.setSalesPrice(salesProductViewModel.getSalesPrice());
                     salesHistoryModel.setSalesType(salesMethod);
+
+                    if(salesProductViewModel.getDiscount()!=null)
+                        salesHistoryModel.setDiscount(salesProductViewModel.getDiscount());
+
                     salesHistoryModel.setDate(invoiceDate);
                     salesHistoryModel.setSupportPeriodInMonth(salesProductViewModel.getSupportPeriodInMonth());
                     salesHistoryModel.setSerialNo(salesProductViewModel.getSerialNo());

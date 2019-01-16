@@ -27,4 +27,5 @@ public class SalesHistoryModel extends BaseModel {
     private Integer supportPeriodInMonth;
     private String serialNo;
     private String invoiceNo;
+    private Double discount;
 }
