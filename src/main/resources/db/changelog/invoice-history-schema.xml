@@ -7,7 +7,7 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="01" author="Salahin Rocky">
-        <createTable tableName="invoice_balance" remarks="A table to contain all Invoice balance information">
+        <createTable tableName="invoice_history" remarks="A table to contain all Invoice balance information">
             <column name="id" type="UUID">
                 <constraints nullable="false" unique="true" primaryKey="true"/>
             </column>
@@ -23,6 +23,7 @@
             <column name="grand_total" type="double">
                 <constraints nullable="false"/>
             </column>
+            <column name="discount" type="double"></column>
             <column name="date" type="datetime">
                 <constraints nullable="false"/>
             </column>

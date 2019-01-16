@@ -17,8 +17,8 @@ import java.util.UUID;
 @EqualsAndHashCode
 @DynamicInsert
 @DynamicUpdate
-@Table(name = "invoice_balance")
-public class InvoiceBalance extends BaseEntity {
+@Table(name = "invoice_history")
+public class InvoiceHistory extends BaseEntity {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
@@ -38,6 +38,9 @@ public class InvoiceBalance extends BaseEntity {
     @Column(name = "grand_total")
     @NotNull
     private Double grandTotal;
+
+    @Column(name = "discount")
+    private Double discount;
 
     @Column(name = "date")
     @NotNull

@@ -50,7 +50,7 @@ public class StoreSalesProductService extends BaseService<StoreOutProduct> {
     private ProductSalesService productSalesService;
 
     @Autowired
-    private InvoiceBalanceService invoiceBalanceService;
+    private InvoiceHistoryService invoiceHistoryService;
 
     @Autowired
     private CustomerPaymentService customerPaymentService;
@@ -71,7 +71,7 @@ public class StoreSalesProductService extends BaseService<StoreOutProduct> {
         UUID customerId;// = UUID.randomUUID() ;
         Integer salesMethod=null;
         String invoiceNo;
-        InvoiceBalanceModel invoiceBalanceModel;
+        InvoiceHistoryModel invoiceHistoryModel;
         CustomerPaymentModel customerPaymentModel;
 
         //===== stock variable ========================
@@ -197,13 +197,13 @@ public class StoreSalesProductService extends BaseService<StoreOutProduct> {
             }
 
             // insert data into invoice balance
-            invoiceBalanceModel = new InvoiceBalanceModel();
-            invoiceBalanceModel.setInvoiceNo(invoiceNo);
-            invoiceBalanceModel.setPaidAmount(paidAmount);
-            invoiceBalanceModel.setDueAmount(dueAmount);
-            invoiceBalanceModel.setGrandTotal(grandTotal);
-            invoiceBalanceModel.setDate(invoiceDate);
-            this.invoiceBalanceService.save(invoiceBalanceModel);
+            invoiceHistoryModel = new InvoiceHistoryModel();
+            invoiceHistoryModel.setInvoiceNo(invoiceNo);
+            invoiceHistoryModel.setPaidAmount(paidAmount);
+            invoiceHistoryModel.setDueAmount(dueAmount);
+            invoiceHistoryModel.setGrandTotal(grandTotal);
+            invoiceHistoryModel.setDate(invoiceDate);
+            this.invoiceHistoryService.save(invoiceHistoryModel);
 
 
             // insert data into customer payment
