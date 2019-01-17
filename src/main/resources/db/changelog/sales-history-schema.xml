@@ -39,7 +39,7 @@
             </column>
 
             <column name="invoice_no" type="varchar">
-                <constraints nullable="false"/>
+                <constraints nullable="false" unique="true"/>
             </column>
 
 
