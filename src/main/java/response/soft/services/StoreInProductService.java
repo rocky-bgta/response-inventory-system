@@ -577,7 +577,10 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
         try {
             queryBuilderString = new StringBuilder();
             queryBuilderString.append("SELECT DISTINCT p.id, ")
-                    .append("p.name ")
+                    .append("p.name, ")
+                    .append("p.categoryId, ")
+                    .append("p.brandId, ")
+                    .append("p.modelNo ")
                     .append("FROM StoreInProduct sip ")
                     .append("INNER JOIN Product p ON sip.productId = p.id ")
                     .append("WHERE ")
