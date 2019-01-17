@@ -41,11 +41,34 @@
                 splitStatements="true"
                 stripComments="true"/>
 
+        <sqlFile
+                encoding="utf8"
+                endDelimiter="\nGO"
+                path="seed/stock.sql"
+                relativeToChangelogFile="true"
+                splitStatements="true"
+                stripComments="true"/>
 
         <sqlFile
                 encoding="utf8"
                 endDelimiter="\nGO"
                 path="seed/store.sql"
+                relativeToChangelogFile="true"
+                splitStatements="true"
+                stripComments="true"/>
+
+        <sqlFile
+                encoding="utf8"
+                endDelimiter="\nGO"
+                path="seed/store_in_product.sql"
+                relativeToChangelogFile="true"
+                splitStatements="true"
+                stripComments="true"/>
+
+        <sqlFile
+                encoding="utf8"
+                endDelimiter="\nGO"
+                path="seed/vendor.sql"
                 relativeToChangelogFile="true"
                 splitStatements="true"
                 stripComments="true"/>
