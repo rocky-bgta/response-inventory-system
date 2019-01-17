@@ -61,7 +61,7 @@ public class SalesHistory extends BaseEntity {
     @Column(name = "serial_no")
     private String serialNo;
 
-    @Column(name="invoice_no",unique = true)
+    @Column(name="invoice_no")
     @NotNull
     private String invoiceNo;
 

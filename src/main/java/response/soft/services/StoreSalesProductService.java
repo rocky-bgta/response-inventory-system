@@ -84,14 +84,22 @@ public class StoreSalesProductService extends BaseService<StoreOutProduct> {
         SalesHistoryModel salesHistoryModel;
         CustomerModel requestedCustomerModel=null,createdCustomerModel;
         Boolean isCustomerExist;
+        InvoiceHistoryModel whereConditionInvoiceHistoryModel;
+        List<InvoiceHistoryModel> invoiceHistoryModelList;
 
         try {
 
             productSalesViewModel = Core.processRequestMessage(requestMessage, ProductSalesViewModel.class);
 
             salesProductViewModelList = productSalesViewModel.getSalesProductViewModelList();
+            Date invoiceDate = new Date();
+            Double paidAmount = productSalesViewModel.getPaidAmount();
+            Double dueAmount = productSalesViewModel.getDueAmount();
+            Double grandTotal = productSalesViewModel.getGrandTotal();
+            invoiceNo = productSalesViewModel.getInvoiceNo();
             //storeId = productSalesViewModel.getStoreId();
 
+            //check duplicate customer;
             if(productSalesViewModel.getCustomerModel() !=null) {
                 requestedCustomerModel = productSalesViewModel.getCustomerModel();
                 isCustomerExist = this.customerService.isCustomerAlreadyExist(requestedCustomerModel);
@@ -102,6 +110,21 @@ public class StoreSalesProductService extends BaseService<StoreOutProduct> {
                     return responseMessage;
                 }
             }
+            //check duplicate customer;
+
+            //check duplicate invoice no =====================================
+            whereConditionInvoiceHistoryModel = new InvoiceHistoryModel();
+            whereConditionInvoiceHistoryModel.setInvoiceNo(invoiceNo);
+            invoiceHistoryModelList = this.invoiceHistoryService.getAllByConditionWithActive(whereConditionInvoiceHistoryModel);
+
+            if(invoiceHistoryModelList!=null && invoiceHistoryModelList.size()>0){
+                responseMessage = this.buildResponseMessage();
+                responseMessage.message="Duplicate Invoice information found!!!";
+                responseMessage.httpStatus = HttpStatus.IM_USED.value();
+                return responseMessage;
+            }
+//check     duplicate invoice no =====================================
+
 
             if(productSalesViewModel.getCustomerId()!=null)
                 customerId = productSalesViewModel.getCustomerId();
@@ -115,11 +138,9 @@ public class StoreSalesProductService extends BaseService<StoreOutProduct> {
             Integer paymentStatus;
 
 
-            Date invoiceDate = new Date();
-            Double paidAmount = productSalesViewModel.getPaidAmount();
-            Double dueAmount = productSalesViewModel.getDueAmount();
-            Double grandTotal = productSalesViewModel.getGrandTotal();
-            invoiceNo = productSalesViewModel.getInvoiceNo();
+
+
+
 
 
             for(SalesProductViewModel salesProductViewModel: salesProductViewModelList){

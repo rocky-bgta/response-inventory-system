@@ -25,7 +25,7 @@ public class InvoiceHistory extends BaseEntity {
     @Column(name = "id", unique = true, nullable = false)
     private UUID id;
 
-    @Column(name = "invoice_no")
+    @Column(name = "invoice_no",unique = true)
     @NotNull
     private String invoiceNo;
 
