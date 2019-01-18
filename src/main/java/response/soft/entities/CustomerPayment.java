@@ -29,7 +29,7 @@ public class CustomerPayment extends BaseEntity {
     @NotNull
     private UUID customerId;
 
-    @Column(name = "invoice_no")
+    @Column(name = "invoice_no", unique = true)
     @NotNull
     private String invoiceNo;
 
