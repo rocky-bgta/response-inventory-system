@@ -1,6 +1,7 @@
 package response.soft.services;
 
 import org.apache.commons.lang3.StringUtils;
+import org.decimal4j.util.DoubleRounder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -154,6 +155,8 @@ public class CustomerPaymentService extends BaseService<CustomerPayment> {
             currentPayment = requestedCustomerPaymentModel.getCurrentPayment();
 
             dueAmount = dueAmount - currentPayment;
+
+            dueAmount= DoubleRounder.round(dueAmount,2);
 
             if(dueAmount==0)
                 paidStatus = InventoryEnum.PaymentStatus.PAID.get();
