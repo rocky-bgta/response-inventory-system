@@ -93,6 +93,7 @@ public abstract class Core {
     public static final ThreadLocal<String> shortDirection = new ThreadLocal<>();
     public static final ThreadLocal<String> shortColumnName = new ThreadLocal<>();
     public static final ThreadLocal<Boolean> isDataTablePagination = new ThreadLocal<>();
+    public static final ThreadLocal<String> dataTableSearchKey = new ThreadLocal<>();
 
     public static final ThreadLocal<Session> SESSION_THREAD_LOCAL = new ThreadLocal<>();
     public static final ThreadLocal<Transaction> TRANSACTION_THREAD_LOCAL = new ThreadLocal<>();
@@ -239,6 +240,7 @@ public abstract class Core {
         Core.dataTableDraw.remove();
         Core.shortDirection.remove();
         Core.shortColumnName.remove();
+        Core.dataTableSearchKey.remove();
 
         try {
             if (requestMessage.data != null && !ObjectUtils.isEmpty(requestMessage.data)) {
@@ -258,11 +260,13 @@ public abstract class Core {
                 }
 
                 Core.dataTableDraw.set(requestMessage.dataTableRequest.draw);
+                Core.dataTableSearchKey.set(requestMessage.dataTableRequest.search.value);
 
 
                 shortDirection = requestMessage.dataTableRequest.order.get(0).dir;
                 shortColumnIndex = requestMessage.dataTableRequest.order.get(0).column;
                 shortColumnName = requestMessage.dataTableRequest.columns.get(shortColumnIndex).data;
+
 
                 if (shortDirection.equals("asc") || shortDirection.equals("desc"))
                     Core.shortDirection.set(shortDirection);
