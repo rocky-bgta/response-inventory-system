@@ -40,15 +40,15 @@ public class CustomerPaymentService extends BaseService<CustomerPayment> {
 
     public ResponseMessage getCustomerPaymentList(RequestMessage requestMessage) {
         ResponseMessage responseMessage;
-        List<CustomerPaymentModel> list=null;
+        List<CustomerPaymentModel> list = null;
         DataTableRequest dataTableRequest;
-        String searchKey=null;
-        StringBuilder queryBuilderString =new StringBuilder();
+        String searchKey = null;
+        StringBuilder queryBuilderString = new StringBuilder();
         try {
             Core.processRequestMessage(requestMessage);
 
             dataTableRequest = requestMessage.dataTableRequest;
-            if(dataTableRequest!=null && !StringUtils.equals(dataTableRequest.search.value,"string")) {
+            if (dataTableRequest != null && !StringUtils.equals(dataTableRequest.search.value, "string")) {
                 searchKey = dataTableRequest.search.value;
                 searchKey = searchKey.trim().toLowerCase();
             }
@@ -57,7 +57,6 @@ public class CustomerPaymentService extends BaseService<CustomerPayment> {
             for (ConstraintViolation<CountryModel> violation : violations) {
                 log.error(violation.getMessage());
             }*/
-
 
 
             //============ full text search ===========================================
@@ -85,13 +84,13 @@ public class CustomerPaymentService extends BaseService<CustomerPayment> {
                         //.append("OR lower(cp.date) LIKE '%" + searchKey + "%' ")
                         .append("OR lower(c.name) LIKE '%" + searchKey + "%' ")
                         .append(") ")
-                        .append("AND ( cp.paidStatus = "+InventoryEnum.PaymentStatus.PARTIAL.get())
-                        .append(" OR cp.paidStatus = " + InventoryEnum.PaymentStatus.DUE.get() +" )");
+                        .append("AND ( cp.paidStatus = " + InventoryEnum.PaymentStatus.PARTIAL.get())
+                        .append(" OR cp.paidStatus = " + InventoryEnum.PaymentStatus.DUE.get() + " )");
 
 
-                list = this.executeHqlQuery(queryBuilderString.toString(),CustomerPaymentModel.class,SqlEnum.QueryType.Join.get());
+                list = this.executeHqlQuery(queryBuilderString.toString(), CustomerPaymentModel.class, SqlEnum.QueryType.Join.get());
                 //============ full text search ===========================================
-            }else {
+            } else {
                 queryBuilderString.setLength(0);
                 queryBuilderString.append("SELECT cp.id, ")
                         .append("cp.customerId, ")
@@ -105,15 +104,14 @@ public class CustomerPaymentService extends BaseService<CustomerPayment> {
                         .append("c.name as customerName ")
                         .append("FROM CustomerPayment cp ")
                         .append("INNER JOIN Customer c ON cp.customerId = c.id ")
-                        .append("WHERE cp.paidStatus = "+InventoryEnum.PaymentStatus.PARTIAL.get())
+                        .append("WHERE cp.paidStatus = " + InventoryEnum.PaymentStatus.PARTIAL.get())
                         .append(" OR cp.paidStatus = " + InventoryEnum.PaymentStatus.DUE.get());
 
-                list = this.executeHqlQuery(queryBuilderString.toString(),CustomerPaymentModel.class,SqlEnum.QueryType.Join.get());
+                list = this.executeHqlQuery(queryBuilderString.toString(), CustomerPaymentModel.class, SqlEnum.QueryType.Join.get());
             }
 
 
-
-            if (list != null && list.size()>0) {
+            if (list != null && list.size() > 0) {
                 responseMessage = this.buildResponseMessage(list);
                 responseMessage.data = list;
                 responseMessage.httpStatus = HttpStatus.FOUND.value();
@@ -140,6 +138,7 @@ public class CustomerPaymentService extends BaseService<CustomerPayment> {
         Integer paidStatus;
         Double currentPayment;
         Double dueAmount;
+        Double grandTotal;
         CustomerDuePaymentHistoryModel customerDuePaymentHistoryModel;
 
         try {
@@ -149,21 +148,25 @@ public class CustomerPaymentService extends BaseService<CustomerPayment> {
                 log.error(violation.getMessage());
             }*/
 
-            requestedCustomerPaymentModel = Core.processRequestMessage(requestMessage,CustomerPaymentModel.class);
-
+            requestedCustomerPaymentModel = Core.processRequestMessage(requestMessage, CustomerPaymentModel.class);
+            grandTotal = requestedCustomerPaymentModel.getGrandTotal();
             dueAmount = requestedCustomerPaymentModel.getDueAmount();
             currentPayment = requestedCustomerPaymentModel.getCurrentPayment();
 
-            dueAmount = dueAmount - currentPayment;
+            dueAmount = dueAmount.doubleValue() - currentPayment.doubleValue();
 
-            dueAmount= DoubleRounder.round(dueAmount,2);
+            dueAmount = DoubleRounder.round(dueAmount.doubleValue(), 2);
 
-            if(dueAmount==0)
+            if (dueAmount.doubleValue() == 0) {
                 paidStatus = InventoryEnum.PaymentStatus.PAID.get();
-            else
+                requestedCustomerPaymentModel.setPaidAmount(grandTotal);
+            } else {
                 paidStatus = InventoryEnum.PaymentStatus.PARTIAL.get();
+                requestedCustomerPaymentModel.setPaidAmount(currentPayment);
+            }
 
             requestedCustomerPaymentModel.setDueAmount(dueAmount);
+
             requestedCustomerPaymentModel.setPaidStatus(paidStatus);
             createdCustomerPaymentModel = this.update(requestedCustomerPaymentModel);
 
