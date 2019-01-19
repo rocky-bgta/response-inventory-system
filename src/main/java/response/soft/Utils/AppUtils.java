@@ -376,11 +376,11 @@ public final class AppUtils {
 
     public static Integer getPaymentStatus(Double paid, Double grandTotal){
         Integer paymentStatus=0;
-        if(paid==grandTotal){
+        if(paid.doubleValue()==grandTotal.doubleValue()){
             paymentStatus = InventoryEnum.PaymentStatus.PAID.get();
-        }else if(paid==0){
+        }else if(paid.doubleValue()==0){
             paymentStatus = InventoryEnum.PaymentStatus.DUE.get();
-        }else if(paid<grandTotal){
+        }else if(paid.doubleValue()<grandTotal.doubleValue()){
             paymentStatus = InventoryEnum.PaymentStatus.PARTIAL.get();
         }
         return paymentStatus;
