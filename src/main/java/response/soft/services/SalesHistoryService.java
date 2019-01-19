@@ -477,14 +477,20 @@ public class SalesHistoryService extends BaseService<SalesHistory> {
         return responseMessage;
     }
 
-    public ResponseMessage getSalesHistoryByInvoiceId(RequestMessage requestMessage, UUID invoiceId) {
+    public ResponseMessage getSalesHistoryByInvoiceNo(String invoiceNo) {
         ResponseMessage responseMessage;
         List<SalesHistoryViewModel> list;
 
         StringBuilder queryBuilderString;
         String searchKey;
         try {
-            Core.processRequestMessage(requestMessage);
+
+             /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(StoreOutProductModel);
+            for (ConstraintViolation<CountryModel> violation : violations) {
+                log.error(violation.getMessage());
+            }*/
+
+            //Core.processRequestMessage(requestMessage);
             searchKey = Core.dataTableSearchKey.get();
 
             if(searchKey!=null) {
@@ -522,7 +528,8 @@ public class SalesHistoryService extends BaseService<SalesHistory> {
                     .append("INNER JOIN StoreOutProduct sop ON sh.storeOutId = sop.id  ")
                     .append("INNER JOIN Store s ON sop.storeId = s.id  ")
                     .append("INNER JOIN Customer c ON sh.customerId = c.id  ")
-                    .append("INNER JOIN Product p ON sh.productId = p.id  ");
+                    .append("INNER JOIN Product p ON sh.productId = p.id  ")
+            .append("WHERE sh.invoiceNo = '" + invoiceNo + "'" );
 
             if (searchKey != null && !StringUtils.isEmpty(searchKey)) {
                 //implement full-text search
@@ -548,23 +555,15 @@ public class SalesHistoryService extends BaseService<SalesHistory> {
                 list = this.executeHqlQuery(queryBuilderString.toString(), SalesHistoryViewModel.class, SqlEnum.QueryType.Join.get());
             }
 
-
-
-            /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(StoreOutProductModel);
-            for (ConstraintViolation<CountryModel> violation : violations) {
-                log.error(violation.getMessage());
-            }*/
-
-
             responseMessage = this.buildResponseMessage(list);
 
             if (responseMessage.data != null) {
-                responseMessage.httpStatus = HttpStatus.OK.value();
-                responseMessage.message = "Get all StoreOutProduct successfully";
+                responseMessage.httpStatus = HttpStatus.FOUND.value();
+                responseMessage.message = "Get all Sales History successfully";
                 //this.commit();
             } else {
                 responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
-                responseMessage.message = "Failed to get StoreOutProduct";
+                responseMessage.message = "Failed to get Sales History";
                 //this.rollBack();
             }
         } catch (Exception ex) {

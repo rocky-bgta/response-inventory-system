@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("api/store-sales-products")
-@Api(tags = "Store Sales Product Api List")
+@Api(tags = "Sales History Api List")
 public class SalesHistoryController {
 
     @Autowired
@@ -66,5 +66,14 @@ public class SalesHistoryController {
         ResponseMessage responseMessage;
         responseMessage = this.salesHistoryService.deleteStoreSalesProducts(id);
         return new ResponseEntity(responseMessage,HttpStatus.OK);
+    }
+
+    @ApiOperation(value ="", response = Object.class)
+    @ResponseStatus(HttpStatus.OK)
+    @RequestMapping(value = "/invoice-no/{invoiceNo}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseMessage getSalesHistoryByInvoiceNo(@PathVariable String invoiceNo){
+        ResponseMessage responseMessage;
+        responseMessage = this.salesHistoryService.getSalesHistoryByInvoiceNo(invoiceNo);
+        return responseMessage;
     }
 }
