@@ -18,6 +18,7 @@ import response.soft.core.datatable.model.DataTableRequest;
 import response.soft.entities.SalesHistory;
 import response.soft.entities.StoreOutProduct;
 import response.soft.model.*;
+import response.soft.model.view.SalesHistoryViewModel;
 import response.soft.model.view.SalesProductViewModel;
 import response.soft.model.view.ProductSalesViewModel;
 
@@ -446,6 +447,105 @@ public class SalesHistoryService extends BaseService<SalesHistory> {
 
             } else {
                 list = this.getAll();
+            }
+
+
+
+            /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(StoreOutProductModel);
+            for (ConstraintViolation<CountryModel> violation : violations) {
+                log.error(violation.getMessage());
+            }*/
+
+
+            responseMessage = this.buildResponseMessage(list);
+
+            if (responseMessage.data != null) {
+                responseMessage.httpStatus = HttpStatus.OK.value();
+                responseMessage.message = "Get all StoreOutProduct successfully";
+                //this.commit();
+            } else {
+                responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
+                responseMessage.message = "Failed to get StoreOutProduct";
+                //this.rollBack();
+            }
+        } catch (Exception ex) {
+            responseMessage = this.buildFailedResponseMessage();
+            ex.printStackTrace();
+            //this.rollBack();
+            log.error("getAllStock -> save got exception");
+        }
+        return responseMessage;
+    }
+
+    public ResponseMessage getSalesHistoryByInvoiceId(RequestMessage requestMessage, UUID invoiceId) {
+        ResponseMessage responseMessage;
+        List<SalesHistoryViewModel> list;
+
+        StringBuilder queryBuilderString;
+        String searchKey;
+        try {
+            Core.processRequestMessage(requestMessage);
+            searchKey = Core.dataTableSearchKey.get();
+
+            if(searchKey!=null) {
+                searchKey = searchKey.trim().toLowerCase();
+            }
+
+
+           /* SELECT
+            sh.invoiceNo,
+            s.id AS storeId,
+            s.name AS storeName,
+            sh.customerId,
+            c.name AS customerName,
+            sh.productId,
+                    p.name as productName,
+            sh.salesPrice
+
+                    FROM
+            SalesHistory sh
+            INNER JOIN StoreOutProduct sop ON sh.storeOutId = sop.id
+            INNER JOIN Store s ON sop.storeId = s.id
+            INNER JOIN Customer c ON sh.customerId = c.id
+            INNER JOIN Product p ON sh.productId = p.id*/
+            queryBuilderString = new StringBuilder();
+            queryBuilderString.append("SELECT ")
+                    .append("sh.invoiceNo, ")
+                    .append("s.id AS storeId, ")
+                    .append("s.name AS storeName, ")
+                    .append("sh.customerId, ")
+                    .append("c.name AS customerName, ")
+                    .append("sh.productId, ")
+                    .append("p.name as productName, ")
+                    .append("CAST(sh.salesPrice AS string) ")
+                    .append("FROM  SalesHistory sh ")
+                    .append("INNER JOIN StoreOutProduct sop ON sh.storeOutId = sop.id  ")
+                    .append("INNER JOIN Store s ON sop.storeId = s.id  ")
+                    .append("INNER JOIN Customer c ON sh.customerId = c.id  ")
+                    .append("INNER JOIN Product p ON sh.productId = p.id  ");
+
+            if (searchKey != null && !StringUtils.isEmpty(searchKey)) {
+                //implement full-text search
+
+
+
+                      /*  .append("WHERE ")
+                        .append("( ")
+                        .append("lower(p.name) LIKE '%" + searchKey + "%' ")
+                        .append("OR lower(c.name) LIKE '%" + searchKey + "%' ")
+                        .append("OR lower(b.name) LIKE '%" + searchKey + "%' ")
+                        .append("OR lower(p.modelNo) LIKE '%" + searchKey + "%' ")
+                        .append("OR CAST(p.price AS string) LIKE '%" + searchKey + "%' ")
+                        .append("OR lower(p.description) LIKE '%" + searchKey + "%' ")
+                        .append(") ")
+                        .append("AND p.status="+SqlEnum.Status.Active.get());
+
+                       */
+
+                list = this.executeHqlQuery(queryBuilderString.toString(), SalesHistoryViewModel.class, SqlEnum.QueryType.Join.get());
+
+            } else {
+                list = this.executeHqlQuery(queryBuilderString.toString(), SalesHistoryViewModel.class, SqlEnum.QueryType.Join.get());
             }
 
 

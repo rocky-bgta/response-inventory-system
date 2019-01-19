@@ -56,7 +56,8 @@ public class InvoiceHistoryService extends BaseService<InvoiceHistory> {
                     .append("case cp.paidStatus " +
                             " when 0 then 'Paid'" +
                             " when 2 then 'Partial' " +
-                            " when 3 then 'Due' end AS invoiceStatus ")
+                            " when 3 then 'Due' end AS invoiceStatus, ")
+                    .append("invh.date ")
                     .append("FROM InvoiceHistory invh ")
                     .append("INNER JOIN CustomerPayment cp ON invh.invoiceNo = cp.invoiceNo ")
                     .append("INNER JOIN Customer c ON cp.customerId = c.id");

@@ -15,5 +15,6 @@ public class InvoiceHistoryViewModel {
     private String invoiceNo;
     private Double invoiceAmount;
     private String invoiceStatus;
+    private Date date;
 
 }
