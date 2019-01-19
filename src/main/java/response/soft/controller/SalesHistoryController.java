@@ -10,17 +10,17 @@ import org.springframework.web.bind.annotation.*;
 import response.soft.core.RequestMessage;
 import response.soft.core.ResponseMessage;
 import response.soft.model.StoreOutProductModel;
-import response.soft.services.StoreSalesProductService;
+import response.soft.services.SalesHistoryService;
 
 import java.util.UUID;
 
 @RestController
 @RequestMapping("api/store-sales-products")
 @Api(tags = "Store Sales Product Api List")
-public class StoreSalesProductsController {
+public class SalesHistoryController {
 
     @Autowired
-    private StoreSalesProductService storeSalesProductService;
+    private SalesHistoryService salesHistoryService;
 
 
     @ApiOperation(value ="", response = Object.class)
@@ -28,7 +28,7 @@ public class StoreSalesProductsController {
     @RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseMessage getAll(@RequestBody RequestMessage requestMessage){
         ResponseMessage responseMessage;
-        responseMessage = this.storeSalesProductService.getAllStoreSalesProducts(requestMessage);
+        responseMessage = this.salesHistoryService.getAllStoreSalesProducts(requestMessage);
         return responseMessage;
     }
 
@@ -37,7 +37,7 @@ public class StoreSalesProductsController {
     @RequestMapping(value = "{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseMessage getById(@PathVariable UUID id){
         ResponseMessage responseMessage;
-        responseMessage = this.storeSalesProductService.getByStoreSalesProductsId(id);
+        responseMessage = this.salesHistoryService.getByStoreSalesProductsId(id);
         return responseMessage;
     }
 
@@ -46,7 +46,7 @@ public class StoreSalesProductsController {
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseMessage save(@RequestBody RequestMessage requestMessage) {
         ResponseMessage responseMessage;
-        responseMessage = this.storeSalesProductService.saveStoreSalesProducts(requestMessage);
+        responseMessage = this.salesHistoryService.saveStoreSalesProducts(requestMessage);
         return responseMessage;
     }
 
@@ -55,7 +55,7 @@ public class StoreSalesProductsController {
     @RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseMessage update(@RequestBody RequestMessage requestMessage) {
         ResponseMessage responseMessage;
-        responseMessage = this.storeSalesProductService.updateStoreSalesProducts(requestMessage);
+        responseMessage = this.salesHistoryService.updateStoreSalesProducts(requestMessage);
         return responseMessage;
     }
 
@@ -64,7 +64,7 @@ public class StoreSalesProductsController {
     @RequestMapping(value = "{id}",method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseMessage> delete(@PathVariable UUID id) {
         ResponseMessage responseMessage;
-        responseMessage = this.storeSalesProductService.deleteStoreSalesProducts(id);
+        responseMessage = this.salesHistoryService.deleteStoreSalesProducts(id);
         return new ResponseEntity(responseMessage,HttpStatus.OK);
     }
 }

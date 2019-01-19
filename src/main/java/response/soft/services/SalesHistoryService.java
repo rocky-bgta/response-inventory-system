@@ -15,6 +15,7 @@ import response.soft.core.Core;
 import response.soft.core.RequestMessage;
 import response.soft.core.ResponseMessage;
 import response.soft.core.datatable.model.DataTableRequest;
+import response.soft.entities.SalesHistory;
 import response.soft.entities.StoreOutProduct;
 import response.soft.model.*;
 import response.soft.model.view.SalesProductViewModel;
@@ -25,16 +26,16 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-public class StoreSalesProductService extends BaseService<StoreOutProduct> {
+public class SalesHistoryService extends BaseService<SalesHistory> {
 
-    private static final Logger log = LoggerFactory.getLogger(StoreSalesProductService.class);
+    private static final Logger log = LoggerFactory.getLogger(SalesHistoryService.class);
 
     @Override
     protected void initEntityModel() {
         Core.runTimeModelType.remove();
         Core.runTimeEntityType.remove();
-        Core.runTimeEntityType.set(StoreOutProduct.class);
-        Core.runTimeModelType.set(StoreOutProductModel.class);
+        Core.runTimeEntityType.set(SalesHistory.class);
+        Core.runTimeModelType.set(SalesHistoryModel.class);
     }
 
     @Autowired
