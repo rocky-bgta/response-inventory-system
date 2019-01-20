@@ -341,6 +341,7 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
         StringBuilder queryBuilderString;
         String searchKey = null;
         try {
+            this.resetPaginationVariable();
             Core.processRequestMessage(requestMessage);
             dataTableRequest = requestMessage.dataTableRequest;
 
@@ -423,6 +424,7 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
         StringBuilder queryBuilder = new StringBuilder();
 
         try {
+            this.resetPaginationVariable();
             Core.processRequestMessage(requestMessage);
             queryBuilder.append("SELECT v FROM SalesProductView v WHERE v.storeId='" + storeId + "' " );
 
@@ -467,6 +469,7 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
         StringBuilder queryBuilder = new StringBuilder();
         String hql;
         try {
+            this.resetPaginationVariable();
             Core.processRequestMessage(requestMessage);
 
             EntityManager entityManager = entityManagerFactory.createEntityManager();
@@ -573,6 +576,7 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
         ResponseMessage responseMessage;
         List<ProductModel> list;
         StringBuilder queryBuilderString;
+        this.resetPaginationVariable();
 
         try {
             queryBuilderString = new StringBuilder();

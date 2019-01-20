@@ -220,6 +220,7 @@ public class VendorService extends BaseService<Vendor> {
         //VendorModel brandSearchModel;
         StringBuilder queryBuilderString;
         try {
+            this.resetPaginationVariable();
             Core.processRequestMessage(requestMessage);
 
             dataTableRequest = requestMessage.dataTableRequest;

@@ -221,6 +221,7 @@ public class StoreService extends BaseService<Store> {
         //StoreModel brandSearchModel;
         StringBuilder queryBuilderString;
         try {
+            this.resetPaginationVariable();
             Core.processRequestMessage(requestMessage);
 
             dataTableRequest = requestMessage.dataTableRequest;

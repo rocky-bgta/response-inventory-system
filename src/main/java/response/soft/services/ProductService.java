@@ -319,6 +319,7 @@ public class ProductService extends BaseService<Product> {
         StringBuilder queryBuilderString;
         String searchKey=null;
         try {
+            this.resetPaginationVariable();
             Core.processRequestMessage(requestMessage);
             dataTableRequest = requestMessage.dataTableRequest;
 

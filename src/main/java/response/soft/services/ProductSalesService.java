@@ -41,6 +41,7 @@ public class ProductSalesService extends BaseService<SalesHistory> {
         String fromDate, toDate;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
+            this.resetPaginationVariable();
             productSalesReportViewModel = Core.processRequestMessage(requestMessage,ProductSalesReportViewModel.class);
 
             fromDate = dateFormat.format(productSalesReportViewModel.getFromDate());

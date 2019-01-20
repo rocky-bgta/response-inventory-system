@@ -222,6 +222,7 @@ public class CategoryService extends BaseService<Category> {
         StringBuilder queryBuilderString;
 
         try {
+            this.resetPaginationVariable();
             Core.processRequestMessage(requestMessage);
 
             /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(categoryModel);

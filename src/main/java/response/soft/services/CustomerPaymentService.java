@@ -45,6 +45,7 @@ public class CustomerPaymentService extends BaseService<CustomerPayment> {
         String searchKey = null;
         StringBuilder queryBuilderString = new StringBuilder();
         try {
+            this.resetPaginationVariable();
             Core.processRequestMessage(requestMessage);
 
             dataTableRequest = requestMessage.dataTableRequest;

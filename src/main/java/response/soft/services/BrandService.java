@@ -221,6 +221,7 @@ public class BrandService extends BaseService<Brand> {
         //BrandModel brandSearchModel;
         StringBuilder queryBuilderString;
         try {
+            this.resetPaginationVariable();
             Core.processRequestMessage(requestMessage);
 
             dataTableRequest = requestMessage.dataTableRequest;

@@ -240,7 +240,8 @@ public class CustomerService extends BaseService<Customer> {
         //CustomerModel brandSearchModel;
         StringBuilder queryBuilderString;
         try {
-            requestedCustomerModel = Core.processRequestMessage(requestMessage);
+            this.resetPaginationVariable();
+            Core.processRequestMessage(requestMessage);
 
             dataTableRequest = requestMessage.dataTableRequest;
             if(dataTableRequest!=null) {

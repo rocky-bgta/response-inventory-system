@@ -36,6 +36,7 @@ public class InvoiceHistoryService extends BaseService<InvoiceHistory> {
         String searchKey;
         StringBuilder queryBuilderString =new StringBuilder();
         try {
+            this.resetPaginationVariable();
             Core.processRequestMessage(requestMessage);
             searchKey = Core.dataTableSearchKey.get();
 

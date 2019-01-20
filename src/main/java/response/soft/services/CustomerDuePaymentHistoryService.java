@@ -34,6 +34,7 @@ public class CustomerDuePaymentHistoryService extends BaseService<CustomerDuePay
         String searchKey = null;
         StringBuilder queryBuilderString = new StringBuilder();
         try {
+            this.resetPaginationVariable();
             //Core.processRequestMessage(requestMessage);
             searchKey = Core.dataTableSearchKey.get();
 

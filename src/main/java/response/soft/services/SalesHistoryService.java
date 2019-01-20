@@ -484,7 +484,7 @@ public class SalesHistoryService extends BaseService<SalesHistory> {
         StringBuilder queryBuilderString;
         String searchKey;
         try {
-
+            this.resetPaginationVariable();
              /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(StoreOutProductModel);
             for (ConstraintViolation<CountryModel> violation : violations) {
                 log.error(violation.getMessage());

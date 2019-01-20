@@ -208,6 +208,7 @@ public class StockService extends BaseService<Stock> {
         String searchKey=null;
         StringBuilder queryBuilderString =new StringBuilder();
         try {
+            this.resetPaginationVariable();
             Core.processRequestMessage(requestMessage);
 
             dataTableRequest = requestMessage.dataTableRequest;
