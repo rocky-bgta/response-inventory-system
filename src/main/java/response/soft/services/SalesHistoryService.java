@@ -16,11 +16,10 @@ import response.soft.core.RequestMessage;
 import response.soft.core.ResponseMessage;
 import response.soft.core.datatable.model.DataTableRequest;
 import response.soft.entities.SalesHistory;
-import response.soft.entities.StoreOutProduct;
 import response.soft.model.*;
+import response.soft.model.view.ProductSalesViewModel;
 import response.soft.model.view.SalesHistoryViewModel;
 import response.soft.model.view.SalesProductViewModel;
-import response.soft.model.view.ProductSalesViewModel;
 
 import java.util.Date;
 import java.util.List;
@@ -60,6 +59,9 @@ public class SalesHistoryService extends BaseService<SalesHistory> {
     @Autowired
     private CustomerService customerService;
 
+    @Autowired
+    private CustomerDuePaymentHistoryService customerDuePaymentHistoryService;
+
     public ResponseMessage saveStoreSalesProducts(RequestMessage requestMessage) {
         ResponseMessage responseMessage;
         ProductSalesViewModel productSalesViewModel;
@@ -88,6 +90,7 @@ public class SalesHistoryService extends BaseService<SalesHistory> {
         Boolean isCustomerExist;
         InvoiceHistoryModel whereConditionInvoiceHistoryModel;
         List<InvoiceHistoryModel> invoiceHistoryModelList;
+        CustomerDuePaymentHistoryModel customerDuePaymentHistoryModel;
 
         try {
 
@@ -240,6 +243,13 @@ public class SalesHistoryService extends BaseService<SalesHistory> {
             customerPaymentModel.setPaidAmount(paidAmount);
             customerPaymentModel.setDueAmount(dueAmount);
             customerPaymentModel.setGrandTotal(grandTotal);
+
+            // insert data into customer due payment history
+            customerDuePaymentHistoryModel = new CustomerDuePaymentHistoryModel();
+            customerDuePaymentHistoryModel.setInvoiceNo(invoiceNo);
+            customerDuePaymentHistoryModel.setPaidAmount(paidAmount);
+            customerDuePaymentHistoryModel.setPaymentDate(invoiceDate);
+
 
             paymentStatus = AppUtils.getPaymentStatus(paidAmount,grandTotal);
 
