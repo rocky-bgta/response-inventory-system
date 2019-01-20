@@ -55,7 +55,7 @@ public class InvoiceHistoryService extends BaseService<InvoiceHistory> {
                     .append("invh.invoiceNo, ")
                     .append("invh.grandTotal AS invoiceAmount, ")
                     .append("case cp.paidStatus " +
-                            " when 0 then 'Paid'" +
+                            " when 1 then 'Paid'" +
                             " when 2 then 'Partial' " +
                             " when 3 then 'Due' end AS invoiceStatus, ")
                     .append("invh.date ")
