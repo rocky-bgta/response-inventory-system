@@ -618,6 +618,15 @@ public class Dao<T> extends BaseDao {
                 }else {
                     convertedModels =  session.createQuery(hql,clazz).getResultList();
                 }
+
+                if (convertedModels.size() > 0) {
+                    count = (long)session.createQuery(hql,clazz).getResultList().size();
+                    Core.totalRowCount.set(count);
+                    Core.recordsFilteredCount.set(count);
+                }else {
+                    Core.totalRowCount.set(0l);
+                    Core.recordsFilteredCount.set(0l);
+                }
             }
 
             if (SqlEnum.QueryType.Join.get() == queryType) {
@@ -680,7 +689,7 @@ public class Dao<T> extends BaseDao {
                 Core.recordsFilteredCount.set((long) result.size());
             }*/
 
-            if(queryType==SqlEnum.QueryType.View.get()) {
+           /* if(queryType==SqlEnum.QueryType.View.get()) {
                 queryBuilderString.append("SELECT COUNT(*) FROM ");
                 queryBuilderString.append("" + entityName + " t");
 
@@ -690,7 +699,7 @@ public class Dao<T> extends BaseDao {
 
                 Core.totalRowCount.set(count);
                 Core.recordsFilteredCount.set(count);
-            }
+            }*/
 
 
             // this.setTotalActiveRecordCount(clazz);

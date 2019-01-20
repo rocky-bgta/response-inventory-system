@@ -98,6 +98,18 @@ public abstract class Core {
     public static final ThreadLocal<Session> SESSION_THREAD_LOCAL = new ThreadLocal<>();
     public static final ThreadLocal<Transaction> TRANSACTION_THREAD_LOCAL = new ThreadLocal<>();
 
+    static {
+        pageOffset.set(null);
+        pageSize.set(null);
+        totalRowCount.set(null);
+        recordsFilteredCount.set(null);
+        dataTableDraw.set(null);
+        shortDirection.set(null);
+        shortColumnName.set(null);
+        isDataTablePagination.set(null);
+        dataTableSearchKey.set(null);
+
+    }
 
     //==================== update validation lib ===============================
     private final static Javers compareObject = JaversBuilder.javers().build();
