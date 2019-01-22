@@ -223,16 +223,16 @@ public abstract class Core {
         return processRequestMessage(requestMessage, null);
     }
 
-    public void resetPaginationVariable(){
-        pageOffset.set(null);
-        pageSize.set(null);
-        totalRowCount.set(null);
-        recordsFilteredCount.set(null);
-        dataTableDraw.set(null);
-        shortDirection.set(null);
-        shortColumnName.set(null);
-        isDataTablePagination.set(null);
-        dataTableSearchKey.set(null);
+    public static void resetPaginationVariable(){
+        pageOffset.remove();
+        pageSize.remove();
+        totalRowCount.remove();
+        recordsFilteredCount.remove();
+        dataTableDraw.remove();
+        shortDirection.remove();
+        shortColumnName.remove();
+        isDataTablePagination.remove();
+        dataTableSearchKey.remove();
     }
 
     public static <T> T processRequestMessage(RequestMessage requestMessage, Class clazz) throws Exception {
@@ -243,13 +243,13 @@ public abstract class Core {
         String shortColumnName;
         String shortDirection;
 
-        Core.isDataTablePagination.remove();
+       /* Core.isDataTablePagination.remove();
         Core.pageOffset.remove();
         Core.pageSize.remove();
         Core.dataTableDraw.remove();
         Core.shortDirection.remove();
         Core.shortColumnName.remove();
-        Core.dataTableSearchKey.remove();
+        Core.dataTableSearchKey.remove();*/
 
         try {
             if (requestMessage.data != null && !ObjectUtils.isEmpty(requestMessage.data)) {

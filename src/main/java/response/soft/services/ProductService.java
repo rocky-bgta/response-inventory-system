@@ -30,7 +30,7 @@ public class ProductService extends BaseService<Product> {
     @Autowired
     ApplicationContext applicationContext;
 
-    EntityManagerFactory entityManagerFactory;
+    //EntityManagerFactory entityManagerFactory;
 
 
     @Override
@@ -319,7 +319,7 @@ public class ProductService extends BaseService<Product> {
         StringBuilder queryBuilderString;
         String searchKey=null;
         try {
-            this.resetPaginationVariable();
+            //this.resetPaginationVariable();
             Core.processRequestMessage(requestMessage);
             dataTableRequest = requestMessage.dataTableRequest;
 
