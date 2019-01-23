@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+
+
+    <changeSet id="04" author="Salahin Rocky">
+
+        <createView replaceIfExists="true"
+                    schemaName="inventory"
+                    viewName="invoice_history_view">
+            SELECT
+            invh.id AS invoice_id,
+            c.id AS customer_id,
+            c.name AS customer_name,
+            invh.invoice_no,
+            invh.grand_total AS invoice_amount,
+            case cp.paid_status when 1 then 'Paid' when 2 then 'partial' when 3 then 'Due'  end AS invoice_status
+            FROM
+            invoice_history invh
+            INNER JOIN customer_payment cp ON invh.invoice_no = cp.invoice_no
+            INNER JOIN customer c ON cp.customer_id = c.id
+        </createView>
+
+    </changeSet>
+</databaseChangeLog>
