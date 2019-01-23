@@ -12,7 +12,7 @@
 
         <createView replaceIfExists="true"
                     schemaName="inventory"
-                    viewName="available_stock">
+                    viewName="available_stock_view">
                     select
                     main_stock.store_id,
                     main_stock.store_name,
