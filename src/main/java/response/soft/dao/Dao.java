@@ -620,6 +620,7 @@ public class Dao<T> extends BaseDao {
                 }
 
                 if (convertedModels.size() > 0) {
+                   //( (Integer) session.createQuery(hql).iterate().next() ).intValue();
                     count = (long)session.createQuery(hql,clazz).getResultList().size();
                     Core.totalRowCount.set(count);
                     Core.recordsFilteredCount.set(count);
@@ -641,6 +642,7 @@ public class Dao<T> extends BaseDao {
 
                 if (result.size() > 0) {
                     convertedModels = this.getObjectListFromObjectArray(result, clazz);
+                    //( (Integer) session.createQuery(hql).iterate().next() ).intValue();
                     q = session.createQuery(hql);
                     count = (long)q.getResultList().size();
                     Core.totalRowCount.set(count);
