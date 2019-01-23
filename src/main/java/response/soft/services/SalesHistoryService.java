@@ -244,19 +244,20 @@ public class SalesHistoryService extends BaseService<SalesHistory> {
             customerPaymentModel.setDueAmount(dueAmount);
             customerPaymentModel.setGrandTotal(grandTotal);
 
-            // insert data into customer due payment history
-            customerDuePaymentHistoryModel = new CustomerDuePaymentHistoryModel();
-            customerDuePaymentHistoryModel.setInvoiceNo(invoiceNo);
-            customerDuePaymentHistoryModel.setPaidAmount(paidAmount);
-            customerDuePaymentHistoryModel.setPaymentDate(invoiceDate);
-
-
             paymentStatus = AppUtils.getPaymentStatus(paidAmount,grandTotal);
 
             customerPaymentModel.setPaidStatus(paymentStatus);
 
             customerPaymentModel.setInvoiceDate(invoiceDate);
             this.customerPaymentService.save(customerPaymentModel);
+
+            // insert data into customer due payment history
+            customerDuePaymentHistoryModel = new CustomerDuePaymentHistoryModel();
+            customerDuePaymentHistoryModel.setInvoiceNo(invoiceNo);
+            customerDuePaymentHistoryModel.setPaidAmount(paidAmount);
+            customerDuePaymentHistoryModel.setPaymentDate(invoiceDate);
+            this.customerDuePaymentHistoryService.save(customerDuePaymentHistoryModel);
+
 
 
             responseMessage = this.buildResponseMessage();
