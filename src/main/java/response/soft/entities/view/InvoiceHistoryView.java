@@ -32,5 +32,5 @@ public class InvoiceHistoryView {
     private Double invoiceAmount;
 
     @Column(name = "invoice_status")
-    private Integer invoiceStatus;
+    private String invoiceStatus;
 }
