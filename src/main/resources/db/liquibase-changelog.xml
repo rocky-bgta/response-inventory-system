@@ -29,9 +29,10 @@
     <include file="changelog/view/product-sales-report-view.xml" relativeToChangelogFile="true"/>
     <include file="changelog/view/sales-product-view.xml" relativeToChangelogFile="true"/>
     <include file="changelog/view/available-stock-view.xml" relativeToChangelogFile="true"/>
+    <include file="changelog/view/invoice-history-view.xml" relativeToChangelogFile="true"/>
 
 
-    <include file="changelog/seed-loader.xml" relativeToChangelogFile="true"/>
+  <!--  <include file="changelog/seed-loader.xml" relativeToChangelogFile="true"/>-->
 
 
 </databaseChangeLog>

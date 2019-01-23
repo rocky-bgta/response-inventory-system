@@ -14,7 +14,6 @@ import java.util.UUID;
 @Immutable
 @Table(name = "product_view")
 public class ProductView {
-
     @Id
     @Column(name = "id")
     private UUID id;
