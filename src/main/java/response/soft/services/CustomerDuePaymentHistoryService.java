@@ -30,17 +30,9 @@ public class CustomerDuePaymentHistoryService extends BaseService<CustomerDuePay
 
     public ResponseMessage getCustomerPaymentHistoryByInvoiceNo(String invoiceNo) {
         ResponseMessage responseMessage;
-        List<CustomerDuePaymentHistoryViewModel> list = null;
-        String searchKey = null;
+        List<CustomerDuePaymentHistoryViewModel> list;
         StringBuilder queryBuilderString = new StringBuilder();
         try {
-            this.resetPaginationVariable();
-            //Core.processRequestMessage(requestMessage);
-            searchKey = Core.dataTableSearchKey.get();
-
-           /* if(searchKey!=null && !StringUtils.equals(searchKey,"string")) {
-                searchKey = searchKey.trim().toLowerCase();
-            }*/
 
             /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(categoryModel);
             for (ConstraintViolation<CountryModel> violation : violations) {
