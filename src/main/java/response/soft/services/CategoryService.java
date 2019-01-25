@@ -216,29 +216,30 @@ public class CategoryService extends BaseService<Category> {
         ResponseMessage responseMessage;
         List<CategoryModel> list;
 
-        DataTableRequest dataTableRequest;
-        String searchKey=null;
+        //DataTableRequest dataTableRequest;
+        String searchKey;
         //BrandModel brandSearchModel;
         StringBuilder queryBuilderString;
 
         try {
-            this.resetPaginationVariable();
+            //this.resetPaginationVariable();
             Core.processRequestMessage(requestMessage);
+            searchKey = Core.dataTableSearchKey.get();
 
             /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(categoryModel);
             for (ConstraintViolation<CountryModel> violation : violations) {
                 log.error(violation.getMessage());
             }*/
 
-            dataTableRequest = requestMessage.dataTableRequest;
-            if(dataTableRequest!=null) {
-                searchKey = dataTableRequest.search.value;
+
+            //dataTableRequest = requestMessage.dataTableRequest;
+            if(searchKey!=null) {
                 searchKey = searchKey.trim().toLowerCase();
             }
 
             //============ full text search ===========================================
 
-            if (dataTableRequest != null && !StringUtils.isEmpty(searchKey)) {
+            if (searchKey != null && !StringUtils.isEmpty(searchKey)) {
 
                 queryBuilderString = new StringBuilder();
                 queryBuilderString.append("SELECT c.id, ")

@@ -201,19 +201,16 @@ public class StockService extends BaseService<Stock> {
     }
 
 
-    public ResponseMessage getAllStock(RequestMessage requestMessage, UUID storeId, UUID productId) {
+    public ResponseMessage getAllStock(RequestMessage requestMessage, UUID storeId, UUID categoryId, UUID productId) {
         ResponseMessage responseMessage;
         List<AvailableStockView> list;
-        DataTableRequest dataTableRequest;
-        String searchKey=null;
+        String searchKey;
         StringBuilder queryBuilderString =new StringBuilder();
         try {
-            this.resetPaginationVariable();
             Core.processRequestMessage(requestMessage);
+            searchKey = Core.dataTableSearchKey.get();
 
-            dataTableRequest = requestMessage.dataTableRequest;
-            if(dataTableRequest!=null && !StringUtils.equals(dataTableRequest.search.value,"string")) {
-                searchKey = dataTableRequest.search.value;
+            if(searchKey!=null && !StringUtils.equals(searchKey,"string")) {
                 searchKey = searchKey.trim().toLowerCase();
             }
 
@@ -222,46 +219,38 @@ public class StockService extends BaseService<Stock> {
                 log.error(violation.getMessage());
             }*/
 
-
-
             //============ full text search ===========================================
 
-            if ((dataTableRequest != null && !StringUtils.isEmpty(searchKey))|| storeId!=null || productId!=null) {
+            if ((searchKey != null && !StringUtils.isEmpty(searchKey))|| storeId!=null || productId!=null) {
 
-               /* queryBuilderString.append("SELECT v.id, ")
-                        .append("v.name, ")
-                        .append("v.phoneNo, ")
-                        .append("v.email, ")
-                        .append("v.address, ")
-                        .append("v.description ")
-                        .append("FROM Stock v ")
+                queryBuilderString.append("SELECT v ")
+                        //.append("v.categoryId, ")
+                        //.append("v.storeId, ")
+                        //.append("v.storeName, ")
+                        //.append("v.productName, ")
+                        //.append("v.totalPrice, ")
+                        //.append("v.availableQty ")
+                        .append("FROM AvailableStockView v ")
                         .append("WHERE ")
                         .append("( ")
-                        .append("lower(v.name) LIKE '%" + searchKey + "%' ")
-                        .append("OR lower(v.phoneNo) LIKE '%" + searchKey + "%' ")
-                        .append("OR lower(v.email) LIKE '%" + searchKey + "%' ")
-                        .append("OR lower(v.address) LIKE '%" + searchKey + "%' ")
-                        .append("OR lower(v.description) LIKE '%" + searchKey + "%' ")
-                        .append("OR lower(v.description) LIKE '%" + searchKey + "%' ")
+                        .append("lower(v.storeName) LIKE '%" + searchKey + "%' ")
+                        .append("OR lower(v.productName) LIKE '%" + searchKey + "%' ")
+                        .append("OR CAST(v.totalPrice AS string) LIKE '%" + searchKey + "%' ")
+                        .append("OR CAST(v.availableQty AS string) LIKE '%" + searchKey + "%' ")
                         .append(") ")
-                        .append("AND v.status="+SqlEnum.Status.Active.get());
+                        .append("AND v.availableQty>0 ");
 
-                */
-                //Boolean isWhereAdded=false;
-                queryBuilderString.append("SELECT v FROM AvailableStockView v WHERE v.availableQty>0 ");
                 if(storeId!=null &&  storeId instanceof UUID){
                     queryBuilderString.append("AND v.storeId ='"+storeId+"' ");
-                    //isWhereAdded=true;
                 }
+
+                if(categoryId!=null && categoryId instanceof UUID){
+                    queryBuilderString.append("AND v.categoryId='"+categoryId+"' ");
+                }
+
                 if(productId!=null && storeId instanceof UUID){
-                    //if(isWhereAdded){
-                        queryBuilderString.append("AND v.productId='"+productId+"'");
-                    //}else {
-                      //  queryBuilderString.append("WHERE v.productId='"+productId+"'");
-                   // }
+                    queryBuilderString.append("AND v.productId='"+productId+"' ");
                 }
-
-
 
                 list = this.executeHqlQuery(queryBuilderString.toString(),AvailableStockView.class,SqlEnum.QueryType.View.get());
                 //============ full text search ===========================================

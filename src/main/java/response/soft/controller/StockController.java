@@ -34,9 +34,10 @@ public class StockController {
     @RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseMessage getAll(@RequestBody RequestMessage requestMessage,
                                   @RequestParam(value="storeId", required = false) UUID storeId,
+                                  @RequestParam(value="categoryId", required = false) UUID categoryId,
                                   @RequestParam(value="productId", required = false) UUID productId){
         ResponseMessage responseMessage;
-        responseMessage = this.stockService.getAllStock(requestMessage,storeId,productId);
+        responseMessage = this.stockService.getAllStock(requestMessage,storeId,categoryId,productId);
         return responseMessage;
     }
 
