@@ -23,6 +23,7 @@ public class ProductSalesViewModel extends BaseModel {
     private Double grandTotal;
     private String invoiceNo;
     private CustomerModel customerModel;
+    private Double discountAmount;
 
 }
 
