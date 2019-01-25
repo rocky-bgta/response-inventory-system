@@ -32,7 +32,7 @@
     <include file="changelog/view/invoice-history-view.xml" relativeToChangelogFile="true"/>
 
 
-  <!--  <include file="changelog/seed-loader.xml" relativeToChangelogFile="true"/>-->
+   <!--<include file="changelog/seed-loader.xml" relativeToChangelogFile="true"/>-->
 
 
 </databaseChangeLog>

@@ -211,6 +211,44 @@ public class CategoryService extends BaseService<Category> {
         return responseMessage;
     }
 
+    public ResponseMessage getByCategoryByStoreId(UUID storeId) {
+        ResponseMessage responseMessage;
+        List<CategoryModel> list;
+        StringBuilder queryBuilderString;
+
+        try {
+
+            queryBuilderString = new StringBuilder();
+            queryBuilderString
+                    .append("SELECT c.id, ")
+                    .append("c.name ")
+                    .append("FROM Stock s ")
+            .append("INNER JOIN Product p ON s.productId = p.id ")
+            .append("INNER JOIN Category c ON p.categoryId = c.id ")
+            .append("WHERE s.storeId = '" + storeId+"'");
+
+
+            list=this.executeHqlQuery(queryBuilderString.toString(),CategoryModel.class,SqlEnum.QueryType.Join.get());
+
+            responseMessage = buildResponseMessage(list);
+
+            if (responseMessage.data != null) {
+                responseMessage.httpStatus = HttpStatus.FOUND.value();
+                responseMessage.message = "Get requested category successfully";
+            } else {
+                responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
+                responseMessage.message = "Failed to requested category";
+            }
+
+        } catch (Exception ex) {
+            responseMessage = this.buildFailedResponseMessage();
+            //this.rollBack();
+            ex.printStackTrace();
+            log.error("getByCategoryByStoreId -> got exception");
+        }
+
+        return responseMessage;
+    }
 
     public ResponseMessage getAllCategory(RequestMessage requestMessage) {
         ResponseMessage responseMessage;

@@ -201,7 +201,7 @@ public class StockService extends BaseService<Stock> {
     }
 
 
-    public ResponseMessage getAllStock(RequestMessage requestMessage, UUID storeId, UUID categoryId, UUID productId) {
+    public ResponseMessage getAllStock(RequestMessage requestMessage, String storeId, String categoryId, String productId) {
         ResponseMessage responseMessage;
         List<AvailableStockView> list;
         String searchKey;
@@ -240,15 +240,15 @@ public class StockService extends BaseService<Stock> {
                         .append(") ")
                         .append("AND v.availableQty>0 ");
 
-                if(storeId!=null &&  storeId instanceof UUID){
+                if(storeId!=null && !StringUtils.isEmpty(storeId)){
                     queryBuilderString.append("AND v.storeId ='"+storeId+"' ");
                 }
 
-                if(categoryId!=null && categoryId instanceof UUID){
+                if(categoryId!=null &&  !StringUtils.isEmpty(categoryId)){
                     queryBuilderString.append("AND v.categoryId='"+categoryId+"' ");
                 }
 
-                if(productId!=null && storeId instanceof UUID){
+                if(productId!=null &&  !StringUtils.isEmpty(productId)){
                     queryBuilderString.append("AND v.productId='"+productId+"' ");
                 }
 

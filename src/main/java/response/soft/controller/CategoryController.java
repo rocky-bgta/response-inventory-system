@@ -47,6 +47,14 @@ public class CategoryController {
     }
 
     @ApiOperation(value ="", response = Object.class)
+    @RequestMapping(value = "/store-id/{storeId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseMessage getCategoryByStoreId(@PathVariable UUID storeId){
+        ResponseMessage responseMessage;
+        responseMessage = this.categoryService.getByCategoryByStoreId(storeId);
+        return responseMessage;
+    }
+
+    @ApiOperation(value ="", response = Object.class)
     @RequestMapping(value = "{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseMessage getById(@PathVariable UUID id){
         ResponseMessage responseMessage;
