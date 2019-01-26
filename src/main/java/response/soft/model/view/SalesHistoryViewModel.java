@@ -16,5 +16,6 @@ public class SalesHistoryViewModel {
     private UUID productId;
     private String productName;
     private Double salesPrice;
+    private Double discount;
 
 }

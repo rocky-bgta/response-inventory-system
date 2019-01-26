@@ -56,6 +56,7 @@ public class InvoiceHistoryService extends BaseService<InvoiceHistory> {
                         .append("lower(v.customerName) LIKE '%" + searchKey + "%' ")
                         .append("OR lower(v.invoiceNo) LIKE '%" + searchKey + "%' ")
                         .append("OR CAST(v.invoiceAmount AS string) LIKE '%" + searchKey + "%' ")
+                        .append("OR CAST(v.discountAmount AS string) LIKE '%" + searchKey + "%' ")
                         .append("OR lower(v.invoiceStatus) LIKE '%" + searchKey + "%' ");
                         //.append(") ");
 

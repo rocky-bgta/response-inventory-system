@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.Date;
 import java.util.UUID;
 
 @Data
@@ -31,6 +32,12 @@ public class InvoiceHistoryView {
     @Column(name = "invoice_amount")
     private Double invoiceAmount;
 
+    @Column(name = "discount_amount")
+    private Double discountAmount;
+
     @Column(name = "invoice_status")
     private String invoiceStatus;
+
+    @Column(name = "date")
+    private Date date;
 }

@@ -19,7 +19,9 @@
             c.name AS customer_name,
             invh.invoice_no,
             invh.grand_total AS invoice_amount,
-            case cp.paid_status when 1 then 'Paid' when 2 then 'partial' when 3 then 'Due'  end AS invoice_status
+            invh.discount AS discount_amount,
+            case cp.paid_status when 1 then 'Paid' when 2 then 'partial' when 3 then 'Due'  end AS invoice_status,
+            invh.date
             FROM
             invoice_history invh
             INNER JOIN customer_payment cp ON invh.invoice_no = cp.invoice_no

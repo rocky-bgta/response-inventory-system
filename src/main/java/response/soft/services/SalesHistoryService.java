@@ -508,7 +508,6 @@ public class SalesHistoryService extends BaseService<SalesHistory> {
                 searchKey = searchKey.trim().toLowerCase();
             }
 
-
            /* SELECT
             sh.invoiceNo,
             s.id AS storeId,
@@ -534,7 +533,8 @@ public class SalesHistoryService extends BaseService<SalesHistory> {
                     .append("c.name AS customerName, ")
                     .append("sh.productId, ")
                     .append("p.name as productName, ")
-                    .append("CAST(sh.salesPrice AS string) ")
+                    .append("CAST(sh.salesPrice AS string), ")
+                    .append("CAST(sh.discount AS string) ")
                     .append("FROM  SalesHistory sh ")
                     .append("INNER JOIN StoreOutProduct sop ON sh.storeOutId = sop.id  ")
                     .append("INNER JOIN Store s ON sop.storeId = s.id  ")
