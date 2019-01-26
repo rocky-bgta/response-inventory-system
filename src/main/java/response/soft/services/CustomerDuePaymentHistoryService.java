@@ -78,6 +78,7 @@ public class CustomerDuePaymentHistoryService extends BaseService<CustomerDuePay
     public ResponseMessage getPreviousDueByCustomerId(String customerId) {
         ResponseMessage responseMessage;
         List<CustomerPreviousDueViewModel> list;
+        CustomerPreviousDueViewModel customerPreviousDueViewModel=null;
         StringBuilder queryBuilderString = new StringBuilder();
         try {
 
@@ -113,9 +114,12 @@ public class CustomerDuePaymentHistoryService extends BaseService<CustomerDuePay
 
 
             list = this.executeHqlQuery(queryBuilderString.toString(), CustomerPreviousDueViewModel.class, SqlEnum.QueryType.Join.get());
+            if(list!=null && list.size()>0){
+                customerPreviousDueViewModel = list.get(0);
+            }
 
 
-            responseMessage = this.buildResponseMessage(list);
+            responseMessage = this.buildResponseMessage(customerPreviousDueViewModel);
 
             if (responseMessage.data != null) {
                 responseMessage.httpStatus = HttpStatus.FOUND.value();
