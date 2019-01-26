@@ -28,4 +28,13 @@ public class CustomerDuePaymentHistoryController {
         return responseMessage;
     }
 
+    @ApiOperation(value ="", response = Object.class)
+    @ResponseStatus(HttpStatus.OK)
+    @RequestMapping(value = "/previous-due/customer-id/{customerId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseMessage getPreviousDueByCustomerId(@PathVariable String customerId){
+        ResponseMessage responseMessage;
+        responseMessage = this.customerDuePaymentHistoryService.getPreviousDueByCustomerId(customerId);
+        return responseMessage;
+    }
+
 }
