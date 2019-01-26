@@ -77,6 +77,7 @@ public class SalesHistoryService extends BaseService<SalesHistory> {
         String invoiceNo;
         InvoiceHistoryModel invoiceHistoryModel;
         CustomerPaymentModel customerPaymentModel;
+        Double invoiceDiscountAmount=0d;
 
         //===== stock variable ========================
         StockModel stockModel, whereConditionStockModel;
@@ -102,7 +103,9 @@ public class SalesHistoryService extends BaseService<SalesHistory> {
             Double dueAmount = productSalesViewModel.getDueAmount();
             Double grandTotal = productSalesViewModel.getGrandTotal();
             invoiceNo = productSalesViewModel.getInvoiceNo();
-            //storeId = productSalesViewModel.getStoreId();
+            if(productSalesViewModel.getDiscountAmount()!=null)
+                invoiceDiscountAmount = productSalesViewModel.getDiscountAmount();
+
 
             //check duplicate customer;
             if(productSalesViewModel.getCustomerModel() !=null) {
@@ -128,7 +131,7 @@ public class SalesHistoryService extends BaseService<SalesHistory> {
                 responseMessage.httpStatus = HttpStatus.IM_USED.value();
                 return responseMessage;
             }
-//check     duplicate invoice no =====================================
+            //check duplicate invoice no =====================================
 
 
             if(productSalesViewModel.getCustomerId()!=null)
@@ -140,13 +143,9 @@ public class SalesHistoryService extends BaseService<SalesHistory> {
 
             if(productSalesViewModel.getSalesMethod()!=null)
                 salesMethod = productSalesViewModel.getSalesMethod();
+
+
             Integer paymentStatus;
-
-
-
-
-
-
 
             for(SalesProductViewModel salesProductViewModel: salesProductViewModelList){
 
@@ -231,6 +230,7 @@ public class SalesHistoryService extends BaseService<SalesHistory> {
             invoiceHistoryModel.setInvoiceNo(invoiceNo);
             invoiceHistoryModel.setPaidAmount(paidAmount);
             invoiceHistoryModel.setDueAmount(dueAmount);
+            invoiceHistoryModel.setDiscount(invoiceDiscountAmount);
             invoiceHistoryModel.setGrandTotal(grandTotal);
             invoiceHistoryModel.setDate(invoiceDate);
             this.invoiceHistoryService.save(invoiceHistoryModel);
