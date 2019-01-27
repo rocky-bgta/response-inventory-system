@@ -25,7 +25,7 @@ import java.util.UUID;
 
 @Service
 public class CustomerPaymentService extends BaseService<CustomerPayment> {
-    private static final Logger log = LoggerFactory.getLogger(StoreInProductService.class);
+    private static final Logger log = LoggerFactory.getLogger(CustomerPaymentService.class);
 
     @Autowired
     CustomerDuePaymentHistoryService customerDuePaymentHistoryService;
@@ -196,6 +196,61 @@ public class CustomerPaymentService extends BaseService<CustomerPayment> {
             log.error("updateCustomerPayment -> save got exception");
         }
         return responseMessage;
+    }
+
+    public List<CustomerPaymentModel> dupPaymentByCustomerId(String customerId){
+        List<CustomerPaymentModel> customerPaymentModelList=null;
+        StringBuilder queryBuilder = new StringBuilder();
+
+        /* SELECT
+        cp.id,
+                cp.customerId,
+                cp.invoiceNo,
+                cp.paidAmount,
+                cp.dueAmount,
+                cp.grandTotal,
+                cp.paidStatus,
+                cp.invoiceDate,
+                cp.paymentDate,
+                c.name AS customerName
+        FROM
+        CustomerPayment cp
+        INNER JOIN Customer c ON cp.customerId = c.id
+        WHERE
+        cp.paidStatus = 2
+        OR cp.paidStatus = 3
+        AND c.id = '03cee2b6-601b-4347-bb81-69503f25b31f' order by cp.invoiceDate */
+        try{
+            queryBuilder.append("SELECT ")
+                    .append("cp.id, ")
+                    .append("cp.customerId, ")
+                    .append("cp.invoiceNo, ")
+                    .append("cp.paidAmount, ")
+                    .append("cp.dueAmount, ")
+                    .append("cp.grandTotal, ")
+                    .append("cp.paidStatus, ")
+                    .append("cp.invoiceDate, ")
+                    .append("cp.paymentDate, ")
+                    .append("c.name AS customerName ")
+            .append("FROM ")
+            .append("CustomerPayment cp ")
+            .append("INNER JOIN Customer c ON cp.customerId = c.id ")
+            .append("WHERE ")
+            .append("cp.paidStatus = 2 ")
+            .append("OR cp.paidStatus = 3 ")
+            .append("AND c.id = '"+customerId+"' ")
+            .append("ORDER BY cp.invoiceDate");
+
+            customerPaymentModelList = this.executeHqlQuery(queryBuilder.toString(),CustomerPaymentModel.class,SqlEnum.QueryType.Join.get());
+
+
+
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+
+        return  customerPaymentModelList;
+
     }
 
 }
