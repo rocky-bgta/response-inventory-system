@@ -78,6 +78,7 @@ public class SalesHistoryService extends BaseService<SalesHistory> {
         InvoiceHistoryModel invoiceHistoryModel;
         CustomerPaymentModel customerPaymentModel;
         Double invoiceDiscountAmount=0d;
+        Double currentInvoicePayment;
 
         //===== stock variable ========================
         StockModel stockModel, whereConditionStockModel;
@@ -225,10 +226,17 @@ public class SalesHistoryService extends BaseService<SalesHistory> {
 
             }
 
-            // insert data into invoice balance
+            if(paidAmount.doubleValue()>grandTotal.doubleValue()){
+                currentInvoicePayment = grandTotal;
+                this.customerPaymentService.payPreviousDueInvoice(customerId,grandTotal,paidAmount);
+            }else {
+                currentInvoicePayment = paidAmount;
+            }
+
+            // insert data into invoice history
             invoiceHistoryModel = new InvoiceHistoryModel();
             invoiceHistoryModel.setInvoiceNo(invoiceNo);
-            invoiceHistoryModel.setPaidAmount(paidAmount);
+            invoiceHistoryModel.setPaidAmount(currentInvoicePayment);
             invoiceHistoryModel.setDueAmount(dueAmount);
             invoiceHistoryModel.setDiscount(invoiceDiscountAmount);
             invoiceHistoryModel.setGrandTotal(grandTotal);
@@ -240,7 +248,7 @@ public class SalesHistoryService extends BaseService<SalesHistory> {
             customerPaymentModel = new CustomerPaymentModel();
             customerPaymentModel.setCustomerId(customerId);
             customerPaymentModel.setInvoiceNo(invoiceNo);
-            customerPaymentModel.setPaidAmount(paidAmount);
+            customerPaymentModel.setPaidAmount(currentInvoicePayment);
             customerPaymentModel.setDueAmount(dueAmount);
             customerPaymentModel.setGrandTotal(grandTotal);
 
@@ -254,7 +262,7 @@ public class SalesHistoryService extends BaseService<SalesHistory> {
             // insert data into customer due payment history
             customerDuePaymentHistoryModel = new CustomerDuePaymentHistoryModel();
             customerDuePaymentHistoryModel.setInvoiceNo(invoiceNo);
-            customerDuePaymentHistoryModel.setPaidAmount(paidAmount);
+            customerDuePaymentHistoryModel.setPaidAmount(currentInvoicePayment);
             customerDuePaymentHistoryModel.setPaymentDate(invoiceDate);
             this.customerDuePaymentHistoryService.save(customerDuePaymentHistoryModel);
 

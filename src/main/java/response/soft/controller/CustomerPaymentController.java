@@ -41,13 +41,13 @@ public class CustomerPaymentController {
         return responseMessage;
     }
 
-    @ApiOperation(value = "", response = Object.class)
+   /* @ApiOperation(value = "", response = Object.class)
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value ="/customer-id/{customerId}" ,method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<CustomerPaymentModel> test(@PathVariable String customerId){
         //ResponseMessage responseMessage;
         List<CustomerPaymentModel> list;
-        list = this.customerPaymentService.dupPaymentByCustomerId(customerId);
+        list = this.customerPaymentService.dueInvoiceListByCustomerId(customerId);
         return list;
-    }
+    }*/
 }

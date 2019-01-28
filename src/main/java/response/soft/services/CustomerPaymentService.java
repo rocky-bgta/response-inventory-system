@@ -198,8 +198,55 @@ public class CustomerPaymentService extends BaseService<CustomerPayment> {
         return responseMessage;
     }
 
-    public List<CustomerPaymentModel> dupPaymentByCustomerId(String customerId){
-        List<CustomerPaymentModel> customerPaymentModelList=null;
+    public void payPreviousDueInvoice(UUID customerId, Double grandTotal, Double paidAmount) throws Exception {
+        RequestMessage requestMessage = new RequestMessage();
+        List<CustomerPaymentModel> dueInvoiceList;
+        CustomerPaymentModel customerPaymentModelForPayment;
+        Double excessAmount, remainAmountAfterInvoicePayment, paidAmountForInvoice;
+        Double invoiceDueAmount;
+        excessAmount = paidAmount.doubleValue() - grandTotal.doubleValue();
+        try {
+
+            if (excessAmount.doubleValue() > 0) {
+                dueInvoiceList = this.dueInvoiceListByCustomerId(customerId);
+                for (CustomerPaymentModel customerPaymentModel : dueInvoiceList) {
+                    invoiceDueAmount = customerPaymentModel.getDueAmount();
+
+                    if (excessAmount.doubleValue() == invoiceDueAmount.doubleValue()) {
+                        customerPaymentModelForPayment = customerPaymentModel;
+                        customerPaymentModelForPayment.setCurrentPayment(excessAmount);
+                        requestMessage.data = customerPaymentModel;
+                        this.updateCustomerPayment(requestMessage);
+                        break;
+                    } else if (excessAmount.doubleValue() > invoiceDueAmount.doubleValue()) {
+                        paidAmountForInvoice = excessAmount.doubleValue() - invoiceDueAmount.doubleValue();
+                        remainAmountAfterInvoicePayment = excessAmount.doubleValue() - paidAmountForInvoice.doubleValue();
+                        excessAmount = remainAmountAfterInvoicePayment;
+
+                        customerPaymentModelForPayment = customerPaymentModel;
+                        customerPaymentModelForPayment.setCurrentPayment(excessAmount);
+                        requestMessage.data = customerPaymentModel;
+                        this.updateCustomerPayment(requestMessage);
+
+                    } else if (excessAmount.doubleValue() < invoiceDueAmount.doubleValue()) {
+                        customerPaymentModelForPayment = customerPaymentModel;
+                        customerPaymentModelForPayment.setCurrentPayment(excessAmount);
+                        requestMessage.data = customerPaymentModel;
+                        this.updateCustomerPayment(requestMessage);
+                        break;
+                    }
+
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw ex;
+        }
+
+    }
+
+    public List<CustomerPaymentModel> dueInvoiceListByCustomerId(UUID customerId) throws Exception {
+        List<CustomerPaymentModel> customerPaymentModelList;
         StringBuilder queryBuilder = new StringBuilder();
 
         /* SELECT
@@ -220,7 +267,7 @@ public class CustomerPaymentService extends BaseService<CustomerPayment> {
         cp.paidStatus = 2
         OR cp.paidStatus = 3
         AND c.id = '03cee2b6-601b-4347-bb81-69503f25b31f' order by cp.invoiceDate */
-        try{
+        try {
             queryBuilder.append("SELECT ")
                     .append("cp.id, ")
                     .append("cp.customerId, ")
@@ -232,24 +279,24 @@ public class CustomerPaymentService extends BaseService<CustomerPayment> {
                     .append("cp.invoiceDate, ")
                     .append("cp.paymentDate, ")
                     .append("c.name AS customerName ")
-            .append("FROM ")
-            .append("CustomerPayment cp ")
-            .append("INNER JOIN Customer c ON cp.customerId = c.id ")
-            .append("WHERE ")
-            .append("cp.paidStatus = 2 ")
-            .append("OR cp.paidStatus = 3 ")
-            .append("AND c.id = '"+customerId+"' ")
-            .append("ORDER BY cp.invoiceDate");
+                    .append("FROM ")
+                    .append("CustomerPayment cp ")
+                    .append("INNER JOIN Customer c ON cp.customerId = c.id ")
+                    .append("WHERE ")
+                    .append("cp.paidStatus = 2 ")
+                    .append("OR cp.paidStatus = 3 ")
+                    .append("AND c.id = '" + customerId + "' ")
+                    .append("ORDER BY cp.invoiceDate");
 
-            customerPaymentModelList = this.executeHqlQuery(queryBuilder.toString(),CustomerPaymentModel.class,SqlEnum.QueryType.Join.get());
+            customerPaymentModelList = this.executeHqlQuery(queryBuilder.toString(), CustomerPaymentModel.class, SqlEnum.QueryType.Join.get());
 
 
-
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
+            throw ex;
         }
 
-        return  customerPaymentModelList;
+        return customerPaymentModelList;
 
     }
 
