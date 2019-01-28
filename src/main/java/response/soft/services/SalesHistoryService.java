@@ -252,7 +252,7 @@ public class SalesHistoryService extends BaseService<SalesHistory> {
             customerPaymentModel.setDueAmount(dueAmount);
             customerPaymentModel.setGrandTotal(grandTotal);
 
-            paymentStatus = AppUtils.getPaymentStatus(paidAmount,grandTotal);
+            paymentStatus = AppUtils.getPaymentStatus(currentInvoicePayment,grandTotal);
 
             customerPaymentModel.setPaidStatus(paymentStatus);
 
