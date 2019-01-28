@@ -235,6 +235,7 @@ public class StockService extends BaseService<Stock> {
                         .append("( ")
                         .append("lower(v.categoryName) LIKE '%" + searchKey + "%' ")
                         .append("OR lower(v.storeName) LIKE '%" + searchKey + "%' ")
+                        .append("OR lower(v.modelNo) LIKE '%" + searchKey + "%' ")
                         .append("OR lower(v.productName) LIKE '%" + searchKey + "%' ")
                         .append("OR CAST(v.totalPrice AS string) LIKE '%" + searchKey + "%' ")
                         .append("OR CAST(v.availableQty AS string) LIKE '%" + searchKey + "%' ")

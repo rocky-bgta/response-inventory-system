@@ -34,6 +34,9 @@ public class AvailableStockView implements Serializable {
     @Column(name = "product_name")
     private String productName;
 
+    @Column(name = "model_no")
+    private String modelNo;
+
     @Column(name = "total_price")
     private Double totalPrice;
 
