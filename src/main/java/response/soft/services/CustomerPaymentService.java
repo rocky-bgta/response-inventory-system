@@ -219,12 +219,12 @@ public class CustomerPaymentService extends BaseService<CustomerPayment> {
                         this.updateCustomerPayment(requestMessage);
                         break;
                     } else if (excessAmount.doubleValue() > invoiceDueAmount.doubleValue()) {
-                        paidAmountForInvoice = excessAmount.doubleValue() - invoiceDueAmount.doubleValue();
-                        remainAmountAfterInvoicePayment = excessAmount.doubleValue() - paidAmountForInvoice.doubleValue();
+                        remainAmountAfterInvoicePayment = excessAmount.doubleValue() - invoiceDueAmount.doubleValue();
+                        //remainAmountAfterInvoicePayment = excessAmount.doubleValue() - paidAmountForInvoice.doubleValue();
                         excessAmount = remainAmountAfterInvoicePayment;
 
                         customerPaymentModelForPayment = customerPaymentModel;
-                        customerPaymentModelForPayment.setCurrentPayment(excessAmount);
+                        customerPaymentModelForPayment.setCurrentPayment(invoiceDueAmount);
                         requestMessage.data = customerPaymentModel;
                         this.updateCustomerPayment(requestMessage);
 
