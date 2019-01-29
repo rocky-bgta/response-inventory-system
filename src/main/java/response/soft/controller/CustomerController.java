@@ -34,6 +34,15 @@ public class CustomerController {
 
     @ApiOperation(value ="", response = Object.class)
     @ResponseStatus(HttpStatus.OK)
+    @RequestMapping(value = "/invoice-customer-list", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseMessage getInvoiceCustomerList(){
+        ResponseMessage responseMessage;
+        responseMessage = this.customerService.getInvoiceCustomerList();
+        return responseMessage;
+    }
+
+    @ApiOperation(value ="", response = Object.class)
+    @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseMessage getById(@PathVariable UUID id){
         ResponseMessage responseMessage;

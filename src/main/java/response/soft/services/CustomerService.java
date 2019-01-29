@@ -7,14 +7,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import response.soft.appenum.SqlEnum;
-import response.soft.core.BaseService;
-import response.soft.core.Core;
-import response.soft.core.RequestMessage;
-import response.soft.core.ResponseMessage;
+import response.soft.core.*;
 import response.soft.core.datatable.model.DataTableRequest;
 import response.soft.entities.Customer;
+import response.soft.entities.view.InvoiceHistoryView;
 import response.soft.model.CustomerModel;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -230,6 +229,43 @@ public class CustomerService extends BaseService<Customer> {
         return responseMessage;
     }
 
+
+    public ResponseMessage getInvoiceCustomerList(){
+        ResponseMessage responseMessage;
+        List<DropDownSelectModel> customerList = new ArrayList<>();
+        List<InvoiceHistoryView> invoiceHistoryViewList;
+        DropDownSelectModel dropDownSelectModel;
+        StringBuilder queryBuilderString =new StringBuilder();
+        try{
+            queryBuilderString.append("SELECT v FROM InvoiceHistoryView v");
+            invoiceHistoryViewList = this.executeHqlQuery( queryBuilderString.toString(),InvoiceHistoryView.class,SqlEnum.QueryType.View.get());
+
+            for(InvoiceHistoryView invoiceHistoryView: invoiceHistoryViewList){
+                dropDownSelectModel = new DropDownSelectModel();
+                dropDownSelectModel.setId(invoiceHistoryView.getCustomerId());
+                dropDownSelectModel.setName(invoiceHistoryView.getCustomerName());
+                customerList.add(dropDownSelectModel);
+            }
+
+            responseMessage = buildResponseMessage();
+            if(customerList.size()>0){
+                responseMessage.data = customerList;
+                responseMessage.httpStatus = HttpStatus.FOUND.value();
+                responseMessage.message="Found Invoice Customer List Successfully";
+            }else {
+                responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
+                responseMessage.message="Failed to get Invoice Customer List";
+            }
+
+        }catch (Exception ex){
+            responseMessage = this.buildFailedResponseMessage();
+            ex.printStackTrace();
+            //this.rollBack();
+            log.error("getInvoiceCustomerList -> save got exception");
+        }
+
+        return responseMessage;
+    }
 
     public ResponseMessage getAllCustomer(RequestMessage requestMessage) {
         ResponseMessage responseMessage;

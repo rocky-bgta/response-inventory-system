@@ -1,7 +1,9 @@
 package response.soft.core;
 
-import java.util.UUID;
+import lombok.Data;
 
+import java.util.UUID;
+@Data
 public class DropDownSelectModel {
     UUID id;
     String name;
