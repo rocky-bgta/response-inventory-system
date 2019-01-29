@@ -60,6 +60,9 @@ public class SalesHistoryService extends BaseService<SalesHistory> {
     private CustomerService customerService;
 
     @Autowired
+    private CustomerPaymentHistoryService customerPaymentHistoryService;
+
+    @Autowired
     private CustomerDuePaymentHistoryService customerDuePaymentHistoryService;
 
     public ResponseMessage saveStoreSalesProducts(RequestMessage requestMessage) {
@@ -93,6 +96,7 @@ public class SalesHistoryService extends BaseService<SalesHistory> {
         InvoiceHistoryModel whereConditionInvoiceHistoryModel;
         List<InvoiceHistoryModel> invoiceHistoryModelList;
         CustomerDuePaymentHistoryModel customerDuePaymentHistoryModel;
+        CustomerPaymentHistoryModel customerPaymentHistoryModel;
 
         try {
 
@@ -267,6 +271,15 @@ public class SalesHistoryService extends BaseService<SalesHistory> {
             this.customerDuePaymentHistoryService.save(customerDuePaymentHistoryModel);
 
 
+            // insert data into customer payment history
+            if(paidAmount.doubleValue()>0){
+                customerPaymentHistoryModel = new CustomerPaymentHistoryModel();
+                customerPaymentHistoryModel.setInvoiceNo(invoiceNo);
+                customerPaymentHistoryModel.setCustomerId(customerId);
+                customerPaymentHistoryModel.setPaidAmount(paidAmount);
+                customerPaymentHistoryModel.setPaymentDate(invoiceDate);
+                this.customerPaymentHistoryService.save(customerPaymentHistoryModel);
+            }
 
             responseMessage = this.buildResponseMessage();
             responseMessage.httpStatus = HttpStatus.CREATED.value();

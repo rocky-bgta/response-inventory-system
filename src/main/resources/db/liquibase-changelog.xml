@@ -19,6 +19,7 @@
     <include file="changelog/sales-history-schema.xml" relativeToChangelogFile="true"/>
     <include file="changelog/invoice-history-schema.xml" relativeToChangelogFile="true"/>
     <include file="changelog/customer-payment-schema.xml" relativeToChangelogFile="true"/>
+    <include file="changelog/customer-payment-history-schema.xml" relativeToChangelogFile="true"/>
     <include file="changelog/customer-due-payment-history-schema.xml" relativeToChangelogFile="true"/>
     <include file="changelog/customer-schema.xml" relativeToChangelogFile="true"/>
     <include file="changelog/file-upload-schema.xml" relativeToChangelogFile="true"/>
@@ -32,7 +33,14 @@
     <include file="changelog/view/invoice-history-view.xml" relativeToChangelogFile="true"/>
 
 
-   <!--<include file="changelog/seed-loader.xml" relativeToChangelogFile="true"/>-->
+
+
+
+
+   <include file="changelog/seed-loader.xml" relativeToChangelogFile="true"/>
+
+
+
 
 
 </databaseChangeLog>
