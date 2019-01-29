@@ -1,20 +1,17 @@
+
 package response.soft.model.view;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import response.soft.core.DropDownSelectModel;
+import response.soft.entities.view.InvoiceHistoryView;
 
-import java.util.Date;
-import java.util.UUID;
+import java.util.List;
 
 @Data
 @EqualsAndHashCode
 public class InvoiceHistoryViewModel {
-    private UUID invoiceId;
-    private UUID customerId;
-    private String customerName;
-    private String invoiceNo;
-    private Double invoiceAmount;
-    private String invoiceStatus;
-    private Date date;
-
+    private List<InvoiceHistoryView> invoiceHistoryViewList;
+    private List<DropDownSelectModel> customerDropDownList;
 }
+
