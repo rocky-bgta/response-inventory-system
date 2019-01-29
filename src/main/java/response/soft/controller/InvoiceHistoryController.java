@@ -25,7 +25,7 @@ public class InvoiceHistoryController {
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseMessage getAll(@RequestBody RequestMessage requestMessage,
-                                  @RequestParam(value="customerId", required = false) UUID customerId){
+                                  @RequestParam(value="customerId", required = false) String customerId){
         ResponseMessage responseMessage;
         responseMessage = this.invoiceHistoryService.getInvoiceDetailsList(requestMessage,customerId);
         return responseMessage;

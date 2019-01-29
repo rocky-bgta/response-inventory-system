@@ -29,7 +29,7 @@ public class InvoiceHistoryService extends BaseService<InvoiceHistory> {
         Core.runTimeModelType.set(InvoiceHistoryModel.class);
     }
 
-    public ResponseMessage getInvoiceDetailsList(RequestMessage requestMessage, UUID customerId) {
+    public ResponseMessage getInvoiceDetailsList(RequestMessage requestMessage, String customerId) {
         ResponseMessage responseMessage;
         List<InvoiceHistoryView> list;
         String searchKey;
@@ -48,23 +48,29 @@ public class InvoiceHistoryService extends BaseService<InvoiceHistory> {
             }*/
             //============ full text search ===========================================
 
-            if ((searchKey != null && !StringUtils.isEmpty(searchKey))|| customerId!=null) {
+            if (searchKey != null && !StringUtils.isEmpty(searchKey)) {
 
                 queryBuilderString.append("SELECT v FROM InvoiceHistoryView v ")
                         .append("WHERE ")
-                        //.append("( ")
+                        .append("( ")
                         .append("lower(v.customerName) LIKE '%" + searchKey + "%' ")
                         .append("OR lower(v.invoiceNo) LIKE '%" + searchKey + "%' ")
                         .append("OR CAST(v.invoiceAmount AS string) LIKE '%" + searchKey + "%' ")
                         .append("OR CAST(v.discountAmount AS string) LIKE '%" + searchKey + "%' ")
-                        .append("OR lower(v.invoiceStatus) LIKE '%" + searchKey + "%' ");
-                        //.append(") ");
+                        .append("OR lower(v.invoiceStatus) LIKE '%" + searchKey + "%' ")
+                        .append(") ");
+                if(!StringUtils.isEmpty(customerId)){
+                    queryBuilderString.append("AND v.customerId='"+customerId+"'");
+                }
 
                 list = this.executeHqlQuery(queryBuilderString.toString(),InvoiceHistoryView.class,SqlEnum.QueryType.View.get());
                 //============ full text search ===========================================
             }else {
                 queryBuilderString.setLength(0);
-                queryBuilderString.append("SELECT v FROM InvoiceHistoryView v");
+                queryBuilderString.append("SELECT v FROM InvoiceHistoryView v ");
+                if(!StringUtils.isEmpty(customerId)){
+                    queryBuilderString.append("WHERE v.customerId='"+customerId+"'");
+                }
                 list = this.executeHqlQuery( queryBuilderString.toString(),InvoiceHistoryView.class,SqlEnum.QueryType.View.get());
             }
 
