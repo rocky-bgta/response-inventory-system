@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import response.soft.core.BaseModel;
 import response.soft.model.CustomerModel;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,6 +25,7 @@ public class ProductSalesViewModel extends BaseModel {
     private String invoiceNo;
     private CustomerModel customerModel;
     private Double discountAmount;
+    private Date invoiceDate;
 
 }
 

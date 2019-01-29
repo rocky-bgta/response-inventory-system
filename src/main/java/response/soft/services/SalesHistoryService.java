@@ -103,7 +103,7 @@ public class SalesHistoryService extends BaseService<SalesHistory> {
             productSalesViewModel = Core.processRequestMessage(requestMessage, ProductSalesViewModel.class);
 
             salesProductViewModelList = productSalesViewModel.getSalesProductViewModelList();
-            Date invoiceDate = new Date();
+            Date invoiceDate = productSalesViewModel.getInvoiceDate();
             Double paidAmount = productSalesViewModel.getPaidAmount();
             Double dueAmount = productSalesViewModel.getDueAmount();
             Double grandTotal = productSalesViewModel.getGrandTotal();
