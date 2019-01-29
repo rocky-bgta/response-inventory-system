@@ -232,20 +232,11 @@ public class CustomerService extends BaseService<Customer> {
 
     public ResponseMessage getInvoiceCustomerList(){
         ResponseMessage responseMessage;
-        List<DropDownSelectModel> customerList = new ArrayList<>();
-        List<InvoiceHistoryView> invoiceHistoryViewList;
-        DropDownSelectModel dropDownSelectModel;
+        List<DropDownSelectModel> customerList;
         StringBuilder queryBuilderString =new StringBuilder();
         try{
-            queryBuilderString.append("SELECT v FROM InvoiceHistoryView v");
-            invoiceHistoryViewList = this.executeHqlQuery( queryBuilderString.toString(),InvoiceHistoryView.class,SqlEnum.QueryType.View.get());
-
-            for(InvoiceHistoryView invoiceHistoryView: invoiceHistoryViewList){
-                dropDownSelectModel = new DropDownSelectModel();
-                dropDownSelectModel.setId(invoiceHistoryView.getCustomerId());
-                dropDownSelectModel.setName(invoiceHistoryView.getCustomerName());
-                customerList.add(dropDownSelectModel);
-            }
+            queryBuilderString.append("SELECT DISTINCT v.customerId AS id, v.customerName AS name FROM InvoiceHistoryView v");
+            customerList = this.executeHqlQuery( queryBuilderString.toString(),DropDownSelectModel.class,SqlEnum.QueryType.Join.get());
 
             responseMessage = buildResponseMessage();
             if(customerList.size()>0){
