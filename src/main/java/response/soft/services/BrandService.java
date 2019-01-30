@@ -75,11 +75,11 @@ public class BrandService extends BaseService<Brand> {
             if (brandModel != null) {
                 responseMessage.httpStatus = HttpStatus.CREATED.value();
                 responseMessage.message = "Brand save successfully!";
-                //this.commit();
+                Core.commitTransaction();
             } else {
                 responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY.value();
                 responseMessage.message = "Failed to save category";
-                //this.rollBack();
+                Core.rollBackTransaction();
             }
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage("Internal server error");
@@ -117,6 +117,7 @@ public class BrandService extends BaseService<Brand> {
                 if (brandModel != null) {
                     responseMessage.message = "Brand updated successfully!";
                     responseMessage.httpStatus = HttpStatus.OK.value();
+                    Core.commitTransaction();
                     return responseMessage;
                     //this.commit();
                 }
@@ -129,12 +130,12 @@ public class BrandService extends BaseService<Brand> {
                     if (brandModel != null) {
                         responseMessage.message = "Brand updated successfully!";
                         responseMessage.httpStatus = HttpStatus.OK.value();
-                        //this.commit();
+                        Core.commitTransaction();
                     }
                 }else {
                     responseMessage.httpStatus = HttpStatus.CONFLICT.value();
                     responseMessage.message = "Same Brand Name already exist";
-                    //this.rollBack();
+                    Core.rollBackTransaction();
                 }
             }
 
@@ -170,11 +171,11 @@ public class BrandService extends BaseService<Brand> {
             if (brandModel != null) {
                 responseMessage.httpStatus = HttpStatus.OK.value();
                 responseMessage.message = "Brand deleted successfully!";
-                //this.commit();
+                Core.commitTransaction();
             } else {
                 responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY.value();
                 responseMessage.message = "Failed to deleted category";
-                //this.rollBack();
+                Core.rollBackTransaction();
             }
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();

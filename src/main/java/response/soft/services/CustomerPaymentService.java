@@ -182,12 +182,12 @@ public class CustomerPaymentService extends BaseService<CustomerPayment> {
                 responseMessage = this.buildResponseMessage(createdCustomerPaymentModel);
                 responseMessage.httpStatus = HttpStatus.OK.value();
                 responseMessage.message = "Customer payment update successfully";
-                //this.commit();
+                Core.commitTransaction();
             } else {
                 responseMessage = this.buildResponseMessage();
                 responseMessage.httpStatus = HttpStatus.CONFLICT.value();
                 responseMessage.message = "Failed to get Customer payment update !!!";
-                //this.rollBack();
+                Core.rollBackTransaction();
             }
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
@@ -237,9 +237,11 @@ public class CustomerPaymentService extends BaseService<CustomerPayment> {
                     }
 
                 }
+                Core.commitTransaction();
             }
         } catch (Exception ex) {
             ex.printStackTrace();
+            Core.rollBackTransaction();
             throw ex;
         }
 

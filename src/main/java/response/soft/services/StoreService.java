@@ -75,16 +75,16 @@ public class StoreService extends BaseService<Store> {
             if (storeModel != null) {
                 responseMessage.httpStatus = HttpStatus.CREATED.value();
                 responseMessage.message = "Store save successfully!";
-                //this.commit();
+                Core.commitTransaction();
             } else {
                 responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY.value();
                 responseMessage.message = "Failed to save Store";
-                //this.rollBack();
+                Core.rollBackTransaction();
             }
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage("Internal server error");
             ex.printStackTrace();
-            //this.rollBack();
+            Core.rollBackTransaction();
             log.error("saveVendor -> save got exception");
         }
         return responseMessage;
@@ -117,6 +117,7 @@ public class StoreService extends BaseService<Store> {
                     responseMessage = this.buildResponseMessage(storeModel);
                     responseMessage.message = "Store update successfully!";
                     responseMessage.httpStatus = HttpStatus.OK.value();
+                    Core.commitTransaction();
                     return responseMessage;
                     //this.commit();
                 }
@@ -130,6 +131,7 @@ public class StoreService extends BaseService<Store> {
                         responseMessage = this.buildResponseMessage(storeModel);
                         responseMessage.message = "Store update successfully!";
                         responseMessage.httpStatus = HttpStatus.OK.value();
+                        Core.commitTransaction();
                         return responseMessage;
                         //this.commit();
                     }
@@ -137,6 +139,7 @@ public class StoreService extends BaseService<Store> {
                     responseMessage = this.buildResponseMessage(storeModel);
                     responseMessage.httpStatus = HttpStatus.CONFLICT.value();
                     responseMessage.message = "Same Store name already exist";
+                    Core.rollBackTransaction();
                     //this.rollBack();
                 }
             }else {
@@ -145,7 +148,7 @@ public class StoreService extends BaseService<Store> {
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
             ex.printStackTrace();
-            //this.rollBack();
+            Core.rollBackTransaction();
             log.error("updateVendor -> got exception");
         }
         return responseMessage;
@@ -171,16 +174,16 @@ public class StoreService extends BaseService<Store> {
 
             if (storeModel != null) {
                 responseMessage.message = "Store deleted successfully!";
-                //this.commit();
+                Core.commitTransaction();
             } else {
                 responseMessage.message = "Failed to deleted vendor";
-                //this.rollBack();
+                Core.rollBackTransaction();
             }
             responseMessage.httpStatus = HttpStatus.OK.value();
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
             ex.printStackTrace();
-            //this.rollBack();
+            Core.rollBackTransaction();
             log.error("deleteVendor -> got exception");
         }
         return responseMessage;

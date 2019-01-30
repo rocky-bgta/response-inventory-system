@@ -74,11 +74,11 @@ public class CategoryService extends BaseService<Category> {
             if (categoryModel != null) {
                 responseMessage.httpStatus = HttpStatus.CREATED.value();
                 responseMessage.message = "Category save successfully!";
-                //this.commit();
+                Core.commitTransaction();
             } else {
                 responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY.value();
                 responseMessage.message = "Failed to save category";
-                //this.rollBack();
+                Core.rollBackTransaction();
             }
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
@@ -117,6 +117,7 @@ public class CategoryService extends BaseService<Category> {
                 if (categoryModel != null) {
                     responseMessage.message = "Category update successfully!";
                     responseMessage.httpStatus = HttpStatus.OK.value();
+                    Core.commitTransaction();
                     return responseMessage;
                     //this.commit();
                 }
@@ -130,11 +131,13 @@ public class CategoryService extends BaseService<Category> {
                     if (categoryModel != null) {
                         responseMessage.message = "Category update successfully!";
                         responseMessage.httpStatus = HttpStatus.OK.value();
+                        Core.commitTransaction();
                         //this.commit();
                     }
                 }else {
                     responseMessage.httpStatus = HttpStatus.CONFLICT.value();
                     responseMessage.message = "Same Category Name already exist";
+                    Core.rollBackTransaction();
                     //this.rollBack();
                 }
             }
@@ -169,11 +172,11 @@ public class CategoryService extends BaseService<Category> {
             if (categoryModel != null) {
                 responseMessage.httpStatus = HttpStatus.OK.value();
                 responseMessage.message = "Category deleted successfully!";
-                //this.commit();
+                Core.commitTransaction();
             } else {
                 responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY.value();
                 responseMessage.message = "Failed to deleted category";
-                //this.rollBack();
+               Core.rollBackTransaction();
             }
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();

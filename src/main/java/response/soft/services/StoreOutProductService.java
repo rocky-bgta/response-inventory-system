@@ -41,7 +41,9 @@ public class StoreOutProductService extends BaseService<StoreOutProduct> {
                 saveStoreOutProductModel = this.save(storeOutProductModel);
                 savedStoreOutProductModelList.add(saveStoreOutProductModel);
             }
+            Core.commitTransaction();
         } catch (Exception e) {
+            Core.rollBackTransaction();
             e.printStackTrace();
             throw e;
         }

@@ -95,7 +95,8 @@ public abstract class Core {
     public static final ThreadLocal<Boolean> isDataTablePagination = new ThreadLocal<>();
     public static final ThreadLocal<String> dataTableSearchKey = new ThreadLocal<>();
 
-    public static final ThreadLocal<Session> SESSION_THREAD_LOCAL = new ThreadLocal<>();
+    //public static final ThreadLocal<Session> SESSION_THREAD_LOCAL_FOR_READ = new ThreadLocal<>();
+    public static final ThreadLocal<Session> SESSION_THREAD_LOCAL_FOR_UPDATE = new ThreadLocal<>();
     public static final ThreadLocal<Transaction> TRANSACTION_THREAD_LOCAL = new ThreadLocal<>();
 
 
@@ -233,6 +234,39 @@ public abstract class Core {
         shortColumnName.remove();
         isDataTablePagination.remove();
         dataTableSearchKey.remove();
+    }
+
+    public static void closeHibernateSession(){
+        Session session;
+        session = SESSION_THREAD_LOCAL_FOR_UPDATE.get();
+        if (session!=null && session.isOpen())
+            session.close();
+    }
+
+    public static void restHibernateSession(){
+       //SESSION_THREAD_LOCAL_FOR_READ.remove();
+       SESSION_THREAD_LOCAL_FOR_UPDATE.remove();
+       TRANSACTION_THREAD_LOCAL.remove();
+    }
+
+    public static void commitTransaction(){
+        Session session;
+        Transaction transaction;
+        session = SESSION_THREAD_LOCAL_FOR_UPDATE.get();
+        transaction = TRANSACTION_THREAD_LOCAL.get();
+        transaction.commit();
+        session.close();
+        restHibernateSession();
+    }
+
+    public static void rollBackTransaction(){
+        Session session;
+        Transaction transaction;
+        session = SESSION_THREAD_LOCAL_FOR_UPDATE.get();
+        transaction = TRANSACTION_THREAD_LOCAL.get();
+        transaction.rollback();
+        session.close();
+        restHibernateSession();
     }
 
     public static <T> T processRequestMessage(RequestMessage requestMessage, Class clazz) throws Exception {

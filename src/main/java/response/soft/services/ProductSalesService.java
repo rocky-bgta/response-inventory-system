@@ -109,16 +109,13 @@ public class ProductSalesService extends BaseService<SalesHistory> {
             if (list != null && list.size()>0) {
                 responseMessage.httpStatus = HttpStatus.FOUND.value();
                 responseMessage.message = "Get Product Sales Report successfully";
-                //this.commit();
             } else {
                 responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
                 responseMessage.message = "Failed to get Product Sales Report";
-                //this.rollBack();
             }
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
             ex.printStackTrace();
-            //this.rollBack();
             log.error("getProductSalesReport -> save got exception");
         }
         return responseMessage;

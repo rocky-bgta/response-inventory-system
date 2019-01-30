@@ -248,6 +248,7 @@ public class SalesHistoryService extends BaseService<SalesHistory> {
             this.invoiceHistoryService.save(invoiceHistoryModel);
 
 
+
             // insert data into customer payment
             customerPaymentModel = new CustomerPaymentModel();
             customerPaymentModel.setCustomerId(customerId);
@@ -281,14 +282,20 @@ public class SalesHistoryService extends BaseService<SalesHistory> {
                 this.customerPaymentHistoryService.save(customerPaymentHistoryModel);
             }
 
+
+           /* if(customerId!=null){
+                throw new Exception("Not possible");
+            }*/
+
             responseMessage = this.buildResponseMessage();
             responseMessage.httpStatus = HttpStatus.CREATED.value();
             responseMessage.message="Sales Invoice generated successfully";
+            Core.commitTransaction();
 
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
             ex.printStackTrace();
-            //this.rollBack();
+            this.rollBackTransaction();
             log.error("saveStock -> save got exception");
         }
         return responseMessage;

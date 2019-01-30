@@ -33,7 +33,7 @@ public abstract class BaseService<T extends BaseEntity> extends Core {
     @Autowired
     private Dao dao;// = new Dao();
 
-    private Boolean insertDataInHistory=true;
+    private Boolean insertDataInHistory=false;
 
     //type                return type
     public <M extends BaseModel> List<M> getAll() throws Exception {

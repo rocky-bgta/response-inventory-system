@@ -74,16 +74,16 @@ public class VendorService extends BaseService<Vendor> {
             if (vendorModel != null) {
                 responseMessage.httpStatus = HttpStatus.CREATED.value();
                 responseMessage.message = "Vendor save successfully!";
-                //this.commit();
+                Core.commitTransaction();
             } else {
                 responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY.value();
                 responseMessage.message = "Failed to save vendor";
-                //this.rollBack();
+                Core.rollBackTransaction();
             }
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage("Internal server error");
             ex.printStackTrace();
-            //this.rollBack();
+            Core.rollBackTransaction();
             log.error("saveVendor -> save got exception");
         }
         return responseMessage;
@@ -129,19 +129,19 @@ public class VendorService extends BaseService<Vendor> {
                     if (vendorModel != null) {
                         responseMessage.message = "Vendor update successfully!";
                         responseMessage.httpStatus = HttpStatus.OK.value();
-                        //this.commit();
+                        Core.commitTransaction();
                     }
                 }else {
                     responseMessage.httpStatus = HttpStatus.CONFLICT.value();
                     responseMessage.message = "Same Vendor name already exist";
-                    //this.rollBack();
+                    Core.rollBackTransaction();
                 }
             }
 
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
             ex.printStackTrace();
-            //this.rollBack();
+            Core.rollBackTransaction();
             log.error("updateVendor -> got exception");
         }
         return responseMessage;
@@ -169,11 +169,11 @@ public class VendorService extends BaseService<Vendor> {
             if (vendorModel != null) {
                 responseMessage.httpStatus = HttpStatus.OK.value();
                 responseMessage.message = "Vendor deleted successfully!";
-                //this.commit();
+                Core.commitTransaction();
             } else {
                 responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY.value();
                 responseMessage.message = "Failed to deleted Vendor";
-                //this.rollBack();
+                Core.rollBackTransaction();
             }
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();

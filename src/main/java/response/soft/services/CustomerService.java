@@ -84,16 +84,16 @@ public class CustomerService extends BaseService<Customer> {
             if (saveCustomerModel != null) {
                 responseMessage.httpStatus = HttpStatus.CREATED.value();
                 responseMessage.message = "Customer save successfully!";
-                //this.commit();
+                Core.commitTransaction();
             } else {
                 responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY.value();
                 responseMessage.message = "Failed to save vendor";
-                //this.rollBack();
+                Core.rollBackTransaction();
             }
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage("Internal server error");
             ex.printStackTrace();
-            //this.rollBack();
+            Core.rollBackTransaction();
             log.error("saveCustomer -> save got exception");
         }
         return responseMessage;
@@ -133,8 +133,8 @@ public class CustomerService extends BaseService<Customer> {
                 if (requestedCustomerModel != null) {
                     responseMessage.message = "Customer update successfully!";
                     responseMessage.httpStatus = HttpStatus.OK.value();
+                    Core.commitTransaction();
                     return responseMessage;
-                    //this.commit();
                 }
             }else {
 
@@ -146,12 +146,12 @@ public class CustomerService extends BaseService<Customer> {
                     if (requestedCustomerModel != null) {
                         responseMessage.message = "Customer update successfully!";
                         responseMessage.httpStatus = HttpStatus.OK.value();
-                        //this.commit();
+                        Core.commitTransaction();
                     }
                 }else {
                     responseMessage.httpStatus = HttpStatus.CONFLICT.value();
                     responseMessage.message = "Failed to update Customer information!!!";
-                    //this.rollBack();
+                    Core.rollBackTransaction();
                 }
             }
 
@@ -159,7 +159,7 @@ public class CustomerService extends BaseService<Customer> {
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
             ex.printStackTrace();
-            //this.rollBack();
+            Core.rollBackTransaction();
             log.error("updateCustomer -> got exception");
         }
         return responseMessage;
@@ -187,16 +187,16 @@ public class CustomerService extends BaseService<Customer> {
             if (vendorModel != null) {
                 responseMessage.httpStatus = HttpStatus.OK.value();
                 responseMessage.message = "Customer deleted successfully!";
-                //this.commit();
+                Core.commitTransaction();
             } else {
                 responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY.value();
                 responseMessage.message = "Failed to deleted vendor";
-                //this.rollBack();
+                Core.rollBackTransaction();
             }
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
             ex.printStackTrace();
-            //this.rollBack();
+            Core.rollBackTransaction();
             log.error("deleteCustomer -> got exception");
         }
         return responseMessage;

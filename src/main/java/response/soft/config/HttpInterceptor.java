@@ -15,6 +15,7 @@ public class HttpInterceptor extends HandlerInterceptorAdapter {
             HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         //System.out.println("I am from pre Handler");
         Core.resetPaginationVariable();
+        Core.restHibernateSession();
 
 
         return true;
@@ -33,6 +34,8 @@ public class HttpInterceptor extends HandlerInterceptorAdapter {
                                 Object handler, Exception exception) throws Exception {
         //System.out.println("I am from afterCompletion Handle");
         Core.resetPaginationVariable();
+        Core.closeHibernateSession();
+        Core.restHibernateSession();
 
     }
 }
