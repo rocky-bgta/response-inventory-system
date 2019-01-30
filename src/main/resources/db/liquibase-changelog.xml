@@ -36,9 +36,11 @@
 
 
 
+<!--
 
    <include file="changelog/seed-loader.xml" relativeToChangelogFile="true"/>
 
+-->
 
 
 

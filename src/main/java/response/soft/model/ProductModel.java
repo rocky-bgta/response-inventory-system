@@ -18,6 +18,7 @@ public class ProductModel extends BaseModel {
     private String modelNo;
     //private String serialNo;
     private Double price;
+    private Double salePrice;
     private String description;
     private String barcode;
     //private byte[] image;

@@ -22,6 +22,7 @@
             brn.NAME AS brand_name,
             P.model_no,
             sip.price AS buy_price,
+            p.sale_price,
             P.description,
             P.barcode,
             P.image
@@ -38,6 +39,7 @@
             brn.NAME,
             P.model_no,
             sip.price,
+            p.sale_price,
             P.description,
             P.barcode,
             P.image,

@@ -23,7 +23,7 @@ public class SalesProductViewModel extends BaseModel {
     private String image;
     private Double discount;
     //=========================
-    private Double salesPrice;
+    private Double salePrice;
     private Integer salesQty;
     private String serialNo;
     private Integer supportPeriodInMonth;

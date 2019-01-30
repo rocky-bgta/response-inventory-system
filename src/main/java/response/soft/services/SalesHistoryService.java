@@ -214,7 +214,7 @@ public class SalesHistoryService extends BaseService<SalesHistory> {
                     salesHistoryModel.setProductId(savedStoreOutProductModel.getProductId());
                     salesHistoryModel.setCustomerId(customerId);
                     salesHistoryModel.setBuyPrice(updatedStoreInProductModel.getPrice());
-                    salesHistoryModel.setSalesPrice(salesProductViewModel.getSalesPrice());
+                    salesHistoryModel.setSalesPrice(salesProductViewModel.getSalePrice());
                     salesHistoryModel.setSalesType(salesMethod);
 
                     if(salesProductViewModel.getDiscount()!=null)

@@ -336,7 +336,8 @@ public class ProductService extends BaseService<Product> {
                         .append("c.id, ")
                         .append("p.brandId, ")
                         .append("p.modelNo, ")
-                        .append("CAST(p.price AS string), ")
+                        .append("p.price, ")
+                        .append("p.salePrice, ")
                         .append("p.description, ")
                         .append("p.barcode, ")
                         .append("p.image ")
@@ -350,6 +351,7 @@ public class ProductService extends BaseService<Product> {
                         .append("OR lower(b.name) LIKE '%" + searchKey + "%' ")
                         .append("OR lower(p.modelNo) LIKE '%" + searchKey + "%' ")
                         .append("OR CAST(p.price AS string) LIKE '%" + searchKey + "%' ")
+                        .append("OR CAST(p.salePrice AS string) LIKE '%" + searchKey + "%' ")
                         .append("OR lower(p.description) LIKE '%" + searchKey + "%' ")
                         .append(") ")
                         .append("AND p.status="+SqlEnum.Status.Active.get());
@@ -420,7 +422,8 @@ public class ProductService extends BaseService<Product> {
                         .append("OR lower(v.category) LIKE '%" + searchKey + "%' ")
                         .append("OR lower(v.brand) LIKE '%" + searchKey + "%' ")
                         .append("OR lower(v.modelNo) LIKE '%" + searchKey + "%' ")
-                        .append("OR CAST(v.price AS string) LIKE '%" + searchKey + "%' ");
+                        .append("OR CAST(v.price AS string) LIKE '%" + searchKey + "%' ")
+                        .append("OR CAST(v.salePrice AS string) LIKE '%" + searchKey + "%' ");
 
                 list = this.executeHqlQuery(queryBuilderString.toString(),ProductView.class,SqlEnum.QueryType.View.get());
                 //============ full text search ===========================================

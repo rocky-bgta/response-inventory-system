@@ -39,6 +39,9 @@ public class SalesProductView {
     @Column(name = "buy_price")
     private Double buyPrice;
 
+    @Column(name = "sale_price")
+    private Double salePrice;
+
     @Column(name = "description")
     private String description;
 
