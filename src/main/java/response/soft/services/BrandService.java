@@ -11,7 +11,6 @@ import response.soft.core.BaseService;
 import response.soft.core.Core;
 import response.soft.core.RequestMessage;
 import response.soft.core.ResponseMessage;
-import response.soft.core.datatable.model.DataTableRequest;
 import response.soft.entities.Brand;
 import response.soft.model.BrandModel;
 
@@ -204,7 +203,6 @@ public class BrandService extends BaseService<Brand> {
 
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
-            //this.rollBack();
             ex.printStackTrace();
             log.error("getByBrandId -> got exception");
         }
@@ -215,17 +213,14 @@ public class BrandService extends BaseService<Brand> {
     public ResponseMessage getAllBrand(RequestMessage requestMessage) {
         ResponseMessage responseMessage;
         List<BrandModel> list;
-        DataTableRequest dataTableRequest;
-        String searchKey=null;
+        String searchKey;
         //BrandModel brandSearchModel;
         StringBuilder queryBuilderString;
         try {
-            this.resetPaginationVariable();
+            //this.resetPaginationVariable();
             Core.processRequestMessage(requestMessage);
-
-            dataTableRequest = requestMessage.dataTableRequest;
-            if(dataTableRequest!=null) {
-                searchKey = dataTableRequest.search.value;
+            searchKey = Core.dataTableSearchKey.get();
+            if(searchKey!=null) {
                 searchKey = searchKey.trim().toLowerCase();
             }
             /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(brandModel);
@@ -235,7 +230,7 @@ public class BrandService extends BaseService<Brand> {
 
             //============ full text search ===========================================
 
-            if (dataTableRequest != null && !StringUtils.isEmpty(searchKey)) {
+            if (searchKey != null && !StringUtils.isEmpty(searchKey)) {
 
                 queryBuilderString = new StringBuilder();
                 queryBuilderString.append("SELECT b.id, ")
