@@ -57,7 +57,7 @@ public abstract class Core {
     protected static final ObjectMapper jsonMapper = new ObjectMapper()
             .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
             .configure(DeserializationFeature.ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT.FAIL_ON_UNKNOWN_PROPERTIES, false)
-            .configure(JsonGenerator.Feature.WRITE_NUMBERS_AS_STRINGS,true)
+            .configure(JsonGenerator.Feature.WRITE_NUMBERS_AS_STRINGS, true)
             .setDateFormat(dateFormat);
 
     protected static final ModelMapper modelMapper = new ModelMapper();
@@ -100,17 +100,16 @@ public abstract class Core {
     public static final ThreadLocal<Transaction> TRANSACTION_THREAD_LOCAL = new ThreadLocal<>();
 
 
-
     //==================== update validation lib ===============================
     private final static Javers compareObject = JaversBuilder.javers().build();
     //private final static int baseEntityPropertyCount=3;
     //==================== update validation lib ===============================
 
-    public static int comparePropertyValueDifference(Object newObject, Object oldObject){
+    public static int comparePropertyValueDifference(Object newObject, Object oldObject) {
         //List<Change> changeList;
-        int changeCount,result;
-        int baseEntityPropertyCount=5;
-        Diff diff= Core.compareObject.compare(newObject,oldObject);
+        int changeCount, result;
+        int baseEntityPropertyCount = 5;
+        Diff diff = Core.compareObject.compare(newObject, oldObject);
         changeCount = diff.getChanges().size();
 
        /*
@@ -121,7 +120,7 @@ public abstract class Core {
 
         */
 
-        result = Math.abs(baseEntityPropertyCount-changeCount);
+        result = Math.abs(baseEntityPropertyCount - changeCount);
         return result;
     }
 
@@ -183,48 +182,47 @@ public abstract class Core {
             jsonObject = Core.jsonMapper.writeValueAsString(m);
             jsonObject = org.apache.commons.lang3.StringUtils.replace(jsonObject, "{", "");
             jsonObject = org.apache.commons.lang3.StringUtils.replace(jsonObject, "}", "");
-            jsonObject = org.apache.commons.lang3.StringUtils.replace(jsonObject,"null","\"\"");
+            jsonObject = org.apache.commons.lang3.StringUtils.replace(jsonObject, "null", "\"\"");
             jsonObject = jsonObject.substring(1, jsonObject.length() - 1);
 
             pattern = Pattern.compile("\",\"");
             String[] token = pattern.split(jsonObject);
-            int i=0;
-            for(String item: token){
+            int i = 0;
+            for (String item : token) {
 
                 //String propertyName = org.apache.commons.lang3.StringUtils.substringBefore(item,":");
                 //propertyName = org.apache.commons.lang3.StringUtils.remove(propertyName,"\"");
-                String propertyValue = org.apache.commons.lang3.StringUtils.substringAfter(item,":").trim();
+                String propertyValue = org.apache.commons.lang3.StringUtils.substringAfter(item, ":").trim();
 
-                propertyValue=org.apache.commons.lang3.StringUtils.remove(propertyValue,"\"");
-                if(!org.apache.commons.lang3.StringUtils.isEmpty(propertyValue)){
+                propertyValue = org.apache.commons.lang3.StringUtils.remove(propertyValue, "\"");
+                if (!org.apache.commons.lang3.StringUtils.isEmpty(propertyValue)) {
                     propertyValue = "\"" + propertyValue + "\"";
                     fieldName = fields[i].getName();
                     type = fields[i].getType();
-                    fieldValue = AppUtils.castValue(org.apache.commons.lang3.StringUtils.remove(type.toString(),"class ").trim(), propertyValue);
-                    temJson += "\"" + fieldName+ "\":"+fieldValue +",";
+                    fieldValue = AppUtils.castValue(org.apache.commons.lang3.StringUtils.remove(type.toString(), "class ").trim(), propertyValue);
+                    temJson += "\"" + fieldName + "\":" + fieldValue + ",";
                 }
                 //if(org.apache.commons.lang3.StringUtils.equalsIgnoreCase(fields[i].getName(),propertyName))
-                    i++;
+                i++;
             }
-                temJson = temJson.substring(0,temJson.length()-1);
-                buildJson += "{"+temJson+"}";
-                model = (M)clazz.newInstance();
-                model = (M) Core.gson.fromJson(buildJson, model.getClass());
+            temJson = temJson.substring(0, temJson.length() - 1);
+            buildJson += "{" + temJson + "}";
+            model = (M) clazz.newInstance();
+            model = (M) Core.gson.fromJson(buildJson, model.getClass());
         } catch (Exception e) {
             e.printStackTrace();
-            log.error("getTrimmedModel -> got exception",e.getCause());
+            log.error("getTrimmedModel -> got exception", e.getCause());
             throw e;
         }
         return model;
     }
 
 
-
     public static <T> T processRequestMessage(RequestMessage requestMessage) throws Exception {
         return processRequestMessage(requestMessage, null);
     }
 
-    public static void resetPaginationVariable(){
+    public static void resetPaginationVariable() {
         pageOffset.remove();
         pageSize.remove();
         totalRowCount.remove();
@@ -236,20 +234,20 @@ public abstract class Core {
         dataTableSearchKey.remove();
     }
 
-    public static void closeHibernateSession(){
+    public static void closeHibernateSession() {
         Session session;
         session = SESSION_THREAD_LOCAL_FOR_UPDATE.get();
-        if (session!=null && session.isOpen())
+        if (session != null && session.isOpen())
             session.close();
     }
 
-    public static void restHibernateSession(){
-       //SESSION_THREAD_LOCAL_FOR_READ.remove();
-       SESSION_THREAD_LOCAL_FOR_UPDATE.remove();
-       TRANSACTION_THREAD_LOCAL.remove();
+    public static void restHibernateSession() {
+        //SESSION_THREAD_LOCAL_FOR_READ.remove();
+        SESSION_THREAD_LOCAL_FOR_UPDATE.remove();
+        TRANSACTION_THREAD_LOCAL.remove();
     }
 
-    public static void commitTransaction(){
+    public static void commitTransaction() {
         Session session;
         Transaction transaction;
         session = SESSION_THREAD_LOCAL_FOR_UPDATE.get();
@@ -259,17 +257,17 @@ public abstract class Core {
         restHibernateSession();
     }
 
-    public static void rollBackTransaction(){
+    public static void rollBackTransaction() {
         Session session;
         Transaction transaction;
         session = SESSION_THREAD_LOCAL_FOR_UPDATE.get();
 
         transaction = TRANSACTION_THREAD_LOCAL.get();
-        if(transaction!=null)
-            transaction.rollback();
+        //if(transaction!=null)
+        transaction.rollback();
 
-        if(session!=null && session.isOpen())
-            session.close();
+        //if(session!=null && session.isOpen())
+        session.close();
 
         restHibernateSession();
     }
@@ -294,15 +292,15 @@ public abstract class Core {
             if (requestMessage.data != null && !ObjectUtils.isEmpty(requestMessage.data)) {
                 requestData = requestMessage.data;
             }
-            if (requestMessage.dataTableRequest != null && requestMessage.dataTableRequest.length!=null && requestMessage.dataTableRequest.length!=0) {
+            if (requestMessage.dataTableRequest != null && requestMessage.dataTableRequest.length != null && requestMessage.dataTableRequest.length != 0) {
                 Core.isDataTablePagination.set(true);
 
 
-                if((requestMessage.dataTableRequest.start!=null
-                        && requestMessage.dataTableRequest.length!=null) && requestMessage.dataTableRequest.length>0){
+                if ((requestMessage.dataTableRequest.start != null
+                        && requestMessage.dataTableRequest.length != null) && requestMessage.dataTableRequest.length > 0) {
                     Core.pageOffset.set(requestMessage.dataTableRequest.start);
                     Core.pageSize.set(requestMessage.dataTableRequest.length);
-                }else {
+                } else {
                     Core.pageOffset.set(null);
                     Core.pageSize.set(null);
                 }
@@ -343,13 +341,14 @@ public abstract class Core {
     public ResponseMessage buildFailedResponseMessage() {
         return this.buildFailedResponseMessage(null);
     }
+
     public ResponseMessage buildFailedResponseMessage(String message) {
         ResponseMessage responseMessage = new ResponseMessage();
         responseMessage.data = null;
         responseMessage.totalRow = 0l;
         responseMessage.token = null;
         responseMessage.httpStatus = HttpStatus.INTERNAL_SERVER_ERROR.value();
-        if(message!=null)
+        if (message != null)
             responseMessage.message = message;
         else
             responseMessage.message = "Internal server error!!!";
@@ -364,7 +363,7 @@ public abstract class Core {
         DataTableResponse dataTableResponse;
         ResponseMessage responseMessage = new ResponseMessage();
 
-        if(data!=null) {
+        if (data != null) {
             responseMessage.data = data;
 
             if (Core.totalRowCount.get() != null)
@@ -383,11 +382,11 @@ public abstract class Core {
                 dataTableResponse = new DataTableResponse();
                 responseMessage.dataTableResponse = dataTableResponse;
                 //responseMessage.dataTableResponse.setData((List) data);
-                responseMessage.dataTableResponse.recordsTotal=(Core.totalRowCount.get());
-                responseMessage.dataTableResponse.recordsFiltered=(Core.recordsFilteredCount.get());
-                responseMessage.dataTableResponse.draw=(Core.dataTableDraw.get());
+                responseMessage.dataTableResponse.recordsTotal = (Core.totalRowCount.get());
+                responseMessage.dataTableResponse.recordsFiltered = (Core.recordsFilteredCount.get());
+                responseMessage.dataTableResponse.draw = (Core.dataTableDraw.get());
             }
-        }else {
+        } else {
             responseMessage.token = "token" + UUID.randomUUID();
             responseMessage.httpStatus = HttpStatus.CONFLICT.value();
             responseMessage.message = "Failed";
@@ -538,16 +537,16 @@ public abstract class Core {
 
             query = new StringBuilder();
 
-            if (SqlEnum.QueryType.Select.get() == queryType || SqlEnum.QueryType.LikeOrSearch.get()==queryType) {
+            if (SqlEnum.QueryType.Select.get() == queryType || SqlEnum.QueryType.LikeOrSearch.get() == queryType) {
                 query.append("SELECT t ")
                         .append("FROM " + entityName + " t ")
                         .append(" WHERE ");
 
                 // Select query with and condition
-                if(SqlEnum.QueryType.Select.get() == queryType)
+                if (SqlEnum.QueryType.Select.get() == queryType)
                     query = this.criteriaBuilder(keyValueParisForWhereCondition, query, SqlEnum.QueryType.Select.get());
                 // Select query with or and like condition
-                if(SqlEnum.QueryType.LikeOrSearch.get() == queryType)
+                if (SqlEnum.QueryType.LikeOrSearch.get() == queryType)
                     query = this.criteriaBuilder(keyValueParisForWhereCondition, query, SqlEnum.QueryType.LikeOrSearch.get());
             }
 
@@ -590,12 +589,12 @@ public abstract class Core {
         try {
             List<String> criteria = new ArrayList<String>();
 
-            if(SqlEnum.QueryType.LikeOrSearch.get()==queryType){
+            if (SqlEnum.QueryType.LikeOrSearch.get() == queryType) {
                 for (Map.Entry<Object, Object> entry : keyValueParis.entrySet()) {
                     key = entry.getKey().toString();
                     criteria.add("lower(t." + key + ") LIKE :" + key + queryType);
                 }
-            }else {
+            } else {
 
                 for (Map.Entry<Object, Object> entry : keyValueParis.entrySet()) {
                     key = entry.getKey().toString();
@@ -612,7 +611,7 @@ public abstract class Core {
                         query.append(" AND ");
                     if (queryType == SqlEnum.QueryType.Update.get())
                         query.append(" , ");
-                    if(queryType==SqlEnum.QueryType.LikeOrSearch.get())
+                    if (queryType == SqlEnum.QueryType.LikeOrSearch.get())
                         query.append(" OR ");
                 }
                 query.append(criteria.get(i));
