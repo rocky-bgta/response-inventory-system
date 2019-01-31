@@ -532,7 +532,7 @@ public class SalesHistoryService extends BaseService<SalesHistory> {
         StringBuilder queryBuilderString;
         String searchKey;
         try {
-            this.resetPaginationVariable();
+            //this.resetPaginationVariable();
              /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(StoreOutProductModel);
             for (ConstraintViolation<CountryModel> violation : violations) {
                 log.error(violation.getMessage());
@@ -608,16 +608,13 @@ public class SalesHistoryService extends BaseService<SalesHistory> {
             if (responseMessage.data != null) {
                 responseMessage.httpStatus = HttpStatus.FOUND.value();
                 responseMessage.message = "Get all Sales History successfully";
-                //this.commit();
             } else {
                 responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
                 responseMessage.message = "Failed to get Sales History";
-                //this.rollBack();
             }
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
             ex.printStackTrace();
-            //this.rollBack();
             log.error("getAllStock -> save got exception");
         }
         return responseMessage;
