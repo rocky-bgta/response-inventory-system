@@ -110,7 +110,7 @@ public class CustomerDuePaymentHistoryService extends BaseService<CustomerDuePay
                     .append("WHERE (cp.paidStatus = " +InventoryEnum.PaymentStatus.PARTIAL.get() +" ")
                     .append("OR cp.paidStatus = " +InventoryEnum.PaymentStatus.DUE.get() +" ")
                     .append(") AND cp.customerId = '" +customerId +"' ")
-            .append("GROUP BY c.name,cp.customerId ");
+                    .append("GROUP BY c.name,cp.customerId ");
 
 
             list = this.executeHqlQuery(queryBuilderString.toString(), CustomerPreviousDueViewModel.class, SqlEnum.QueryType.Join.get());

@@ -223,7 +223,7 @@ public class CategoryService extends BaseService<Category> {
 
             queryBuilderString = new StringBuilder();
             queryBuilderString
-                    .append("SELECT c.id, ")
+                    .append("SELECT DISTINCT c.id, ")
                     .append("c.name ")
                     .append("FROM Stock s ")
             .append("INNER JOIN Product p ON s.productId = p.id ")

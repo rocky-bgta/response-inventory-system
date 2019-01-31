@@ -89,10 +89,10 @@ public class StoreInProductsController {
 
     @ApiOperation(value ="", response = UUID.class)
     @ResponseStatus(HttpStatus.OK)
-    @RequestMapping(value = "/store-id/{storeId}",method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseMessage getStoreInProductsByStoreId(@PathVariable UUID storeId) {
+    @RequestMapping(value = "/store-id/category-id/{storeId}/{categoryId}",method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseMessage getStoreInProductsByStoreId(@PathVariable UUID storeId,@PathVariable UUID categoryId) {
         ResponseMessage responseMessage;
-        responseMessage = this.storeInProductService.getStoreInProductsByStoreId(storeId);
+        responseMessage = this.storeInProductService.getStoreInProductsByStoreIdAndCategoryId(storeId,categoryId);
         return responseMessage;
     }
 
@@ -102,10 +102,11 @@ public class StoreInProductsController {
     public ResponseMessage getAllAvailableProduct(@RequestBody RequestMessage requestMessage,
                                   @RequestParam(value="storeId") String storeId,
                                   @RequestParam(value="productId", required = false) String productId,
+                                  @RequestParam(value="categoryId", required = false) String categoryId,
                                   @RequestParam(value="barcode", required = false) String barcode){
         ResponseMessage responseMessage;
-        responseMessage = this.storeInProductService.getSalesProductListByStoreIdOrProductIdOrBarcode(
-                requestMessage,storeId,productId,barcode);
+        responseMessage = this.storeInProductService.getSalesProductListByStoreIdOrProductIdOrCategoryIdOrBarcode(
+                requestMessage,storeId,productId,categoryId,barcode);
         return responseMessage;
     }
 }

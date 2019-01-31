@@ -13,12 +13,26 @@
         <createView replaceIfExists="true"
                     schemaName="inventory"
                     viewName="sales_product_view">
-            SELECT P
-            .ID AS product_id,
+            SELECT  sale_product_view.product_id,
+            sale_product_view.store_id,
+            sale_product_view.available,
+            sale_product_view.product_name,
+            sale_product_view.category_name,
+            sale_product_view.category_id,
+            sale_product_view.brand_name,
+            sale_product_view.model_no,
+            sale_product_view.buy_price,
+            sale_product_view.sale_price,
+            sale_product_view.description,
+            sale_product_view.barcode,
+            sale_product_view.image
+            FROM (SELECT sip
+            .product_id,
             sip.store_id AS store_id,
             COUNT ( sip.product_id ) AS available,
             P.NAME AS product_name,
             cat.NAME AS category_name,
+            cat.id AS category_id,
             brn.NAME AS brand_name,
             P.model_no,
             sip.price AS buy_price,
@@ -33,9 +47,10 @@
             LEFT JOIN inventory.brand brn ON P.brand_id = brn.ID
             WHERE sip.product_status = 1
             GROUP BY
-            P.ID,
+            sip.product_id,
             P.name,
             cat.NAME,
+            cat.id,
             brn.NAME,
             P.model_no,
             sip.price,
@@ -45,7 +60,7 @@
             P.image,
             sip.store_id
             ORDER BY
-            sip.store_id
+            sip.store_id) sale_product_view
 
         </createView>
 
