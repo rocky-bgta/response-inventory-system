@@ -19,15 +19,14 @@ public abstract class BaseService<T extends BaseEntity> extends Core {
 
     private static final Logger log = LoggerFactory.getLogger(BaseService.class);
 
-    @Autowired
-    public BaseService(Dao dao) {
+    public BaseService() {
         super();
-        this.dao = dao;
     }
 
     protected abstract void initEntityModel();
 
-    private final Dao dao;// = new Dao();
+    @Autowired
+    private Dao dao;// = new Dao();
 
     private Boolean insertDataInHistory=false;
 
