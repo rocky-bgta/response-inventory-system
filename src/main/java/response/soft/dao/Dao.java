@@ -20,14 +20,13 @@ import response.soft.core.BaseDao;
 import response.soft.core.Core;
 import response.soft.entities.History;
 
-import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-@SuppressWarnings("ALL")
+//@SuppressWarnings("ALL")
 @Repository
 //@Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class Dao<T> extends BaseDao {
@@ -35,14 +34,15 @@ public class Dao<T> extends BaseDao {
     //@Autowired
     //private SessionFactory sessionFactory;
 
-    @Autowired
-    ApplicationContext applicationContext;
+    private final ApplicationContext applicationContext;
 
     //@Autowired
     //EntityManagerFactory entityManagerFactory;
 
-    public Dao() {
+    @Autowired
+    public Dao(ApplicationContext applicationContext) {
         super();
+        this.applicationContext = applicationContext;
     }
 
 
@@ -51,7 +51,7 @@ public class Dao<T> extends BaseDao {
 
     public T save(T t, Boolean insertDataInHistory) throws Exception {
         History historyEntity;
-        Session session=null;
+        Session session;
         try {
             session = this.getSessionForUpdateOperation(); //getSession();
 
@@ -74,9 +74,6 @@ public class Dao<T> extends BaseDao {
             ex.printStackTrace();
             log.error("Exception from Dao Save method");
             throw ex;
-        }finally {
-            //if (session!=null && session.isOpen())
-            //    session.close();
         }
         return t;
     }
@@ -85,7 +82,7 @@ public class Dao<T> extends BaseDao {
         Object primaryKeyValue;
         Object oldEntity;
         History historyEntity;
-        Session session=null;
+        Session session;
         try {
             session = this.getSessionForUpdateOperation();//getSession();
             //session.beginTransaction();
@@ -116,9 +113,6 @@ public class Dao<T> extends BaseDao {
             ex.printStackTrace();
             log.error("Exception from Dao update method");
             throw ex;
-        }finally {
-            //if (session!=null && session.isOpen())
-            //    session.close();
         }
         return t;
     }
@@ -131,8 +125,8 @@ public class Dao<T> extends BaseDao {
         String entityName,primaryKeyField;
         List selectedUpdateRowList;
         Query selectQuery,deleteUpdateQuery;
-        Integer numberOfUpdatedRows = 0;
-        Session session=null;
+        Integer numberOfUpdatedRows;
+        Session session;
         try {
             session = this.getSessionForUpdateOperation();
             //session.beginTransaction();
@@ -185,9 +179,6 @@ public class Dao<T> extends BaseDao {
             ex.printStackTrace();
             log.error("Exception from Dao update method");
             throw ex;
-        }finally {
-            //if (session!=null && session.isOpen())
-            //    session.close();
         }
         return numberOfUpdatedRows;
     }
@@ -222,10 +213,10 @@ public class Dao<T> extends BaseDao {
     }
 
     public List<T> getAllByConditions(String hql, Map<Object, Object> keyValueParis,Integer limit) throws HibernateException {
-        List<T> list = null;
+        List<T> list;
         String key;
         Object value;
-        Boolean likeQuery=false;
+        Boolean likeQuery;
         Session session=null;
         try {
             session = this.getSessionFroReadOperation();
@@ -356,9 +347,9 @@ public class Dao<T> extends BaseDao {
     }
 
     public List<T> getAll() throws HibernateException {
-        List<T> list = null;
+        List<T> list;
 
-        Object entity = null;
+        //Object entity = null;
         StringBuilder queryBuilderString;
         String entityName;
         Long count;
@@ -403,8 +394,8 @@ public class Dao<T> extends BaseDao {
                 Core.totalRowCount.set(count);
                 Core.recordsFilteredCount.set(count);
             }else {
-                Core.totalRowCount.set(0l);
-                Core.recordsFilteredCount.set(0l);
+                Core.totalRowCount.set((long)0);
+                Core.recordsFilteredCount.set((long)0);
             }
 
           /*
@@ -437,13 +428,13 @@ public class Dao<T> extends BaseDao {
                                       Map<Object, Object> keyValuePairsForWhereCondition,
                                       Boolean insertDataInHistory) throws Exception {
 
-        Integer numberOfUpdatedRows = 0;
+        Integer numberOfUpdatedRows;
         String key;
         Object value;
         List selectedUpdateRowList;
         String entityName;
         History historyEntity;
-        Session session=null;
+        Session session;
         try {
             session = this.getSessionForUpdateOperation();
             //session.beginTransaction();
@@ -484,16 +475,13 @@ public class Dao<T> extends BaseDao {
             ex.printStackTrace();
             log.error("Exception from Dao updateByConditions method");
             throw ex;
-        }finally {
-            //if (session!=null && session.isOpen())
-            //    session.close();
         }
         return numberOfUpdatedRows;
     }
 
     public boolean delete(T t) throws HibernateException {
-        boolean isDeleted = false;
-        Session session=null;
+        boolean isDeleted;
+        Session session;
         try {
             session = getSessionForUpdateOperation();
             //session.beginTransaction();
@@ -506,9 +494,6 @@ public class Dao<T> extends BaseDao {
             ex.printStackTrace();
             log.error("Exception from Dao delete method");
             throw ex;
-        }finally {
-            //if (session!=null && session.isOpen())
-            //    session.close();
         }
         return isDeleted;
     }
@@ -518,8 +503,8 @@ public class Dao<T> extends BaseDao {
         StringBuilder query;
         String entityName;
         String primaryKeyField;
-        Integer numOfDeletedRow = 0;
-        Session session=null;
+        Integer numOfDeletedRow;
+        Session session;
         try {
             session = getSessionForUpdateOperation();
             primaryKeyField = this.getPrimaryKeyFieldName();
@@ -545,9 +530,6 @@ public class Dao<T> extends BaseDao {
             ex.printStackTrace();
             log.error("Exception from Dao deleteById method");
             throw ex;
-        }finally {
-            //if (session!=null && session.isOpen())
-            //    session.close();
         }
         return isDeleted;
     }
@@ -556,7 +538,7 @@ public class Dao<T> extends BaseDao {
         Integer numberOfDeletedRows = 0;
         String key;
         Object value;
-        Session session=null;
+        Session session;
         try {
             session = getSessionForUpdateOperation();
             //session.beginTransaction();
@@ -575,15 +557,12 @@ public class Dao<T> extends BaseDao {
             ex.printStackTrace();
             log.error("Exception from Dao deleteByConditions method");
             throw ex;
-        }finally {
-            //if (session!=null && session.isOpen())
-            //    session.close();
         }
         return numberOfDeletedRows;
     }
 
     public <M> List<M> executeHqlQuery(String hql, Class<M> clazz, int queryType, Boolean insertDataInHistory) throws Exception {
-        List<Object[]> result=null;
+        List<Object[]> result;
         Integer numberOfUpdatedRow;
         List<M> convertedModels = new ArrayList<>();
         String selectHql;
@@ -592,15 +571,15 @@ public class Dao<T> extends BaseDao {
         String entityName;
         Query selectQuery;
         Session session=null;
-        StringBuilder queryBuilderString = new StringBuilder();
+        //StringBuilder queryBuilderString = new StringBuilder();
         Long count;
         try {
             session = getSession();
             session.beginTransaction();
             Query q=null;
 
-            entityName = clazz.getName();
-            entityName = StringUtils.substringAfterLast(entityName, ".").trim();
+            //entityName = clazz.getName();
+            //entityName = StringUtils.substringAfterLast(entityName, ".").trim();
             Integer pageOffset= Core.pageOffset.get();
             Integer pageSize= Core.pageSize.get();
 
@@ -750,14 +729,14 @@ public class Dao<T> extends BaseDao {
 
     public Boolean isRowExist(List<Map<Object, Object>> keyValueWithTypeList, Class entityClass) throws Exception {
         Boolean isExist = false;
-        String key = null;
-        Object value = null;
+        String key;
+        Object value;
         String entityName;
         String entityClassPath = entityClass.toString();
         String hql;
         Long count;
         Map<Object, Object> keyValueParis = keyValueWithTypeList.get(0);
-        Map<Object, Object> typeMap = keyValueWithTypeList.get(1);
+        //Map<Object, Object> typeMap = keyValueWithTypeList.get(1);
 
         entityClassPath = StringUtils.substringAfterLast(entityClassPath, "class").trim();
         entityName = StringUtils.substringAfterLast(entityClassPath, ".");
@@ -828,9 +807,9 @@ public class Dao<T> extends BaseDao {
         //Transaction transaction;
         entityManagerFactory = this.applicationContext.getBean("entityManagerFactory",EntityManagerFactory.class);
 
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        //EntityManager entityManager = entityManagerFactory.createEntityManager();
         SessionFactory sessionFactory;
-        Session session=null;
+        Session session;
         try {
             sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
             session = sessionFactory.openSession();

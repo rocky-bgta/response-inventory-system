@@ -1,14 +1,11 @@
 package response.soft.core;
 
 
-
-import io.swagger.models.auth.In;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import response.soft.appenum.SqlEnum;
 import response.soft.dao.Dao;
 
@@ -17,21 +14,20 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-@SuppressWarnings("ALL")
 @Service
-@Transactional
 public abstract class BaseService<T extends BaseEntity> extends Core {
 
     private static final Logger log = LoggerFactory.getLogger(BaseService.class);
 
-    public BaseService() {
+    @Autowired
+    public BaseService(Dao dao) {
         super();
+        this.dao = dao;
     }
 
     protected abstract void initEntityModel();
 
-    @Autowired
-    private Dao dao;// = new Dao();
+    private final Dao dao;// = new Dao();
 
     private Boolean insertDataInHistory=false;
 
@@ -203,7 +199,7 @@ public abstract class BaseService<T extends BaseEntity> extends Core {
 
     public <T extends BaseEntity, M extends BaseModel> M saveWithStatus(M m) throws Exception {
         initEntityModel();
-        Object model = null, entity = null;
+        Object model, entity;
         T t;
         try {
             t = (T) Core.modelMapper.map(m, Core.runTimeEntityType.get());
@@ -259,7 +255,7 @@ public abstract class BaseService<T extends BaseEntity> extends Core {
 
     public <T extends BaseEntity, M extends BaseModel> M softDelete(M m) throws Exception {
         initEntityModel();
-        Object model = null, entity = null;
+        Object model, entity;
         T t;
         try {
             t = (T) Core.modelMapper.map(m, Core.runTimeEntityType.get());
@@ -332,7 +328,7 @@ public abstract class BaseService<T extends BaseEntity> extends Core {
 
     public <T extends BaseEntity, M extends BaseModel> M inActive(M m) throws Exception {
         initEntityModel();
-        Object model = null, entity = null;
+        Object model, entity;
         T t;
         try {
             t = (T) Core.modelMapper.map(m, Core.runTimeEntityType.get());
@@ -425,7 +421,7 @@ public abstract class BaseService<T extends BaseEntity> extends Core {
 
     public boolean deleteById(Object id) throws Exception {
         initEntityModel();
-        boolean isDeleted = false;
+        boolean isDeleted;
         try {
             this.dao.deleteById(id);
             isDeleted = true;
@@ -444,7 +440,7 @@ public abstract class BaseService<T extends BaseEntity> extends Core {
         initEntityModel();
         Map<Object, Object> keyValueParisForWhereCondition,keyValuePairForUpdate;
         String updateHql,selectHql;
-        Integer numOfUpdatedRows = 0;
+        Integer numOfUpdatedRows;
         try {
 
             // ================================================
@@ -523,7 +519,7 @@ public abstract class BaseService<T extends BaseEntity> extends Core {
 
     public <M extends BaseModel> M getById(Object id, Integer status) throws Exception {
         initEntityModel();
-        Object model = null, entity = null;
+        Object model, entity;
         try {
             entity = this.dao.getById(id, status);
             if (entity != null)
