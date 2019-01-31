@@ -3,17 +3,15 @@ package response.soft.entities.view;
 import jdk.nashorn.internal.ir.annotations.Immutable;
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.UUID;
 
 @Data
 @Entity
 @Immutable
 @Table(name = "sales_product_view")
-public class SalesProductView {
+public class SalesProductView implements Serializable {
     @Id
     @Column(name = "product_id")
     private UUID productId;
@@ -21,6 +19,7 @@ public class SalesProductView {
     @Column(name = "store_id")
     private UUID storeId;
 
+    @Id
     @Column(name = "available")
     private Integer available;
 
@@ -30,12 +29,17 @@ public class SalesProductView {
     @Column(name = "category_name")
     private String categoryName;
 
+    @Column(name = "category_id")
+    private String categoryId;
+
     @Column(name = "brand_name")
     private String brandName;
 
+    @Id
     @Column(name = "model_no")
     private String modelNo;
 
+    @Id
     @Column(name = "buy_price")
     private Double buyPrice;
 

@@ -410,10 +410,11 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
         return responseMessage;
     }
 
-    public ResponseMessage getSalesProductListByStoreIdOrProductIdOrBarcode(
+    public ResponseMessage getSalesProductListByStoreIdOrProductIdOrCategoryIdOrBarcode(
             RequestMessage requestMessage,
             String storeId,
             String productId,
+            String categoryId,
             String barcode)
     {
 
@@ -434,9 +435,9 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
             if (!StringUtils.isEmpty(barcode) && !StringUtils.equals(barcode, "null"))
                 queryBuilder.append("AND v.barcode = '" + barcode + "' ");
 
-            /*if (!StringUtils.isEmpty(serialNo) && !StringUtils.equals(serialNo, "undefined"))
-                queryBuilder.append("AND v.serialNo = '" + serialNo + "' ");
-*/
+            if (!StringUtils.isEmpty(categoryId) && !StringUtils.equals(categoryId, "null"))
+                queryBuilder.append("AND v.categoryId = '" + categoryId + "' ");
+
 
             salesProductViewList = this.executeHqlQuery(queryBuilder.toString(),SalesProductView.class,SqlEnum.QueryType.View.get());
 
@@ -572,7 +573,7 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
 
     }
 
-    public ResponseMessage getStoreInProductsByStoreId(UUID storeId) {
+    public ResponseMessage getStoreInProductsByStoreIdAndCategoryId(UUID storeId, UUID categoryId) {
         ResponseMessage responseMessage;
         List<ProductModel> list;
         StringBuilder queryBuilderString;
@@ -589,7 +590,8 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
                     .append("INNER JOIN Product p ON sip.productId = p.id ")
                     .append("WHERE ")
                     .append("sip.productStatus =" + InventoryEnum.ProductStatus.AVAILABLE.get() +" ")
-                    .append("AND sip.storeId = '" + storeId + "'");
+                    .append("AND sip.storeId = '" + storeId + "'")
+                    .append("AND p.categoryId = '" + categoryId + "'");
 
 
             list = this.executeHqlQuery(queryBuilderString.toString(), ProductModel.class, SqlEnum.QueryType.Join.get());
