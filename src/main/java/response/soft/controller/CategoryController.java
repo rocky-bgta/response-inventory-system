@@ -19,8 +19,12 @@ import java.util.UUID;
 @Api(tags = "Category Api List")
 public class CategoryController {
 
+    private final CategoryService categoryService;
+
     @Autowired
-    private CategoryService categoryService;
+    public CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
 
     /*
 
@@ -81,9 +85,9 @@ public class CategoryController {
     @ApiOperation(value ="", response = CategoryModel.class)
     @RequestMapping(value = "{id}",method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     //@ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<ResponseMessage> delete(@PathVariable UUID id) {
+    public ResponseMessage delete(@PathVariable UUID id) {
         ResponseMessage responseMessage;
         responseMessage = this.categoryService.deleteCategory(id);
-        return new ResponseEntity(responseMessage,HttpStatus.OK);
+        return responseMessage;
     }
 }

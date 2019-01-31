@@ -8,19 +8,19 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import response.soft.core.RequestMessage;
 import response.soft.core.ResponseMessage;
-import response.soft.model.CustomerPaymentModel;
 import response.soft.services.CustomerPaymentService;
-
-import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("api/customer-payment")
 @Api(tags = "Customer Payment Api List")
 public class CustomerPaymentController {
 
+    private final CustomerPaymentService customerPaymentService;
+
     @Autowired
-    private CustomerPaymentService customerPaymentService;
+    public CustomerPaymentController(CustomerPaymentService customerPaymentService) {
+        this.customerPaymentService = customerPaymentService;
+    }
 
 
     @ApiOperation(value ="", response = Object.class)

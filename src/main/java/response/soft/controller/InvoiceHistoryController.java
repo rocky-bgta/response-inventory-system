@@ -10,15 +10,17 @@ import response.soft.core.RequestMessage;
 import response.soft.core.ResponseMessage;
 import response.soft.services.InvoiceHistoryService;
 
-import java.util.UUID;
-
 @RestController
 @RequestMapping("api/invoice-history")
 @Api(tags = "Invoice History Api List")
 public class InvoiceHistoryController {
 
+    private final InvoiceHistoryService invoiceHistoryService;
+
     @Autowired
-    private InvoiceHistoryService invoiceHistoryService;
+    public InvoiceHistoryController(InvoiceHistoryService invoiceHistoryService) {
+        this.invoiceHistoryService = invoiceHistoryService;
+    }
 
 
     @ApiOperation(value ="", response = Object.class)

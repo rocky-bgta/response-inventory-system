@@ -34,7 +34,7 @@ public class EnumController {
 
             salesMethods = InventoryEnum.PaymentMethod.getMAP();
             if(salesMethods!=null){
-                keyValueModelList =AppUtils.getKeyValueFromMap(salesMethods);
+                keyValueModelList = AppUtils.getKeyValueFromMap(salesMethods);
                 responseMessage.data =keyValueModelList;
                 responseMessage.httpStatus = HttpStatus.FOUND.value();
                 responseMessage.totalRow= (long) keyValueModelList.size();

@@ -6,18 +6,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import response.soft.core.RequestMessage;
 import response.soft.core.ResponseMessage;
 import response.soft.services.CustomerDuePaymentHistoryService;
-import response.soft.services.CustomerPaymentService;
 
 @RestController
 @RequestMapping("api/customer-due-payment-history")
 @Api(tags = "Customer Due Payment History Api List")
 public class CustomerDuePaymentHistoryController {
 
+    private final CustomerDuePaymentHistoryService customerDuePaymentHistoryService;
+
     @Autowired
-    private CustomerDuePaymentHistoryService customerDuePaymentHistoryService;
+    public CustomerDuePaymentHistoryController(CustomerDuePaymentHistoryService customerDuePaymentHistoryService) {
+        this.customerDuePaymentHistoryService = customerDuePaymentHistoryService;
+    }
 
     @ApiOperation(value ="", response = Object.class)
     @ResponseStatus(HttpStatus.OK)

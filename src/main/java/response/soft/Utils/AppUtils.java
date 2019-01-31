@@ -15,12 +15,10 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import response.soft.appenum.InventoryEnum;
 import response.soft.constant.DbConstant;
-import response.soft.core.Core;
 import response.soft.core.KeyValueModel;
 
 import javax.sql.DataSource;
 import java.sql.*;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -359,7 +357,7 @@ public final class AppUtils {
         mailSender.send(message);
     }
 
-    public static List getKeyValueFromMap(Map<String,Integer> map){
+    public static List<KeyValueModel> getKeyValueFromMap(Map<String,Integer> map){
         List<KeyValueModel> keyValueModelList = new ArrayList<>();
         KeyValueModel keyValueModel;
 

@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import response.soft.core.RequestMessage;
 import response.soft.core.ResponseMessage;
@@ -19,8 +18,12 @@ import java.util.UUID;
 @Api(tags = "Customer Api List")
 public class CustomerController {
 
+    private final CustomerService customerService;
+
     @Autowired
-    private CustomerService customerService;
+    public CustomerController(CustomerService customerService) {
+        this.customerService = customerService;
+    }
 
 
     @ApiOperation(value ="", response = Object.class)
@@ -71,9 +74,9 @@ public class CustomerController {
     @ApiOperation(value ="", response = CustomerModel.class)
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "{id}",method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseMessage> delete(@PathVariable UUID id) {
+    public ResponseMessage delete(@PathVariable UUID id) {
         ResponseMessage responseMessage;
         responseMessage = this.customerService.deleteCustomer(id);
-        return new ResponseEntity(responseMessage,HttpStatus.OK);
+        return responseMessage;
     }
 }

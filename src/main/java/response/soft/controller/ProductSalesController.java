@@ -2,18 +2,13 @@ package response.soft.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import response.soft.core.RequestMessage;
 import response.soft.core.ResponseMessage;
-import response.soft.model.StoreInProductModel;
-import response.soft.model.view.StoreInProductsViewModel;
 import response.soft.services.ProductSalesService;
-import response.soft.services.StockService;
 
 import java.util.UUID;
 
@@ -22,11 +17,12 @@ import java.util.UUID;
 @Api(tags = "Product Sales Api List")
 public class ProductSalesController {
 
-    @Autowired
-    private ProductSalesService productSalesService;
+    private final ProductSalesService productSalesService;
 
     @Autowired
-    BeanFactory beanFactory;
+    public ProductSalesController(ProductSalesService productSalesService) {
+        this.productSalesService = productSalesService;
+    }
 
 
     @ApiOperation(value ="", response = Object.class)

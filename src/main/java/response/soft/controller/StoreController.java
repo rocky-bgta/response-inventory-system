@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import response.soft.core.RequestMessage;
 import response.soft.core.ResponseMessage;
@@ -19,8 +18,12 @@ import java.util.UUID;
 @Api(tags = "Store Api List")
 public class StoreController {
 
+    private final StoreService storeService;
+
     @Autowired
-    private StoreService storeService;
+    public StoreController(StoreService storeService) {
+        this.storeService = storeService;
+    }
 
 
     @ApiOperation(value ="", response = Object.class)
@@ -62,9 +65,9 @@ public class StoreController {
     @ApiOperation(value ="", response = StoreModel.class)
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "{id}",method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseMessage> delete(@PathVariable UUID id) {
+    public ResponseMessage delete(@PathVariable UUID id) {
         ResponseMessage responseMessage;
         responseMessage = this.storeService.deleteStore(id);
-        return new ResponseEntity(responseMessage,HttpStatus.OK);
+        return responseMessage;
     }
 }

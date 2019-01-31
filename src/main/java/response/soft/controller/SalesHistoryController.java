@@ -19,8 +19,12 @@ import java.util.UUID;
 @Api(tags = "Sales History Api List")
 public class SalesHistoryController {
 
+    private final SalesHistoryService salesHistoryService;
+
     @Autowired
-    private SalesHistoryService salesHistoryService;
+    public SalesHistoryController(SalesHistoryService salesHistoryService) {
+        this.salesHistoryService = salesHistoryService;
+    }
 
 
     @ApiOperation(value ="", response = Object.class)

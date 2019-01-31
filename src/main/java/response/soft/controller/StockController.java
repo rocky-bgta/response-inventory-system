@@ -2,18 +2,15 @@ package response.soft.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import response.soft.core.RequestMessage;
 import response.soft.core.ResponseMessage;
 import response.soft.model.StoreInProductModel;
 import response.soft.model.view.StoreInProductsViewModel;
 import response.soft.services.StockService;
-import response.soft.services.StoreInProductService;
 
 import java.util.UUID;
 
@@ -22,11 +19,15 @@ import java.util.UUID;
 @Api(tags = "Stock Api List")
 public class StockController {
 
-    @Autowired
-    private StockService stockService;
+    private final StockService stockService;
+
+    //private final BeanFactory beanFactory;
 
     @Autowired
-    BeanFactory beanFactory;
+    public StockController(StockService stockService) {
+        this.stockService = stockService;
+        //this.beanFactory = beanFactory;
+    }
 
 
     @ApiOperation(value ="", response = Object.class)
@@ -71,10 +72,10 @@ public class StockController {
     @ApiOperation(value ="", response = StoreInProductModel.class)
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "{id}",method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseMessage> delete(@PathVariable UUID id) {
+    public ResponseMessage delete(@PathVariable UUID id) {
         ResponseMessage responseMessage;
         responseMessage = this.stockService.deleteStock(id);
-        return new ResponseEntity(responseMessage,HttpStatus.OK);
+        return responseMessage;
     }
 
 }

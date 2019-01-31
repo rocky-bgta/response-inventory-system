@@ -19,8 +19,12 @@ import java.util.UUID;
 @Api(tags = "Product Api List")
 public class ProductController {
 
+    private final ProductService productService;
+
     @Autowired
-    private ProductService productService;
+    public ProductController(ProductService productService) {
+        this.productService = productService;
+    }
 
     @ApiOperation(value ="", response = Object.class)
     @ResponseStatus(HttpStatus.OK)
