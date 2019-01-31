@@ -351,7 +351,7 @@ public class SalesHistoryService extends BaseService<SalesHistory> {
                     responseMessage = this.buildResponseMessage(updatedStoreOutProductModel);
                     responseMessage.httpStatus = HttpStatus.OK.value();
                     responseMessage.message = "Successfully StoreOutProduct updated";
-                    //this.commit();
+                    Core.commitTransaction();
                     return responseMessage;
                 }
 
@@ -364,12 +364,13 @@ public class SalesHistoryService extends BaseService<SalesHistory> {
                         responseMessage = this.buildResponseMessage(updatedStoreOutProductModel);
                         responseMessage.httpStatus = HttpStatus.OK.value();
                         responseMessage.message = "Successfully StoreOutProduct updated";
+                        Core.commitTransaction();
                         return responseMessage;
                     }else {
                         responseMessage = this.buildResponseMessage(requestedStoreOutProductModel);
                         responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY.value();
                         responseMessage.message = "Failed to update StoreOutProduct";
-                        //this.rollBack();
+                        Core.rollBackTransaction();
                         return responseMessage;
                     }
 
@@ -378,7 +379,7 @@ public class SalesHistoryService extends BaseService<SalesHistory> {
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
             ex.printStackTrace();
-            //this.rollBack();
+            Core.rollBackTransaction();
             log.error("updateStock -> got exception");
         }
         return responseMessage;

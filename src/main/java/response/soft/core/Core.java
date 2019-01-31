@@ -15,7 +15,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.javers.core.Javers;
 import org.javers.core.JaversBuilder;
@@ -23,8 +22,6 @@ import org.javers.core.diff.Diff;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
@@ -49,8 +46,8 @@ import java.util.regex.Pattern;
 @Component
 public abstract class Core {
 
-    @Autowired
-    private ApplicationContext context;
+    //@Autowired
+    //private ApplicationContext context;
 
     private static final Logger log = LoggerFactory.getLogger(Core.class);
     public static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -67,7 +64,7 @@ public abstract class Core {
     public static final ThreadLocal<Class> runTimeModelType = new ThreadLocal<>();
     public static final ThreadLocal<Class> runTimeEntityType = new ThreadLocal<>();
     //public static final ThreadLocal<Session> sessionThreadLocal = new ThreadLocal<>();
-    public static final ThreadLocal<SessionFactory> sessionFactoryThreadLocal = new ThreadLocal<>();
+    //public static final ThreadLocal<SessionFactory> sessionFactoryThreadLocal = new ThreadLocal<>();
 
     private static final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
     public static final Validator validator = factory.getValidator();
@@ -646,6 +643,7 @@ public abstract class Core {
         String messageId = Core.messageId.get();
         Core.publisherForRollBackAndCommit.publishedMessageForCommit(messageId);
     }*/
+/*
 
     public static <M> List<M> convertResponseToList(ResponseMessage responseMessage, M model) throws Exception {
         List<M> finalList = new ArrayList<>();
@@ -667,5 +665,6 @@ public abstract class Core {
         }
         return finalList;
     }
+*/
 
 }

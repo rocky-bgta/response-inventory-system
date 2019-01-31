@@ -163,7 +163,7 @@ public class CategoryService extends BaseService<Category> {
 
             responseMessage = this.buildResponseMessage(numberOfDeletedRow);
 
-            if (categoryModel != null) {
+            if (numberOfDeletedRow != null && numberOfDeletedRow>0) {
                 responseMessage.httpStatus = HttpStatus.OK.value();
                 responseMessage.message = "Category deleted successfully!";
                 Core.commitTransaction();
