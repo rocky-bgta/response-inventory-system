@@ -11,7 +11,6 @@ import response.soft.core.BaseService;
 import response.soft.core.Core;
 import response.soft.core.RequestMessage;
 import response.soft.core.ResponseMessage;
-import response.soft.core.datatable.model.DataTableRequest;
 import response.soft.entities.Store;
 import response.soft.model.StoreModel;
 
@@ -219,17 +218,14 @@ public class StoreService extends BaseService<Store> {
     public ResponseMessage getAllStore(RequestMessage requestMessage) {
         ResponseMessage responseMessage;
         List<StoreModel> list;
-        DataTableRequest dataTableRequest;
-        String searchKey = null;
-        //StoreModel brandSearchModel;
+        String searchKey;
         StringBuilder queryBuilderString;
         try {
-            this.resetPaginationVariable();
+            //this.resetPaginationVariable();
             Core.processRequestMessage(requestMessage);
+            searchKey = Core.dataTableSearchKey.get();
 
-            dataTableRequest = requestMessage.dataTableRequest;
-            if (dataTableRequest != null && dataTableRequest.length!=null) {
-                searchKey = dataTableRequest.search.value;
+            if (searchKey != null) {
                 searchKey = searchKey.trim().toLowerCase();
             }
 
@@ -241,7 +237,7 @@ public class StoreService extends BaseService<Store> {
 
             //============ full text search ===========================================
 
-            if (dataTableRequest != null && !StringUtils.isEmpty(searchKey)) {
+            if (searchKey != null && !StringUtils.isEmpty(searchKey)) {
 
                 queryBuilderString = new StringBuilder();
                 queryBuilderString.append("SELECT s.id, ")
@@ -274,16 +270,13 @@ public class StoreService extends BaseService<Store> {
             if (responseMessage.data != null) {
                 responseMessage.httpStatus = HttpStatus.FOUND.value();
                 responseMessage.message = "Get all Store successfully";
-                //this.commit();
             } else {
                 responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
                 responseMessage.message = "Failed to get Store";
-                //this.rollBack();
             }
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
             ex.printStackTrace();
-            //this.rollBack();
             log.error("getAllVendor -> getAllVendor got exception");
         }
         return responseMessage;

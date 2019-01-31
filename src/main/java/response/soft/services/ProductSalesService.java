@@ -10,7 +10,6 @@ import response.soft.core.BaseService;
 import response.soft.core.Core;
 import response.soft.core.RequestMessage;
 import response.soft.core.ResponseMessage;
-import response.soft.core.datatable.model.DataTableRequest;
 import response.soft.entities.SalesHistory;
 import response.soft.entities.view.ProductSalesReportView;
 import response.soft.model.SalesHistoryModel;
@@ -35,8 +34,7 @@ public class ProductSalesService extends BaseService<SalesHistory> {
         ResponseMessage responseMessage;
         ProductSalesReportViewModel productSalesReportViewModel;
         List<ProductSalesReportView> list;
-        DataTableRequest dataTableRequest;
-        String searchKey=null;
+        String searchKey;
         StringBuilder queryBuilderString =new StringBuilder();
         String fromDate, toDate;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -47,9 +45,8 @@ public class ProductSalesService extends BaseService<SalesHistory> {
             fromDate = dateFormat.format(productSalesReportViewModel.getFromDate());
             toDate =  dateFormat.format(productSalesReportViewModel.getToDate());
 
-            dataTableRequest = requestMessage.dataTableRequest;
-            if(dataTableRequest!=null && !StringUtils.equals(dataTableRequest.search.value,"string")) {
-                searchKey = dataTableRequest.search.value;
+            searchKey = Core.dataTableSearchKey.get();
+            if(searchKey!=null && !StringUtils.equals(searchKey,"string")) {
                 searchKey = searchKey.trim().toLowerCase();
             }
 
@@ -62,7 +59,7 @@ public class ProductSalesService extends BaseService<SalesHistory> {
 
             //============ full text search ===========================================
 
-            if ((dataTableRequest != null && !StringUtils.isEmpty(searchKey))) {
+            if ((searchKey != null && !StringUtils.isEmpty(searchKey))) {
 
                /* queryBuilderString.append("SELECT v.id, ")
                         .append("v.name, ")
@@ -87,9 +84,6 @@ public class ProductSalesService extends BaseService<SalesHistory> {
 
                 //Boolean isWhereAdded=false;
                 queryBuilderString.append("SELECT v FROM ProductSalesReportView v");
-
-
-
 
                 list = this.executeHqlQuery(queryBuilderString.toString(),ProductSalesReportView.class,SqlEnum.QueryType.View.get());
                 //============ full text search ===========================================

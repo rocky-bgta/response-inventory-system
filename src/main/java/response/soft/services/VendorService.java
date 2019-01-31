@@ -11,7 +11,6 @@ import response.soft.core.BaseService;
 import response.soft.core.Core;
 import response.soft.core.RequestMessage;
 import response.soft.core.ResponseMessage;
-import response.soft.core.datatable.model.DataTableRequest;
 import response.soft.entities.Vendor;
 import response.soft.model.VendorModel;
 
@@ -107,7 +106,6 @@ public class VendorService extends BaseService<Vendor> {
             oldVendor = this.getByIdActiveStatus(vendorModel.getId());
 
 
-
             vendorSearchCondition = new VendorModel();
             vendorSearchCondition.setName(vendorModel.getName());
             vendorModelList = this.getAllByConditionWithActive(vendorSearchCondition);
@@ -116,6 +114,7 @@ public class VendorService extends BaseService<Vendor> {
                 if (vendorModel != null) {
                     responseMessage.message = "Vendor update successfully!";
                     responseMessage.httpStatus = HttpStatus.OK.value();
+                    Core.commitTransaction();
                     return responseMessage;
                     //this.commit();
                 }
@@ -203,7 +202,6 @@ public class VendorService extends BaseService<Vendor> {
 
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
-            //this.rollBack();
             ex.printStackTrace();
             log.error("getByVendorId -> got exception");
         }
@@ -215,17 +213,12 @@ public class VendorService extends BaseService<Vendor> {
     public ResponseMessage getAllVendor(RequestMessage requestMessage) {
         ResponseMessage responseMessage;
         List<VendorModel> list;
-        DataTableRequest dataTableRequest;
-        String searchKey=null;
-        //VendorModel brandSearchModel;
+        String searchKey;
         StringBuilder queryBuilderString;
         try {
-            this.resetPaginationVariable();
             Core.processRequestMessage(requestMessage);
-
-            dataTableRequest = requestMessage.dataTableRequest;
-            if(dataTableRequest!=null) {
-                searchKey = dataTableRequest.search.value;
+            searchKey  = Core.dataTableSearchKey.get();
+            if(searchKey!=null) {
                 searchKey = searchKey.trim().toLowerCase();
             }
 
@@ -234,11 +227,9 @@ public class VendorService extends BaseService<Vendor> {
                 log.error(violation.getMessage());
             }*/
 
-
-
             //============ full text search ===========================================
 
-            if (dataTableRequest != null && !StringUtils.isEmpty(searchKey)) {
+            if (searchKey != null && !StringUtils.isEmpty(searchKey)) {
 
                 queryBuilderString = new StringBuilder();
                 queryBuilderString.append("SELECT v.id, ")
@@ -269,16 +260,13 @@ public class VendorService extends BaseService<Vendor> {
             if (responseMessage.data != null) {
                 responseMessage.message = "Get all vendor successfully";
                 responseMessage.httpStatus = HttpStatus.FOUND.value();
-                //this.commit();
             } else {
                 responseMessage.message = "Failed to get vendor";
                 responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
-                //this.rollBack();
             }
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
             ex.printStackTrace();
-            //this.rollBack();
             log.error("getAllVendor -> save got exception");
         }
         return responseMessage;

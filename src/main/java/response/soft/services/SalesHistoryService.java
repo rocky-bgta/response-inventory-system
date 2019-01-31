@@ -30,6 +30,39 @@ public class SalesHistoryService extends BaseService<SalesHistory> {
 
     private static final Logger log = LoggerFactory.getLogger(SalesHistoryService.class);
 
+    private final StockService stockService;
+
+    private final StoreInProductService storeInProductService;
+
+    private final StoreOutProductService storeOutProductService;
+
+    private final ProductSalesService productSalesService;
+
+    private final InvoiceHistoryService invoiceHistoryService;
+
+    private final CustomerPaymentService customerPaymentService;
+
+    private final CustomerService customerService;
+
+    private final CustomerPaymentHistoryService customerPaymentHistoryService;
+
+    private final CustomerDuePaymentHistoryService customerDuePaymentHistoryService;
+
+
+
+    @Autowired
+    public SalesHistoryService(CustomerPaymentHistoryService customerPaymentHistoryService, StockService stockService, StoreInProductService storeInProductService, StoreOutProductService storeOutProductService, ProductSalesService productSalesService, InvoiceHistoryService invoiceHistoryService, CustomerPaymentService customerPaymentService, CustomerService customerService, CustomerDuePaymentHistoryService customerDuePaymentHistoryService) {
+        this.customerPaymentHistoryService = customerPaymentHistoryService;
+        this.stockService = stockService;
+        this.storeInProductService = storeInProductService;
+        this.storeOutProductService = storeOutProductService;
+        this.productSalesService = productSalesService;
+        this.invoiceHistoryService = invoiceHistoryService;
+        this.customerPaymentService = customerPaymentService;
+        this.customerService = customerService;
+        this.customerDuePaymentHistoryService = customerDuePaymentHistoryService;
+    }
+
     @Override
     protected void initEntityModel() {
         Core.runTimeModelType.remove();
@@ -38,32 +71,7 @@ public class SalesHistoryService extends BaseService<SalesHistory> {
         Core.runTimeModelType.set(SalesHistoryModel.class);
     }
 
-    @Autowired
-    private StockService stockService;
 
-    @Autowired
-    private StoreInProductService storeInProductService;
-
-    @Autowired
-    private StoreOutProductService storeOutProductService;
-
-    @Autowired
-    private ProductSalesService productSalesService;
-
-    @Autowired
-    private InvoiceHistoryService invoiceHistoryService;
-
-    @Autowired
-    private CustomerPaymentService customerPaymentService;
-
-    @Autowired
-    private CustomerService customerService;
-
-    @Autowired
-    private CustomerPaymentHistoryService customerPaymentHistoryService;
-
-    @Autowired
-    private CustomerDuePaymentHistoryService customerDuePaymentHistoryService;
 
     public ResponseMessage saveStoreSalesProducts(RequestMessage requestMessage) {
         ResponseMessage responseMessage;

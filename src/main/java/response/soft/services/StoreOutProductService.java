@@ -6,12 +6,7 @@ import org.springframework.stereotype.Service;
 import response.soft.core.BaseService;
 import response.soft.core.Core;
 import response.soft.entities.StoreOutProduct;
-import response.soft.model.StoreInProductModel;
 import response.soft.model.StoreOutProductModel;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 @Service
 public class StoreOutProductService extends BaseService<StoreOutProduct> {
@@ -25,7 +20,7 @@ public class StoreOutProductService extends BaseService<StoreOutProduct> {
         Core.runTimeModelType.set(StoreOutProductModel.class);
     }
 
-    public List<StoreOutProductModel> saveStoreOutProduct(List<StoreInProductModel> storeInProductModelList) throws Exception{
+   /* public List<StoreOutProductModel> saveStoreOutProduct(List<StoreInProductModel> storeInProductModelList) throws Exception{
 
         StoreOutProductModel storeOutProductModel,saveStoreOutProductModel;
         List<StoreOutProductModel> savedStoreOutProductModelList = new ArrayList<>();
@@ -49,5 +44,5 @@ public class StoreOutProductService extends BaseService<StoreOutProduct> {
         }
 
         return savedStoreOutProductModelList;
-    }
+    }*/
 }

@@ -3,8 +3,6 @@ package response.soft.services;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -13,12 +11,10 @@ import response.soft.core.BaseService;
 import response.soft.core.Core;
 import response.soft.core.RequestMessage;
 import response.soft.core.ResponseMessage;
-import response.soft.core.datatable.model.DataTableRequest;
 import response.soft.entities.Product;
 import response.soft.entities.view.ProductView;
 import response.soft.model.ProductModel;
 
-import javax.persistence.EntityManagerFactory;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,8 +23,10 @@ public class ProductService extends BaseService<Product> {
 
     private static final Logger log = LoggerFactory.getLogger(ProductService.class);
 
-    @Autowired
-    ApplicationContext applicationContext;
+    /*@Autowired
+    public ProductService(ApplicationContext applicationContext) {
+        ApplicationContext applicationContext1 = applicationContext;
+    }*/
 
     //EntityManagerFactory entityManagerFactory;
 
@@ -87,16 +85,16 @@ public class ProductService extends BaseService<Product> {
             if (productModel != null) {
                 responseMessage.httpStatus = HttpStatus.CREATED.value();
                 responseMessage.message = "Product save successfully!";
-                //this.commit();
+                Core.commitTransaction();
             } else {
                 responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY.value();
                 responseMessage.message = "Failed to save Product";
-                //this.rollBack();
+                Core.rollBackTransaction();
             }
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
             ex.printStackTrace();
-            //this.rollBack();
+            Core.rollBackTransaction();
             log.error("saveProduct -> save got exception");
         }
         return responseMessage;
@@ -181,7 +179,7 @@ public class ProductService extends BaseService<Product> {
                     responseMessage = this.buildResponseMessage(updatedProductModel);
                     responseMessage.httpStatus = HttpStatus.OK.value();
                     responseMessage.message = "Successfully Product updated";
-                    //this.commit();
+                    Core.commitTransaction();
                     return responseMessage;
                 }
 
@@ -194,12 +192,13 @@ public class ProductService extends BaseService<Product> {
                         responseMessage = this.buildResponseMessage(updatedProductModel);
                         responseMessage.httpStatus = HttpStatus.OK.value();
                         responseMessage.message = "Successfully Product updated";
+                        Core.commitTransaction();
                         return responseMessage;
                     }else {
                         responseMessage = this.buildResponseMessage(requestedProductModel);
                         responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY.value();
                         responseMessage.message = "Failed to update Product";
-                        //this.rollBack();
+                        Core.rollBackTransaction();
                         return responseMessage;
                     }
 
@@ -208,7 +207,7 @@ public class ProductService extends BaseService<Product> {
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
             ex.printStackTrace();
-            //this.rollBack();
+            Core.rollBackTransaction();
             log.error("updateProduct -> got exception");
         }
         return responseMessage;
@@ -236,16 +235,16 @@ public class ProductService extends BaseService<Product> {
             if (productModel != null) {
                 responseMessage.httpStatus = HttpStatus.OK.value();
                 responseMessage.message = "Product deleted successfully!";
-                //this.commit();
+                Core.commitTransaction();
             } else {
                 responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY.value();
                 responseMessage.message = "Failed to deleted Product";
-                //this.rollBack();
+                Core.rollBackTransaction();
             }
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
             ex.printStackTrace();
-            //this.rollBack();
+            Core.rollBackTransaction();
             log.error("deleteProduct -> got exception");
         }
         return responseMessage;
@@ -255,13 +254,10 @@ public class ProductService extends BaseService<Product> {
         ResponseMessage responseMessage;
         ProductModel productModel;
         //String base64textString[];
-
         try {
             productModel = this.getByIdActiveStatus(id);
             //productModel.setImage(Base64.decodeBase64(productModel.getImage()));
-
             responseMessage = buildResponseMessage(productModel);
-
             if (responseMessage.data != null) {
                 responseMessage.httpStatus = HttpStatus.OK.value();
                 responseMessage.message = "Get requested Product successfully";
@@ -272,7 +268,6 @@ public class ProductService extends BaseService<Product> {
 
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
-            //this.rollBack();
             ex.printStackTrace();
             log.error("getByProductId -> got exception");
         }
@@ -281,7 +276,7 @@ public class ProductService extends BaseService<Product> {
     }
 
     public ResponseMessage getByProductBarcode(String barcode) {
-        ResponseMessage responseMessage=null;
+        ResponseMessage responseMessage;
         ProductModel productModel, whereCondition;
         List<ProductModel> productModelList;
         //String base64textString[];
@@ -303,7 +298,6 @@ public class ProductService extends BaseService<Product> {
 
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
-            //this.rollBack();
             ex.printStackTrace();
             log.error("getByProductId -> got exception");
         }
@@ -315,20 +309,18 @@ public class ProductService extends BaseService<Product> {
     public ResponseMessage getAllProduct(RequestMessage requestMessage) {
         ResponseMessage responseMessage;
         List<ProductModel> list;
-        DataTableRequest dataTableRequest;
         StringBuilder queryBuilderString;
-        String searchKey=null;
+        String searchKey;
         try {
             //this.resetPaginationVariable();
             Core.processRequestMessage(requestMessage);
-            dataTableRequest = requestMessage.dataTableRequest;
+            searchKey = Core.dataTableSearchKey.get();
 
-            if(dataTableRequest!=null) {
-                searchKey = dataTableRequest.search.value;
+            if(searchKey!=null) {
                 searchKey = searchKey.trim().toLowerCase();
             }
 
-            if (dataTableRequest != null && !StringUtils.isEmpty(searchKey)) {
+            if (searchKey != null && !StringUtils.isEmpty(searchKey)) {
                 //implement full-text search
                 queryBuilderString = new StringBuilder();
                 queryBuilderString.append("SELECT p.id, ")
@@ -369,22 +361,18 @@ public class ProductService extends BaseService<Product> {
                 log.error(violation.getMessage());
             }*/
 
-
             responseMessage = this.buildResponseMessage(list);
 
             if (responseMessage.data != null) {
                 responseMessage.httpStatus = HttpStatus.OK.value();
                 responseMessage.message = "Get all Product successfully";
-                //this.commit();
             } else {
                 responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
                 responseMessage.message = "Failed to get Product";
-                //this.rollBack();
             }
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
             ex.printStackTrace();
-            //this.rollBack();
             log.error("getAllProduct -> save got exception");
         }
         return responseMessage;
@@ -393,16 +381,13 @@ public class ProductService extends BaseService<Product> {
     public ResponseMessage getProductViewList(RequestMessage requestMessage) {
         ResponseMessage responseMessage;
         List<ProductView> list;
-        DataTableRequest dataTableRequest;
-        String searchKey=null;
+        String searchKey;
         StringBuilder queryBuilderString =new StringBuilder();
         try {
 
             Core.processRequestMessage(requestMessage);
-
-            dataTableRequest = requestMessage.dataTableRequest;
-            if(dataTableRequest!=null && !StringUtils.equals(dataTableRequest.search.value,"string")) {
-                searchKey = dataTableRequest.search.value;
+            searchKey = Core.dataTableSearchKey.get();
+            if(searchKey!=null && !StringUtils.equals(searchKey,"string")) {
                 searchKey = searchKey.trim().toLowerCase();
             }
 
@@ -413,7 +398,7 @@ public class ProductService extends BaseService<Product> {
 
             //============ full text search ===========================================
 
-            if ((dataTableRequest != null && !StringUtils.isEmpty(searchKey))) {
+            if ((searchKey != null && !StringUtils.isEmpty(searchKey))) {
 
                 queryBuilderString.append("SELECT v ")
                         .append("FROM ProductView v ")
@@ -438,16 +423,13 @@ public class ProductService extends BaseService<Product> {
             if (list != null && list.size()>0) {
                 responseMessage.httpStatus = HttpStatus.FOUND.value();
                 responseMessage.message = "Get all Product View successfully";
-                //this.commit();
             } else {
                 responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
                 responseMessage.message = "Failed to get Product View";
-                //this.rollBack();
             }
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
             ex.printStackTrace();
-            //this.rollBack();
             log.error("getProductViewList -> get product view got exception");
         }
         return responseMessage;

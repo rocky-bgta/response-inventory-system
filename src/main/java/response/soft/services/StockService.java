@@ -1,11 +1,8 @@
 package response.soft.services;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import response.soft.appenum.SqlEnum;
@@ -13,13 +10,10 @@ import response.soft.core.BaseService;
 import response.soft.core.Core;
 import response.soft.core.RequestMessage;
 import response.soft.core.ResponseMessage;
-import response.soft.core.datatable.model.DataTableRequest;
 import response.soft.entities.Stock;
 import response.soft.entities.view.AvailableStockView;
 import response.soft.model.StockModel;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import java.util.List;
 import java.util.UUID;
 
@@ -104,6 +98,7 @@ public class StockService extends BaseService<Stock> {
                 if (requestedStockModel != null) {
                     responseMessage.message = "Stock update successfully!";
                     responseMessage.httpStatus = HttpStatus.OK.value();
+                    Core.commitTransaction();
                     return responseMessage;
                     //this.commit();
                 }
@@ -130,7 +125,7 @@ public class StockService extends BaseService<Stock> {
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
             ex.printStackTrace();
-            //this.rollBack();
+            Core.rollBackTransaction();
             log.error("updateStock -> got exception");
         }
         return responseMessage;
@@ -158,16 +153,16 @@ public class StockService extends BaseService<Stock> {
             if (vendorModel != null) {
                 responseMessage.httpStatus = HttpStatus.OK.value();
                 responseMessage.message = "Stock deleted successfully!";
-                //this.commit();
+                Core.commitTransaction();
             } else {
                 responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY.value();
                 responseMessage.message = "Failed to deleted Stock";
-                //this.rollBack();
+                Core.rollBackTransaction();
             }
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
             ex.printStackTrace();
-            //this.rollBack();
+            Core.rollBackTransaction();
             log.error("deleteStock -> got exception");
         }
         return responseMessage;
@@ -268,16 +263,13 @@ public class StockService extends BaseService<Stock> {
             if (responseMessage.data != null) {
                 responseMessage.httpStatus = HttpStatus.FOUND.value();
                 responseMessage.message = "Get all Stock successfully";
-                //this.commit();
             } else {
                 responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
                 responseMessage.message = "Failed to get Stock";
-                //this.rollBack();
             }
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
             ex.printStackTrace();
-            //this.rollBack();
             log.error("getAllStock -> save got exception");
         }
         return responseMessage;

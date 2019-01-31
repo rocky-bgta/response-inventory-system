@@ -263,9 +263,14 @@ public abstract class Core {
         Session session;
         Transaction transaction;
         session = SESSION_THREAD_LOCAL_FOR_UPDATE.get();
+
         transaction = TRANSACTION_THREAD_LOCAL.get();
-        transaction.rollback();
-        session.close();
+        if(transaction!=null)
+            transaction.rollback();
+
+        if(session!=null && session.isOpen())
+            session.close();
+
         restHibernateSession();
     }
 

@@ -84,7 +84,7 @@ public class BrandService extends BaseService<Brand> {
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage("Internal server error");
             ex.printStackTrace();
-            //this.rollBack();
+            Core.rollBackTransaction();
             log.error("saveBrand -> save got exception");
         }
         return responseMessage;
@@ -143,12 +143,11 @@ public class BrandService extends BaseService<Brand> {
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
             ex.printStackTrace();
-            //this.rollBack();
+            Core.rollBackTransaction();;
             log.error("updateBrand -> got exception");
         }
         return responseMessage;
     }
-
 
     public ResponseMessage deleteBrand(UUID id) {
         ResponseMessage responseMessage;
@@ -180,7 +179,7 @@ public class BrandService extends BaseService<Brand> {
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
             ex.printStackTrace();
-            //this.rollBack();
+            Core.rollBackTransaction();
             log.error("deleteBrand -> got exception");
         }
         return responseMessage;
@@ -213,7 +212,6 @@ public class BrandService extends BaseService<Brand> {
         return responseMessage;
     }
 
-
     public ResponseMessage getAllBrand(RequestMessage requestMessage) {
         ResponseMessage responseMessage;
         List<BrandModel> list;
@@ -230,13 +228,10 @@ public class BrandService extends BaseService<Brand> {
                 searchKey = dataTableRequest.search.value;
                 searchKey = searchKey.trim().toLowerCase();
             }
-
             /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(brandModel);
             for (ConstraintViolation<CountryModel> violation : violations) {
                 log.error(violation.getMessage());
             }*/
-
-
 
             //============ full text search ===========================================
 
@@ -257,22 +252,17 @@ public class BrandService extends BaseService<Brand> {
             }else {
                 list = this.getAll();
             }
-
             responseMessage = this.buildResponseMessage(list);
-
             if (responseMessage.data != null) {
                 responseMessage.httpStatus = HttpStatus.OK.value();
                 responseMessage.message = "Get all brand successfully";
-                //this.commit();
             } else {
                 responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
                 responseMessage.message = "Failed to get category";
-                //this.rollBack();
             }
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
             ex.printStackTrace();
-            //this.rollBack();
             log.error("getAllBrand -> save got exception");
         }
         return responseMessage;

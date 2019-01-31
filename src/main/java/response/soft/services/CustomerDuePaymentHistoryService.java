@@ -60,16 +60,13 @@ public class CustomerDuePaymentHistoryService extends BaseService<CustomerDuePay
             if (responseMessage.data != null) {
                 responseMessage.httpStatus = HttpStatus.FOUND.value();
                 responseMessage.message = "Get Customer Payment history successfully";
-                //this.commit();
             } else {
                 responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
                 responseMessage.message = "Failed to get Customer Payment history";
-                //this.rollBack();
             }
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
             ex.printStackTrace();
-            //this.rollBack();
             log.error("getAllStock -> save got exception");
         }
         return responseMessage;
@@ -124,16 +121,13 @@ public class CustomerDuePaymentHistoryService extends BaseService<CustomerDuePay
             if (responseMessage.data != null) {
                 responseMessage.httpStatus = HttpStatus.FOUND.value();
                 responseMessage.message = "Get Customer Previous Due successfully";
-                //this.commit();
             } else {
                 responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
                 responseMessage.message = "Failed to get Customer Previous Due";
-                //this.rollBack();
             }
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
             ex.printStackTrace();
-            //this.rollBack();
             log.error("getPreviousDueByCustomerId -> save got exception");
         }
         return responseMessage;

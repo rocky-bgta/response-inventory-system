@@ -11,7 +11,6 @@ import response.soft.core.BaseService;
 import response.soft.core.Core;
 import response.soft.core.RequestMessage;
 import response.soft.core.ResponseMessage;
-import response.soft.core.datatable.model.DataTableRequest;
 import response.soft.entities.Category;
 import response.soft.model.CategoryModel;
 
@@ -48,8 +47,6 @@ public class CategoryService extends BaseService<Category> {
         }
     }
 
-
-
     public ResponseMessage saveCategory(RequestMessage requestMessage) {
         ResponseMessage responseMessage;// = new ResponseMessage();
         CategoryModel categoryModel;
@@ -83,7 +80,7 @@ public class CategoryService extends BaseService<Category> {
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
             ex.printStackTrace();
-            //this.rollBack();
+            Core.rollBackTransaction();
             log.error("saveCategory -> save got exception");
         }
         return responseMessage;
@@ -106,8 +103,6 @@ public class CategoryService extends BaseService<Category> {
 
             // retrieved old vendor to update created and created date.
             oldCategory = this.getByIdActiveStatus(categoryModel.getId());
-
-
 
             categorySearchCondition = new CategoryModel();
             categorySearchCondition.setName(categoryModel.getName());
@@ -144,12 +139,11 @@ public class CategoryService extends BaseService<Category> {
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
             ex.printStackTrace();
-            //this.rollBack();
+            Core.rollBackTransaction();
             log.error("updateCategory -> got exception");
         }
         return responseMessage;
     }
-
 
     public ResponseMessage deleteCategory(UUID id) {
         ResponseMessage responseMessage;
@@ -176,12 +170,12 @@ public class CategoryService extends BaseService<Category> {
             } else {
                 responseMessage.httpStatus = HttpStatus.FAILED_DEPENDENCY.value();
                 responseMessage.message = "Failed to deleted category";
-               Core.rollBackTransaction();
+                Core.rollBackTransaction();
             }
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
             ex.printStackTrace();
-            //this.rollBack();
+            Core.rollBackTransaction();
             log.error("deleteCategory -> got exception");
         }
         return responseMessage;
@@ -206,7 +200,6 @@ public class CategoryService extends BaseService<Category> {
 
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
-            //this.rollBack();
             ex.printStackTrace();
             log.error("getByCategoryId -> got exception");
         }
@@ -245,7 +238,6 @@ public class CategoryService extends BaseService<Category> {
 
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
-            //this.rollBack();
             ex.printStackTrace();
             log.error("getByCategoryByStoreId -> got exception");
         }
@@ -303,16 +295,13 @@ public class CategoryService extends BaseService<Category> {
             if (responseMessage.data != null) {
                 responseMessage.httpStatus = HttpStatus.OK.value();
                 responseMessage.message = "Get all category successfully";
-                //this.commit();
             } else {
                 responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
                 responseMessage.message = "Failed to get category";
-                //this.rollBack();
             }
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
             ex.printStackTrace();
-            //this.rollBack();
             log.error("getAllCategory -> save got exception");
         }
         return responseMessage;

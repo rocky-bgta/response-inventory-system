@@ -15,7 +15,6 @@ import response.soft.entities.view.InvoiceHistoryView;
 import response.soft.model.InvoiceHistoryModel;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class InvoiceHistoryService extends BaseService<InvoiceHistory> {
@@ -79,17 +78,14 @@ public class InvoiceHistoryService extends BaseService<InvoiceHistory> {
             if (responseMessage.data != null) {
                 responseMessage.httpStatus = HttpStatus.FOUND.value();
                 responseMessage.message = "Get all Invoice Details successfully";
-                //this.commit();
             } else {
                 responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
                 responseMessage.message = "Failed to get Invoice Details";
-                //this.rollBack();
             }
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
             ex.printStackTrace();
-            //this.rollBack();
-            log.error("getAllStock -> save got exception");
+            log.error("getInvoiceDetailsList -> save got exception");
         }
         return responseMessage;
     }

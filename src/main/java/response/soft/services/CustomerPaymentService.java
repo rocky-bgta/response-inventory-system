@@ -7,14 +7,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import response.soft.Utils.AppUtils;
 import response.soft.appenum.InventoryEnum;
 import response.soft.appenum.SqlEnum;
 import response.soft.core.BaseService;
 import response.soft.core.Core;
 import response.soft.core.RequestMessage;
 import response.soft.core.ResponseMessage;
-import response.soft.core.datatable.model.DataTableRequest;
 import response.soft.entities.CustomerPayment;
 import response.soft.model.CustomerDuePaymentHistoryModel;
 import response.soft.model.CustomerPaymentModel;
@@ -27,8 +25,12 @@ import java.util.UUID;
 public class CustomerPaymentService extends BaseService<CustomerPayment> {
     private static final Logger log = LoggerFactory.getLogger(CustomerPaymentService.class);
 
+    private final CustomerDuePaymentHistoryService customerDuePaymentHistoryService;
+
     @Autowired
-    CustomerDuePaymentHistoryService customerDuePaymentHistoryService;
+    public CustomerPaymentService(CustomerDuePaymentHistoryService customerDuePaymentHistoryService) {
+        this.customerDuePaymentHistoryService = customerDuePaymentHistoryService;
+    }
 
     @Override
     protected void initEntityModel() {
@@ -40,17 +42,14 @@ public class CustomerPaymentService extends BaseService<CustomerPayment> {
 
     public ResponseMessage getCustomerPaymentList(RequestMessage requestMessage) {
         ResponseMessage responseMessage;
-        List<CustomerPaymentModel> list = null;
-        DataTableRequest dataTableRequest;
-        String searchKey = null;
+        List<CustomerPaymentModel> list;
+        String searchKey;
         StringBuilder queryBuilderString = new StringBuilder();
         try {
-            this.resetPaginationVariable();
             Core.processRequestMessage(requestMessage);
+            searchKey = Core.dataTableSearchKey.get();
 
-            dataTableRequest = requestMessage.dataTableRequest;
-            if (dataTableRequest != null && !StringUtils.equals(dataTableRequest.search.value, "string")) {
-                searchKey = dataTableRequest.search.value;
+            if (searchKey != null && !StringUtils.equals(searchKey, "string")) {
                 searchKey = searchKey.trim().toLowerCase();
             }
 
@@ -59,10 +58,9 @@ public class CustomerPaymentService extends BaseService<CustomerPayment> {
                 log.error(violation.getMessage());
             }*/
 
-
             //============ full text search ===========================================
 
-            if ((dataTableRequest != null && !StringUtils.isEmpty(searchKey))) {
+            if ((searchKey != null && !StringUtils.isEmpty(searchKey))) {
 
                 queryBuilderString.append("SELECT cp.id, ")
                         .append("cp.customerId, ")
@@ -117,17 +115,15 @@ public class CustomerPaymentService extends BaseService<CustomerPayment> {
                 responseMessage.data = list;
                 responseMessage.httpStatus = HttpStatus.FOUND.value();
                 responseMessage.message = "Get all Customer payment list successfully";
-                //this.commit();
+
             } else {
                 responseMessage = this.buildResponseMessage();
                 responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
                 responseMessage.message = "Failed to get Customer payment list";
-                //this.rollBack();
             }
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
             ex.printStackTrace();
-            //this.rollBack();
             log.error("getCustomerPaymentList -> save got exception");
         }
         return responseMessage;
@@ -192,7 +188,7 @@ public class CustomerPaymentService extends BaseService<CustomerPayment> {
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
             ex.printStackTrace();
-            //this.rollBack();
+            Core.rollBackTransaction();
             log.error("updateCustomerPayment -> save got exception");
         }
         return responseMessage;

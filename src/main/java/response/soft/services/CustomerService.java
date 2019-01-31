@@ -8,12 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import response.soft.appenum.SqlEnum;
 import response.soft.core.*;
-import response.soft.core.datatable.model.DataTableRequest;
 import response.soft.entities.Customer;
-import response.soft.entities.view.InvoiceHistoryView;
 import response.soft.model.CustomerModel;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -102,7 +99,6 @@ public class CustomerService extends BaseService<Customer> {
     public ResponseMessage updateCustomer(RequestMessage requestMessage) {
         ResponseMessage responseMessage;
         CustomerModel requestedCustomerModel,oldCustomerModel;
-        //List<CustomerModel> customerModelList;
         Boolean checkDuplicateModel;
         int allowChangePropertyValueForCustomer=4, actualPropertyChangeValueChangeInRequest;
         try {
@@ -120,13 +116,6 @@ public class CustomerService extends BaseService<Customer> {
 
             checkDuplicateModel = this.isCustomerAlreadyExist(requestedCustomerModel);
 
-/*
-            customerSearchCondition = new CustomerModel();
-            customerSearchCondition.setName(requestedCustomerModel.getName());
-            customerSearchCondition.setPhoneNo1(requestedCustomerModel.getPhoneNo1());
-            customerSearchCondition.setAddress(requestedCustomerModel.getAddress());
-            customerModelList = this.getAllByConditionWithActive(customerSearchCondition);
-            */
 
             if (checkDuplicateModel) {
                 requestedCustomerModel = this.update(requestedCustomerModel,oldCustomerModel);
@@ -164,7 +153,6 @@ public class CustomerService extends BaseService<Customer> {
         }
         return responseMessage;
     }
-
 
     public ResponseMessage deleteCustomer(UUID id) {
         ResponseMessage responseMessage;
@@ -221,14 +209,12 @@ public class CustomerService extends BaseService<Customer> {
 
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
-            //this.rollBack();
             ex.printStackTrace();
             log.error("getByCustomerId -> got exception");
         }
 
         return responseMessage;
     }
-
 
     public ResponseMessage getInvoiceCustomerList(){
         ResponseMessage responseMessage;
@@ -251,7 +237,6 @@ public class CustomerService extends BaseService<Customer> {
         }catch (Exception ex){
             responseMessage = this.buildFailedResponseMessage();
             ex.printStackTrace();
-            //this.rollBack();
             log.error("getInvoiceCustomerList -> save got exception");
         }
 
@@ -261,18 +246,15 @@ public class CustomerService extends BaseService<Customer> {
     public ResponseMessage getAllCustomer(RequestMessage requestMessage) {
         ResponseMessage responseMessage;
         List<CustomerModel> list;
-        DataTableRequest dataTableRequest;
-        CustomerModel requestedCustomerModel;
-        String searchKey=null;
+        String searchKey;
         //CustomerModel brandSearchModel;
         StringBuilder queryBuilderString;
         try {
-            this.resetPaginationVariable();
+            //this.resetPaginationVariable();
             Core.processRequestMessage(requestMessage);
+            searchKey = Core.dataTableSearchKey.get();
 
-            dataTableRequest = requestMessage.dataTableRequest;
-            if(dataTableRequest!=null) {
-                searchKey = dataTableRequest.search.value;
+            if(searchKey!=null) {
                 searchKey = searchKey.trim().toLowerCase();
             }
 
@@ -286,9 +268,7 @@ public class CustomerService extends BaseService<Customer> {
 
             //============ full text search ===========================================
 
-            if (dataTableRequest != null && !StringUtils.isEmpty(searchKey)) {
-
-
+            if (searchKey != null && !StringUtils.isEmpty(searchKey)) {
 
                 queryBuilderString = new StringBuilder();
                 queryBuilderString.append("SELECT e.id, ")
@@ -323,40 +303,17 @@ public class CustomerService extends BaseService<Customer> {
             if (responseMessage.data != null) {
                 responseMessage.message = "Get all customer successfully";
                 responseMessage.httpStatus = HttpStatus.FOUND.value();
-                //this.commit();
             } else {
                 responseMessage.message = "Failed to get customer";
                 responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
-                //this.rollBack();
             }
 
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
             ex.printStackTrace();
-            //this.rollBack();
             log.error("getAllCustomer -> save got exception");
         }
         return responseMessage;
     }
 }
 
-/*
-SELECT
-        sh.invoice_no,
-        s.ID AS store_id,
-        s.NAME AS store_name,
-        sh.customer_id,
-        C.NAME AS customer_name,
-        sh.product_id,
-        p.name as product_name,
-        sh.sales_price
-
-        FROM
-        sales_history sh
-        INNER JOIN store_out_product sop ON sh.store_out_id = sop.ID
-        INNER JOIN store s ON sop.store_id = s.ID
-        INNER JOIN customer C ON sh.customer_id = C.ID
-        INNER JOIN product p ON sh.product_id = p.id
-
-        WHERE
-        sh.invoice_no = 'INV-1547565521344'*/

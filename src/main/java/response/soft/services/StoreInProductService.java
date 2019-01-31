@@ -2,8 +2,6 @@ package response.soft.services;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +9,6 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import response.soft.appenum.InventoryEnum;
 import response.soft.appenum.SqlEnum;
@@ -28,8 +25,6 @@ import response.soft.model.StoreInProductModel;
 import response.soft.model.view.SalesProductViewModel;
 import response.soft.model.view.StoreInProductsViewModel;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -39,6 +34,13 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
 
     private static final Logger log = LoggerFactory.getLogger(StoreInProductService.class);
 
+    private final StockService stockService;
+
+    @Autowired
+    public StoreInProductService(StockService stockService) {
+        this.stockService = stockService;
+    }
+
     @Override
     protected void initEntityModel() {
         Core.runTimeModelType.remove();
@@ -47,13 +49,10 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
         Core.runTimeModelType.set(StoreInProductModel.class);
     }
 
-    @Autowired
-    private StockService stockService;
 
-    @Autowired
-    EntityManagerFactory entityManagerFactory;
+    //@Autowired
+    //EntityManagerFactory entityManagerFactory;
 
-    @Transactional
     public ResponseMessage saveStoreInProducts(RequestMessage requestMessage) {
         ResponseMessage responseMessage;
         List<StoreInProductsViewModel> storeInProductsViewModelList;
@@ -168,11 +167,12 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
             responseMessage = this.buildResponseMessage();
             responseMessage.httpStatus = HttpStatus.CREATED.value();
             responseMessage.message = "Products successfully Entered into Stock";
+            Core.commitTransaction();
 
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
             ex.printStackTrace();
-            //this.rollBack();
+            Core.rollBackTransaction();
             log.error("saveStock -> save got exception");
         }
         return responseMessage;
@@ -415,10 +415,9 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
             String storeId,
             String productId,
             String categoryId,
-            String barcode)
-    {
+            String barcode) {
 
-        ResponseMessage responseMessage=null;
+        ResponseMessage responseMessage = null;
         //List<SalesProductViewModel> salesProductViewModelList = null;
         List<SalesProductView> salesProductViewList;
 
@@ -427,7 +426,7 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
         try {
             this.resetPaginationVariable();
             Core.processRequestMessage(requestMessage);
-            queryBuilder.append("SELECT v FROM SalesProductView v WHERE v.storeId='" + storeId + "' " );
+            queryBuilder.append("SELECT v FROM SalesProductView v WHERE v.storeId='" + storeId + "' ");
 
             if (!StringUtils.isEmpty(productId) && !StringUtils.equals(productId, "null"))
                 queryBuilder.append("AND v.productId = '" + productId + "' ");
@@ -439,21 +438,20 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
                 queryBuilder.append("AND v.categoryId = '" + categoryId + "' ");
 
 
-            salesProductViewList = this.executeHqlQuery(queryBuilder.toString(),SalesProductView.class,SqlEnum.QueryType.View.get());
+            salesProductViewList = this.executeHqlQuery(queryBuilder.toString(), SalesProductView.class, SqlEnum.QueryType.View.get());
 
             responseMessage = this.buildResponseMessage();
-            if(salesProductViewList!=null && salesProductViewList.size()>0){
+            if (salesProductViewList != null && salesProductViewList.size() > 0) {
                 responseMessage.data = salesProductViewList;
                 responseMessage.httpStatus = HttpStatus.FOUND.value();
                 responseMessage.message = "Retrieve available product for sales successfully";
-            }else {
+            } else {
                 responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
                 responseMessage.message = "Failed to retrieve available product for sales";
             }
 
 
-
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
 
@@ -470,15 +468,15 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
         StringBuilder queryBuilder = new StringBuilder();
         String hql;
         try {
-            this.resetPaginationVariable();
+            //this.resetPaginationVariable();
             Core.processRequestMessage(requestMessage);
 
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-            SessionFactory sessionFactory;
-            Session session = null;
+            //EntityManager entityManager = entityManagerFactory.createEntityManager();
+            //SessionFactory sessionFactory;
+            //Session session = null;
 
-            sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
-            session = sessionFactory.openSession();
+            //sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
+            //session = sessionFactory.openSession();
 
 
             if (storeId != null) {
@@ -531,8 +529,7 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
 
 
                 hql = queryBuilder.toString();
-
-                List<SalesProductView> SalesProductViews;
+                //List<SalesProductView> SalesProductViews;
 
                 StringBuilder testStringBuilder = new StringBuilder();
                 String testHql = "select v from SalesProductView v where v.storeId='" + storeId + "' ";
@@ -545,9 +542,10 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
                     testStringBuilder.append("AND v.serialNo = '" + serialNo + "' ");
 
 
-                SalesProductViews = session.createQuery(testStringBuilder.toString(), SalesProductView.class).getResultList();
+                //SalesProductViews =this.executeHqlQuery(testStringBuilder.toString(), SalesProductView.class,SqlEnum.QueryType.View.get());
+                //SalesProductViews = session.createQuery(testStringBuilder.toString(), SalesProductView.class).getResultList();
 
-                System.out.println(SalesProductViews);
+                // System.out.println(SalesProductViews);
 
                 salesProductViewModelList = this.executeHqlQuery(hql, SalesProductViewModel.class, SqlEnum.QueryType.Join.get());
             }
@@ -589,7 +587,7 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
                     .append("FROM StoreInProduct sip ")
                     .append("INNER JOIN Product p ON sip.productId = p.id ")
                     .append("WHERE ")
-                    .append("sip.productStatus =" + InventoryEnum.ProductStatus.AVAILABLE.get() +" ")
+                    .append("sip.productStatus =" + InventoryEnum.ProductStatus.AVAILABLE.get() + " ")
                     .append("AND sip.storeId = '" + storeId + "'")
                     .append("AND p.categoryId = '" + categoryId + "'");
 
@@ -598,19 +596,16 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
 
             responseMessage = this.buildResponseMessage(list);
 
-            if (list != null && list.size()>0) {
+            if (list != null && list.size() > 0) {
                 responseMessage.httpStatus = HttpStatus.FOUND.value();
                 responseMessage.message = "Get all Product of selected store successfully";
-                //this.commit();
             } else {
                 responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
                 responseMessage.message = "Failed to get selected Product of store";
-                //this.rollBack();
             }
         } catch (Exception ex) {
             responseMessage = this.buildFailedResponseMessage();
             ex.printStackTrace();
-            //this.rollBack();
             log.error("getStoreInProductsByStoreId -> save got exception");
         }
         return responseMessage;
