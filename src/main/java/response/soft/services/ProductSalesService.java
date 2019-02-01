@@ -15,7 +15,6 @@ import response.soft.entities.view.ProductSalesReportView;
 import response.soft.model.SalesHistoryModel;
 import response.soft.model.view.ProductSalesReportViewModel;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Service
@@ -37,13 +36,13 @@ public class ProductSalesService extends BaseService<SalesHistory> {
         String searchKey;
         StringBuilder queryBuilderString =new StringBuilder();
         String fromDate, toDate;
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
-            this.resetPaginationVariable();
+            //this.resetPaginationVariable();
             productSalesReportViewModel = Core.processRequestMessage(requestMessage,ProductSalesReportViewModel.class);
 
-            fromDate = dateFormat.format(productSalesReportViewModel.getFromDate());
-            toDate =  dateFormat.format(productSalesReportViewModel.getToDate());
+            fromDate = Core.dateFormat.format(productSalesReportViewModel.getFromDate());
+            toDate =  Core.dateFormat.format(productSalesReportViewModel.getToDate());
 
             searchKey = Core.dataTableSearchKey.get();
             if(searchKey!=null && !StringUtils.equals(searchKey,"string")) {

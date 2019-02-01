@@ -13,6 +13,7 @@ import response.soft.core.ResponseMessage;
 import response.soft.entities.Stock;
 import response.soft.entities.view.AvailableStockView;
 import response.soft.model.StockModel;
+import response.soft.model.view.StockViewModel;
 
 import java.util.List;
 import java.util.UUID;
@@ -199,10 +200,20 @@ public class StockService extends BaseService<Stock> {
     public ResponseMessage getAllStock(RequestMessage requestMessage, String storeId, String categoryId, String productId) {
         ResponseMessage responseMessage;
         List<AvailableStockView> list;
+        StockViewModel stockViewModel;
         String searchKey;
+        String fromDate=null,toDate=null;
         StringBuilder queryBuilderString =new StringBuilder();
+        String joinQuery;
         try {
-            Core.processRequestMessage(requestMessage);
+            stockViewModel =  Core.processRequestMessage(requestMessage,StockViewModel.class);
+            if(stockViewModel!=null){
+                if(stockViewModel.getFromDate()!=null)
+                    fromDate = Core.dateFormat.format(stockViewModel.getFromDate());
+                if(stockViewModel.getToDate()!=null)
+                    toDate = Core.dateFormat.format(stockViewModel.getToDate());
+            }
+
             searchKey = Core.dataTableSearchKey.get();
 
             if(searchKey!=null && !StringUtils.equals(searchKey,"string")) {
@@ -214,19 +225,41 @@ public class StockService extends BaseService<Stock> {
                 log.error(violation.getMessage());
             }*/
 
+
+/*
+            SELECT DISTINCT
+            v.storeId,
+                    v.storeName,
+                    v.categoryName,
+                    v.categoryId,
+                    v.productId,
+                    v.productName,
+                    v.modelNo,
+                    v.totalPrice,
+                    v.availableQty
+            FROM AvailableStockView v
+            INNER JOIN Stock s ON v.storeId = s.storeId
+            */
+
+            queryBuilderString.append("SELECT DISTINCT ")
+                    .append("v.productId, ")
+                    .append("v.categoryId, ")
+                    .append("v.storeId, ")
+                    .append("v.storeName, ")
+                    .append("v.categoryName, ")
+                    .append("v.productName, ")
+                    .append("v.modelNo, ")
+                    .append("v.totalPrice, ")
+                    .append("v.availableQty ")
+                    .append("FROM AvailableStockView v ")
+                    .append("INNER JOIN Stock s ON v.storeId = s.storeId ");
+
+            joinQuery = queryBuilderString.toString();
             //============ full text search ===========================================
 
             if ((searchKey != null && !StringUtils.isEmpty(searchKey))|| storeId!=null || productId!=null) {
 
-                queryBuilderString.append("SELECT v ")
-                        //.append("v.categoryId, ")
-                        //.append("v.storeId, ")
-                        //.append("v.storeName, ")
-                        //.append("v.productName, ")
-                        //.append("v.totalPrice, ")
-                        //.append("v.availableQty ")
-                        .append("FROM AvailableStockView v ")
-                        .append("WHERE ")
+                queryBuilderString.append("WHERE ")
                         .append("( ")
                         .append("lower(v.categoryName) LIKE '%" + searchKey + "%' ")
                         .append("OR lower(v.storeName) LIKE '%" + searchKey + "%' ")
@@ -236,6 +269,7 @@ public class StockService extends BaseService<Stock> {
                         .append("OR CAST(v.availableQty AS string) LIKE '%" + searchKey + "%' ")
                         .append(") ")
                         .append("AND v.availableQty>0 ");
+
 
                 if(storeId!=null && !StringUtils.isEmpty(storeId)){
                     queryBuilderString.append("AND v.storeId ='"+storeId+"' ");
@@ -249,13 +283,19 @@ public class StockService extends BaseService<Stock> {
                     queryBuilderString.append("AND v.productId='"+productId+"' ");
                 }
 
-                list = this.executeHqlQuery(queryBuilderString.toString(),AvailableStockView.class,SqlEnum.QueryType.View.get());
+                if(!StringUtils.isEmpty(fromDate) && !StringUtils.isEmpty(toDate)){
+                    queryBuilderString.append("AND s.date BETWEEN '" + fromDate+" 00:00:00' AND '"+toDate+" 23:59:59.999999'");
+                }
+
+                list = this.executeHqlQuery(queryBuilderString.toString(),AvailableStockView.class,SqlEnum.QueryType.Join.get());
                 //============ full text search ===========================================
             }else {
                 queryBuilderString.setLength(0);
-                queryBuilderString.append("SELECT v FROM AvailableStockView v WHERE v.availableQty>0");
-
-                list = this.executeHqlQuery(queryBuilderString.toString(),AvailableStockView.class,SqlEnum.QueryType.View.get());
+                queryBuilderString.append(joinQuery + " WHERE v.availableQty>0 ");
+                if(!StringUtils.isEmpty(fromDate) && !StringUtils.isEmpty(toDate)){
+                    queryBuilderString.append("AND s.date BETWEEN '" + fromDate+" 00:00:00' AND '"+toDate+" 23:59:59.999999'");
+                }
+                list = this.executeHqlQuery(queryBuilderString.toString(),AvailableStockView.class,SqlEnum.QueryType.Join.get());
             }
 
             responseMessage = this.buildResponseMessage(list);

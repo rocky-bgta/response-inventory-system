@@ -609,6 +609,7 @@ public class Dao<T> extends BaseDao {
             }
 
             if (SqlEnum.QueryType.Join.get() == queryType) {
+
                 q = session.createQuery(hql);
 
                 if (pageOffset != null && pageSize>0) {
