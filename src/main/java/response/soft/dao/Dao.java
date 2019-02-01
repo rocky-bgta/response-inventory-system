@@ -603,8 +603,8 @@ public class Dao<T> extends BaseDao {
                     Core.totalRowCount.set(count);
                     Core.recordsFilteredCount.set(count);
                 }else {
-                    Core.totalRowCount.set(0l);
-                    Core.recordsFilteredCount.set(0l);
+                    Core.totalRowCount.set(0L);
+                    Core.recordsFilteredCount.set(0L);
                 }
             }
 
@@ -626,8 +626,8 @@ public class Dao<T> extends BaseDao {
                     Core.totalRowCount.set(count);
                     Core.recordsFilteredCount.set(count);
                 }else {
-                    Core.totalRowCount.set(0l);
-                    Core.recordsFilteredCount.set(0l);
+                    Core.totalRowCount.set(0L);
+                    Core.recordsFilteredCount.set(0L);
                 }
 
 
