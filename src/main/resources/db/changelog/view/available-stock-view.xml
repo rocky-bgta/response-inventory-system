@@ -13,51 +13,39 @@
         <createView replaceIfExists="true"
                     schemaName="inventory"
                     viewName="available_stock_view">
-            select
-            main_stock.store_id,
-            main_stock.store_name,
-            main_stock.category_name,
-            main_stock.category_id,
-            main_stock.product_id,
-            main_stock.product_name,
-            main_stock.model_no,
-            main_stock.total_price,
-            main_stock.available_qty
-            from (select
-            available_stock.store_id,
-            available_stock.store_name,
-            available_stock.category_name,
-            available_stock.category_id,
-            available_stock.ID as product_id,
-            available_stock.name as product_name,
-            available_stock.model_no,
-            sum(available_stock.in_sum) - sum(available_stock.out_sum) as total_price,
-            sum(available_stock.in_qty) - sum(available_stock.out_qty) as available_qty
-            from (
             SELECT
-            c.name as category_name,
-            p.category_id,
-            P.ID,
-            P.name,
-            P.model_no,
-            s.store_id,
-            store.name as store_name,
-            case s.in_out when 1 then sum(s.total) else 0 end as in_sum,
-            case s.in_out when 2 then sum(s.total) else 0 end as out_sum,
-            case s.in_out when 1 then sum(s.quantity) else 0 end as in_qty,
-            case s.in_out when 2 then sum(s.quantity) else 0 end as out_qty
-            FROM inventory.stock s
-            INNER JOIN inventory.product p ON s.product_id = p.id
-            INNER JOIN inventory.store store  ON s.store_id = store.id
-            INNER JOIN inventory.category c ON p.category_id = c.id
-            GROUP BY P.ID, p.name, s.in_out, s.store_id, store.name, c.name,p.model_no) available_stock
-            GROUP BY available_stock.ID,
-            available_stock.name,
-            available_stock.category_id,
-            available_stock.store_id,
-            available_stock.store_name,
-            available_stock.category_name,
-            available_stock.model_no) main_stock
+            category.id AS category_id,
+            category.name AS category_name,
+            stock_sum.product_id,
+            product.name AS product_name,
+            product.model_no,
+            sum(stock_sum.in_total_price_sum) - sum(stock_sum.out_total_price_sum) AS total_price,
+            sum(stock_sum.in_qty_sum) - sum(stock_sum.out_qty_sum) AS available_qty
+
+            FROM
+            (SELECT
+            stock.product_id,
+            stock.in_out,
+            case stock.in_out when 1 then sum(stock.total) else 0 end as in_total_price_sum,
+            case stock.in_out when 2 then sum(stock.total) else 0 end as out_total_price_sum,
+            case stock.in_out when 1 then sum(stock.quantity) else 0 end as in_qty_sum,
+            case stock.in_out when 2 then sum(stock.quantity) else 0 end as out_qty_sum,
+            stock.quantity,
+            stock.unit_price,
+            stock.total
+            FROM stock stock
+            GROUP BY
+            stock.product_id,
+            stock.in_out,
+            stock.quantity,
+            stock.unit_price,
+            stock.total
+            )
+
+            stock_sum
+            INNER JOIN product product ON product.id = stock_sum.product_id
+            INNER JOIN category category ON product.category_id = category.id
+            GROUP BY stock_sum.product_id, product.name, product.model_no, category.id, category.name
         </createView>
 
     </changeSet>

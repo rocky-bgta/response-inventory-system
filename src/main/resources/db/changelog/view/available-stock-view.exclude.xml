@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+
+
+    <changeSet id="05" author="Salahin Rocky">
+
+        <createView replaceIfExists="true"
+                    schemaName="inventory"
+                    viewName="available_stock_view">
+            select
+            main_stock.store_id,
+            main_stock.store_name,
+            main_stock.category_name,
+            main_stock.category_id,
+            main_stock.product_id,
+            main_stock.product_name,
+            main_stock.model_no,
+            main_stock.total_price,
+            main_stock.available_qty
+            from (select
+            available_stock.store_id,
+            available_stock.store_name,
+            available_stock.category_name,
+            available_stock.category_id,
+            available_stock.ID as product_id,
+            available_stock.name as product_name,
+            available_stock.model_no,
+            sum(available_stock.in_sum) - sum(available_stock.out_sum) as total_price,
+            sum(available_stock.in_qty) - sum(available_stock.out_qty) as available_qty
+            from (
+            SELECT
+            c.name as category_name,
+            p.category_id,
+            P.ID,
+            P.name,
+            P.model_no,
+            s.store_id,
+            store.name as store_name,
+            case s.in_out when 1 then sum(s.total) else 0 end as in_sum,
+            case s.in_out when 2 then sum(s.total) else 0 end as out_sum,
+            case s.in_out when 1 then sum(s.quantity) else 0 end as in_qty,
+            case s.in_out when 2 then sum(s.quantity) else 0 end as out_qty
+            FROM inventory.stock s
+            INNER JOIN inventory.product p ON s.product_id = p.id
+            INNER JOIN inventory.store store  ON s.store_id = store.id
+            INNER JOIN inventory.category c ON p.category_id = c.id
+            GROUP BY P.ID, p.name, s.in_out, s.store_id, store.name, c.name,p.model_no) available_stock
+            GROUP BY available_stock.ID,
+            available_stock.name,
+            available_stock.category_id,
+            available_stock.store_id,
+            available_stock.store_name,
+            available_stock.category_name,
+            available_stock.model_no) main_stock
+        </createView>
+
+    </changeSet>
+</databaseChangeLog>

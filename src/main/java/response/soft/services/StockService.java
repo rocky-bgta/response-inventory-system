@@ -227,21 +227,16 @@ public class StockService extends BaseService<Stock> {
 
 
 /*
-            SELECT DISTINCT
-            v.storeId,
-                    v.storeName,
-                    v.categoryName,
-                    v.categoryId,
-                    v.productId,
-                    v.productName,
-                    v.modelNo,
-                    v.totalPrice,
-                    v.availableQty
-            FROM AvailableStockView v
-            INNER JOIN Stock s ON v.storeId = s.storeId
+          select v from AvailableStockView v
+          inner join Stock stock on stock.productId = v.productId
             */
 
-            queryBuilderString.append("SELECT DISTINCT ")
+
+            queryBuilderString.append("SELECT v ")
+                    .append("FROM AvailableStockView v ")
+                    .append("INNER JOIN Stock stock ON stock.productId = v.productId ");
+
+           /* queryBuilderString.append("SELECT DISTINCT ")
                     .append("v.productId, ")
                     .append("v.categoryId, ")
                     .append("v.storeId, ")
@@ -252,7 +247,7 @@ public class StockService extends BaseService<Stock> {
                     .append("v.totalPrice, ")
                     .append("v.availableQty ")
                     .append("FROM AvailableStockView v ")
-                    .append("INNER JOIN Stock s ON v.storeId = s.storeId ");
+                    .append("INNER JOIN Stock s ON v.storeId = s.storeId ");*/
 
             joinQuery = queryBuilderString.toString();
             //============ full text search ===========================================
@@ -262,7 +257,6 @@ public class StockService extends BaseService<Stock> {
                 queryBuilderString.append("WHERE ")
                         .append("( ")
                         .append("lower(v.categoryName) LIKE '%" + searchKey + "%' ")
-                        .append("OR lower(v.storeName) LIKE '%" + searchKey + "%' ")
                         .append("OR lower(v.modelNo) LIKE '%" + searchKey + "%' ")
                         .append("OR lower(v.productName) LIKE '%" + searchKey + "%' ")
                         .append("OR CAST(v.totalPrice AS string) LIKE '%" + searchKey + "%' ")
@@ -284,18 +278,18 @@ public class StockService extends BaseService<Stock> {
                 }
 
                 if(!StringUtils.isEmpty(fromDate) && !StringUtils.isEmpty(toDate)){
-                    queryBuilderString.append("AND s.date BETWEEN '" + fromDate+" 00:00:00' AND '"+toDate+" 23:59:59.999999'");
+                    queryBuilderString.append("AND stock.date BETWEEN '" + fromDate+" 00:00:00' AND '"+toDate+" 23:59:59.999999'");
                 }
 
-                list = this.executeHqlQuery(queryBuilderString.toString(),AvailableStockView.class,SqlEnum.QueryType.Join.get());
+                list = this.executeHqlQuery(queryBuilderString.toString(),AvailableStockView.class,SqlEnum.QueryType.View.get());
                 //============ full text search ===========================================
             }else {
                 queryBuilderString.setLength(0);
                 queryBuilderString.append(joinQuery + " WHERE v.availableQty>0 ");
                 if(!StringUtils.isEmpty(fromDate) && !StringUtils.isEmpty(toDate)){
-                    queryBuilderString.append("AND s.date BETWEEN '" + fromDate+" 00:00:00' AND '"+toDate+" 23:59:59.999999'");
+                    queryBuilderString.append("AND stock.date BETWEEN '" + fromDate+" 00:00:00' AND '"+toDate+" 23:59:59.999999'");
                 }
-                list = this.executeHqlQuery(queryBuilderString.toString(),AvailableStockView.class,SqlEnum.QueryType.Join.get());
+                list = this.executeHqlQuery(queryBuilderString.toString(),AvailableStockView.class,SqlEnum.QueryType.View.get());
             }
 
             responseMessage = this.buildResponseMessage(list);

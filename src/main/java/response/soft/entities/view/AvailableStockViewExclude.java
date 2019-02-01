@@ -1,3 +1,4 @@
+/*
 package response.soft.entities.view;
 
 import jdk.nashorn.internal.ir.annotations.Immutable;
@@ -9,21 +10,27 @@ import java.util.UUID;
 
 @Data
 @Entity
-@IdClass(AvailableStockView.class)
+@IdClass(AvailableStockViewExclude.class)
 @Immutable
 @Table(name = "available_stock_view")
-public class AvailableStockView implements Serializable {
+public class AvailableStockViewExclude implements Serializable {
+    @Id
+    @Column(name = "product_id")
+    private UUID productId;
 
     @Id
     @Column(name = "category_id")
     private UUID categoryId;
 
+    @Id
+    @Column(name = "store_id")
+    private UUID storeId;
+
+    @Column(name = "store_name")
+    private String storeName;
+
     @Column(name = "category_name")
     private String categoryName;
-
-    @Id
-    @Column(name = "product_id")
-    private UUID productId;
 
     @Column(name = "product_name")
     private String productName;
@@ -37,3 +44,4 @@ public class AvailableStockView implements Serializable {
     @Column(name = "available_qty")
     private Integer availableQty;
 }
+*/
