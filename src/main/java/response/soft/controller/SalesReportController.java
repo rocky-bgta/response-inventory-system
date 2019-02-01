@@ -15,12 +15,12 @@ import java.util.UUID;
 @RestController
 @RequestMapping("api/product-sales")
 @Api(tags = "Product Sales Api List")
-public class ProductSalesController {
+public class SalesReportController {
 
     private final ProductSalesService productSalesService;
 
     @Autowired
-    public ProductSalesController(ProductSalesService productSalesService) {
+    public SalesReportController(ProductSalesService productSalesService) {
         this.productSalesService = productSalesService;
     }
 
