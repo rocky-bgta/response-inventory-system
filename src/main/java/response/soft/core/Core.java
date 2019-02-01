@@ -273,9 +273,9 @@ public abstract class Core {
         Object convertedObject = null;
         Object trimmedObject = null;
         Object requestData = null;
-        Integer shortColumnIndex;
-        String shortColumnName;
-        String shortDirection;
+        Integer shortColumnIndex=null;
+        String shortColumnName=null;
+        String shortDirection=null;
 
        /* Core.isDataTablePagination.remove();
         Core.pageOffset.remove();
@@ -306,15 +306,16 @@ public abstract class Core {
                 Core.dataTableSearchKey.set(requestMessage.dataTableRequest.search.value);
 
 
-                shortDirection = requestMessage.dataTableRequest.order.get(0).dir;
-                shortColumnIndex = requestMessage.dataTableRequest.order.get(0).column;
-                shortColumnName = requestMessage.dataTableRequest.columns.get(shortColumnIndex).data;
+                if(requestMessage.dataTableRequest.order.size()>0) {
+                    shortDirection = requestMessage.dataTableRequest.order.get(0).dir;
+                    shortColumnIndex = requestMessage.dataTableRequest.order.get(0).column;
+                    shortColumnName = requestMessage.dataTableRequest.columns.get(shortColumnIndex).data;
+                }
 
-
-                if (shortDirection.equals("asc") || shortDirection.equals("desc"))
+                if (shortDirection!=null && (shortDirection.equals("asc") || shortDirection.equals("desc")))
                     Core.shortDirection.set(shortDirection);
 
-                if (!shortColumnName.equals("string"))
+                if (shortColumnName!=null && !shortColumnName.equals("string"))
                     Core.shortColumnName.set(shortColumnName);
 
             } else {
