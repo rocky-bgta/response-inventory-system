@@ -93,8 +93,10 @@ public class PersistenceJPAConfig {
     Properties additionalProperties() {
         Properties properties = new Properties();
         properties.setProperty("hibernate.hbm2ddl.auto", "none");
-        properties.setProperty(
-                "hibernate.dialect", "org.hibernate.dialect.PostgreSQL9Dialect");
+        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQL9Dialect");
+        properties.setProperty("hibernate.show-sql", "true");
+        properties.setProperty("hibernate.format_sql", "true");
+        properties.setProperty("hibernate.type.descriptor.sql.BasicBinder", "TRACE");
         properties.setProperty("hibernate.default_schema", "inventory");
         properties.setProperty("hibernate.temp.use_jdbc_metadata_defaults","false");
 
