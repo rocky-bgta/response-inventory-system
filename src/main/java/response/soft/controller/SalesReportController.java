@@ -14,7 +14,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("api/product-sales")
-@Api(tags = "Product Sales Api List")
+@Api(tags = "Sales Report Api List")
 public class SalesReportController {
 
     private final ProductSalesService productSalesService;
