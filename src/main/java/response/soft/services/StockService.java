@@ -205,6 +205,7 @@ public class StockService extends BaseService<Stock> {
         String fromDate=null,toDate=null;
         StringBuilder queryBuilderString =new StringBuilder();
         String joinQuery;
+        Double totalStockAmount;
         try {
             stockViewModel =  Core.processRequestMessage(requestMessage,StockViewModel.class);
             if(stockViewModel!=null){
@@ -226,71 +227,56 @@ public class StockService extends BaseService<Stock> {
             }*/
 
 
-/*
-          select v from AvailableStockView v
-          inner join Stock stock on stock.productId = v.productId
-            */
-
-
             queryBuilderString.append("SELECT v ")
                     .append("FROM AvailableStockView v ")
-                    .append("INNER JOIN Stock stock ON stock.productId = v.productId ");
+                    .append("INNER JOIN Stock stock ON stock.productId = v.productId ")
+                    .append("WHERE v.availableQty>0 ");
 
-           /* queryBuilderString.append("SELECT DISTINCT ")
-                    .append("v.productId, ")
-                    .append("v.categoryId, ")
-                    .append("v.storeId, ")
-                    .append("v.storeName, ")
-                    .append("v.categoryName, ")
-                    .append("v.productName, ")
-                    .append("v.modelNo, ")
-                    .append("v.totalPrice, ")
-                    .append("v.availableQty ")
-                    .append("FROM AvailableStockView v ")
-                    .append("INNER JOIN Stock s ON v.storeId = s.storeId ");*/
 
-            joinQuery = queryBuilderString.toString();
+            //joinQuery = queryBuilderString.toString();
+
+
+            if(storeId!=null && !StringUtils.isEmpty(storeId)){
+                queryBuilderString.append("AND stock.storeId ='"+storeId+"' ");
+            }
+
+            if(categoryId!=null &&  !StringUtils.isEmpty(categoryId)){
+                queryBuilderString.append("AND v.categoryId='"+categoryId+"' ");
+            }
+
+            if(productId!=null &&  !StringUtils.isEmpty(productId)){
+                queryBuilderString.append("AND v.productId='"+productId+"' ");
+            }
+
+            if(!StringUtils.isEmpty(fromDate) && !StringUtils.isEmpty(toDate)){
+                queryBuilderString.append("AND stock.date BETWEEN '" + fromDate+" 00:00:00' AND '"+toDate+" 23:59:59.999999'");
+            }
+
             //============ full text search ===========================================
 
-            if ((searchKey != null && !StringUtils.isEmpty(searchKey))|| storeId!=null || productId!=null) {
-
-                queryBuilderString.append("WHERE ")
-                        .append("( ")
+            if ((searchKey != null && !StringUtils.isEmpty(searchKey))) {
+                queryBuilderString
+                        .append("AND ( ")
                         .append("lower(v.categoryName) LIKE '%" + searchKey + "%' ")
                         .append("OR lower(v.modelNo) LIKE '%" + searchKey + "%' ")
                         .append("OR lower(v.productName) LIKE '%" + searchKey + "%' ")
                         .append("OR CAST(v.totalPrice AS string) LIKE '%" + searchKey + "%' ")
                         .append("OR CAST(v.availableQty AS string) LIKE '%" + searchKey + "%' ")
-                        .append(") ")
-                        .append("AND v.availableQty>0 ");
+                        .append(") ");
 
-
-                if(storeId!=null && !StringUtils.isEmpty(storeId)){
-                    queryBuilderString.append("AND stock.storeId ='"+storeId+"' ");
-                }
-
-                if(categoryId!=null &&  !StringUtils.isEmpty(categoryId)){
-                    queryBuilderString.append("AND v.categoryId='"+categoryId+"' ");
-                }
-
-                if(productId!=null &&  !StringUtils.isEmpty(productId)){
-                    queryBuilderString.append("AND v.productId='"+productId+"' ");
-                }
-
-                if(!StringUtils.isEmpty(fromDate) && !StringUtils.isEmpty(toDate)){
-                    queryBuilderString.append("AND stock.date BETWEEN '" + fromDate+" 00:00:00' AND '"+toDate+" 23:59:59.999999'");
-                }
-
-                list = this.executeHqlQuery(queryBuilderString.toString(),AvailableStockView.class,SqlEnum.QueryType.View.get());
                 //============ full text search ===========================================
-            }else {
-                queryBuilderString.setLength(0);
-                queryBuilderString.append(joinQuery + " WHERE v.availableQty>0 ");
+            }
+
+            list = this.executeHqlQuery(queryBuilderString.toString(),AvailableStockView.class,SqlEnum.QueryType.View.get());
+
+            /* else {
+                //queryBuilderString.setLength(0);
+                //queryBuilderString.append(joinQuery + " WHERE v.availableQty>0 ");
                 if(!StringUtils.isEmpty(fromDate) && !StringUtils.isEmpty(toDate)){
                     queryBuilderString.append("AND stock.date BETWEEN '" + fromDate+" 00:00:00' AND '"+toDate+" 23:59:59.999999'");
                 }
                 list = this.executeHqlQuery(queryBuilderString.toString(),AvailableStockView.class,SqlEnum.QueryType.View.get());
-            }
+            }*/
 
             responseMessage = this.buildResponseMessage(list);
 
