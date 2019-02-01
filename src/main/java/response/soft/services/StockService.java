@@ -266,7 +266,7 @@ public class StockService extends BaseService<Stock> {
 
 
                 if(storeId!=null && !StringUtils.isEmpty(storeId)){
-                    queryBuilderString.append("AND v.storeId ='"+storeId+"' ");
+                    queryBuilderString.append("AND stock.storeId ='"+storeId+"' ");
                 }
 
                 if(categoryId!=null &&  !StringUtils.isEmpty(categoryId)){
