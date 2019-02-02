@@ -219,9 +219,11 @@ public class CategoryService extends BaseService<Category> {
                     .append("SELECT DISTINCT c.id, ")
                     .append("c.name ")
                     .append("FROM Stock s ")
-            .append("INNER JOIN Product p ON s.productId = p.id ")
-            .append("INNER JOIN Category c ON p.categoryId = c.id ")
-            .append("WHERE s.storeId = '" + storeId+"'");
+                    .append("INNER JOIN Product p ON s.productId = p.id ")
+                    .append("INNER JOIN Category c ON p.categoryId = c.id ")
+                    .append("INNER JOIN AvailableStockView asv on asv.productId = p.id ")
+                    .append("WHERE asv.availableQty>0 AND ")
+                    .append("s.storeId = '" + storeId+"'");
 
 
             list=this.executeHqlQuery(queryBuilderString.toString(),CategoryModel.class,SqlEnum.QueryType.Join.get());
