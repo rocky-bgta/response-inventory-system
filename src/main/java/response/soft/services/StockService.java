@@ -204,7 +204,8 @@ public class StockService extends BaseService<Stock> {
         String searchKey;
         String fromDate=null,toDate=null;
         StringBuilder queryBuilderString =new StringBuilder();
-        String joinQuery;
+        StringBuilder queryBuilderForTotalStockPrice= new StringBuilder();
+        //String joinQuery;
         Double totalStockAmount;
         try {
             stockViewModel =  Core.processRequestMessage(requestMessage,StockViewModel.class);
@@ -226,6 +227,14 @@ public class StockService extends BaseService<Stock> {
                 log.error(violation.getMessage());
             }*/
 
+            //========= total stock price===============================
+            //queryBuilderForTotalStockPrice.append("SELECT SUM(v.totalPrice) FROM AvailableStockView v WHERE v.availableQty>0 ");
+            queryBuilderForTotalStockPrice.append("SELECT SUM(v.totalPrice) ")
+                    .append("FROM AvailableStockView v ")
+                    .append("INNER JOIN Stock stock ON stock.productId = v.productId ")
+                    .append("WHERE v.availableQty>0 ");
+            //=========================================================
+
 
             queryBuilderString.append("SELECT v ")
                     .append("FROM AvailableStockView v ")
@@ -238,18 +247,23 @@ public class StockService extends BaseService<Stock> {
 
             if(storeId!=null && !StringUtils.isEmpty(storeId)){
                 queryBuilderString.append("AND stock.storeId ='"+storeId+"' ");
+                queryBuilderForTotalStockPrice.append("AND stock.storeId ='"+storeId+"' ");
+
             }
 
             if(categoryId!=null &&  !StringUtils.isEmpty(categoryId)){
                 queryBuilderString.append("AND v.categoryId='"+categoryId+"' ");
+                queryBuilderForTotalStockPrice.append("AND v.categoryId='"+categoryId+"' ");
             }
 
             if(productId!=null &&  !StringUtils.isEmpty(productId)){
                 queryBuilderString.append("AND v.productId='"+productId+"' ");
+                queryBuilderForTotalStockPrice.append("AND v.productId='"+productId+"' ");
             }
 
             if(!StringUtils.isEmpty(fromDate) && !StringUtils.isEmpty(toDate)){
                 queryBuilderString.append("AND stock.date BETWEEN '" + fromDate+" 00:00:00' AND '"+toDate+" 23:59:59.999999'");
+                queryBuilderForTotalStockPrice.append("AND stock.date BETWEEN '" + fromDate+" 00:00:00' AND '"+toDate+" 23:59:59.999999'");
             }
 
             //============ full text search ===========================================
@@ -269,6 +283,18 @@ public class StockService extends BaseService<Stock> {
 
             list = this.executeHqlQuery(queryBuilderString.toString(),AvailableStockView.class,SqlEnum.QueryType.View.get());
 
+            responseMessage = this.buildResponseMessage(list);
+
+            Core.resetPaginationVariable();
+            totalStockAmount = this.executeHqlQuery(queryBuilderForTotalStockPrice.toString(),Double.class,SqlEnum.QueryType.View.get()).get(0);
+
+
+            stockViewModel = new StockViewModel();
+            stockViewModel.setAvailableStockViewList(list);
+            stockViewModel.setTotalStockProductPrice(totalStockAmount);
+
+            responseMessage.data=stockViewModel;
+
             /* else {
                 //queryBuilderString.setLength(0);
                 //queryBuilderString.append(joinQuery + " WHERE v.availableQty>0 ");
@@ -278,7 +304,7 @@ public class StockService extends BaseService<Stock> {
                 list = this.executeHqlQuery(queryBuilderString.toString(),AvailableStockView.class,SqlEnum.QueryType.View.get());
             }*/
 
-            responseMessage = this.buildResponseMessage(list);
+
 
             if (responseMessage.data != null) {
                 responseMessage.httpStatus = HttpStatus.FOUND.value();
