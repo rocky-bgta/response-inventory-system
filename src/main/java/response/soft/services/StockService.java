@@ -206,7 +206,7 @@ public class StockService extends BaseService<Stock> {
         StringBuilder queryBuilderString =new StringBuilder();
         StringBuilder queryBuilderForTotalStockPrice= new StringBuilder();
         //String joinQuery;
-        Double totalStockAmount;
+        Double totalStockAmount=0D;
         try {
             stockViewModel =  Core.processRequestMessage(requestMessage,StockViewModel.class);
             if(stockViewModel!=null){
@@ -285,9 +285,10 @@ public class StockService extends BaseService<Stock> {
 
             responseMessage = this.buildResponseMessage(list);
 
-            Core.resetPaginationVariable();
-            totalStockAmount = this.executeHqlQuery(queryBuilderForTotalStockPrice.toString(),Double.class,SqlEnum.QueryType.View.get()).get(0);
-
+            if(list.size()>0) {
+                Core.resetPaginationVariable();
+                totalStockAmount = this.executeHqlQuery(queryBuilderForTotalStockPrice.toString(), Double.class, SqlEnum.QueryType.View.get()).get(0);
+            }
 
             stockViewModel = new StockViewModel();
             stockViewModel.setAvailableStockViewList(list);
