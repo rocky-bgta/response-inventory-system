@@ -268,7 +268,7 @@ public class StockService extends BaseService<Stock> {
                     .append("sum(v.availableQty) as availableQty ")
                     .append("FROM AvailableStockView v ")
                     .append("INNER JOIN Stock stock ON stock.productId = v.productId ")
-                    .append("WHERE v.availableQty>0 ");
+                    .append("WHERE stock.inOut=1 AND v.availableQty>0  ");
 
 
             //joinQuery = queryBuilderString.toString();
