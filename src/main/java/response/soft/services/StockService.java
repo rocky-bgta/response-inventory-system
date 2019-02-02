@@ -235,8 +235,37 @@ public class StockService extends BaseService<Stock> {
                     .append("WHERE v.availableQty>0 ");
             //=========================================================
 
+            /*select v.categoryId,
+                    v.categoryName,
+                    v.productId,
+                    v.productName,
+                    v.modelNo,
+                    sum(v.totalPrice) as totalPrice,
+            sum(v.availableQty) as availableQty
+            from AvailableStockView v
+            inner join Stock stock on v.productId = stock.productId
+            where stock.storeId = '5f748c8c-0a8a-4148-87b8-bd5afe18a501'
+            and v.availableQty>0
+            group by
+            v.categoryId,
+                    v.categoryName,
+                    v.productId,
+                    v.productName,
+                    v.modelNo,
+                    v.totalPrice,
+                    v.availableQty*/
 
-            queryBuilderString.append("SELECT v ")
+
+
+
+
+            queryBuilderString.append("SELECT v.categoryId, ")
+                    .append("v.categoryName, ")
+                    .append("v.productId, ")
+                    .append("v.productName, ")
+                    .append("v.modelNo, ")
+                    .append("sum(v.totalPrice) as totalPrice, ")
+                    .append("sum(v.availableQty) as availableQty ")
                     .append("FROM AvailableStockView v ")
                     .append("INNER JOIN Stock stock ON stock.productId = v.productId ")
                     .append("WHERE v.availableQty>0 ");
@@ -281,7 +310,26 @@ public class StockService extends BaseService<Stock> {
                 //============ full text search ===========================================
             }
 
-            list = this.executeHqlQuery(queryBuilderString.toString(),AvailableStockView.class,SqlEnum.QueryType.View.get());
+         /*   group by
+            v.categoryId,
+                    v.categoryName,
+                    v.productId,
+                    v.productName,
+                    v.modelNo,
+                    v.totalPrice,
+                    v.availableQty*/
+
+            queryBuilderString.append(" group by ")
+                    .append("v.categoryId, ")
+                    .append("v.categoryName, ")
+                    .append("v.productId, ")
+                    .append("v.productName, ")
+                    .append("v.modelNo, ")
+                    .append("v.totalPrice, ")
+                    .append("v.availableQty");
+
+
+            list = this.executeHqlQuery(queryBuilderString.toString(),AvailableStockView.class,SqlEnum.QueryType.Join.get());
 
             responseMessage = this.buildResponseMessage(list);
 
