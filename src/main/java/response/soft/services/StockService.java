@@ -264,8 +264,8 @@ public class StockService extends BaseService<Stock> {
                     .append("v.productId, ")
                     .append("v.productName, ")
                     .append("v.modelNo, ")
-                    .append("sum(v.totalPrice) as totalPrice, ")
-                    .append("sum(v.availableQty) as availableQty ")
+                    .append("v.totalPrice, ")
+                    .append("v.availableQty ")
                     .append("FROM AvailableStockView v ")
                     .append("INNER JOIN Stock stock ON stock.productId = v.productId ")
                     .append("WHERE stock.inOut=1 AND v.availableQty>0  ");
