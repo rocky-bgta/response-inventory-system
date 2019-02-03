@@ -343,7 +343,7 @@ public abstract class Core {
     public ResponseMessage buildFailedResponseMessage(String message) {
         ResponseMessage responseMessage = new ResponseMessage();
         responseMessage.data = null;
-        responseMessage.totalRow = 0l;
+        responseMessage.totalRow = 0L;
         responseMessage.token = null;
         responseMessage.httpStatus = HttpStatus.INTERNAL_SERVER_ERROR.value();
         if (message != null)
