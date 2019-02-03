@@ -21,10 +21,7 @@ import response.soft.core.Core;
 import response.soft.entities.History;
 
 import javax.persistence.EntityManagerFactory;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 //@SuppressWarnings("ALL")
 @Repository
@@ -702,19 +699,27 @@ public class Dao<T> extends BaseDao {
         return convertedModels;
     }
 
-    public List<Object[]> executeNativeSqlQuery(String hql, int queryType) throws HibernateException {
-        List<Object[]> result = new ArrayList<>();
+    public <M> List<M> executeNativeSqlQuery(String hql, Class<M> clazz, int queryType) throws Exception {
+        //List<Object[]> result = new ArrayList<>();
         Session session=null;
+        List<M> convertedModels = new ArrayList<>();
+        ArrayList result=null;
         try {
             session = getSession();
             session.beginTransaction();
             NativeQuery query = session.createNativeQuery(hql);
+
             if (SqlEnum.QueryType.Select.get() == queryType)
-                if (result.size() > 0) {
-                    result = query.getResultList();
-                }
+                result = (ArrayList) query.getResultList();
+
+            result.forEach(item -> {
+                convertedModels.add((M)(item.toString()));
+            });
+
+
             if (SqlEnum.QueryType.Update.get() == queryType)
                 query.executeUpdate();
+
             session.getTransaction().commit();
             //session.close();
         } catch (Exception ex) {
@@ -725,7 +730,7 @@ public class Dao<T> extends BaseDao {
             if (session!=null && session.isOpen())
                 session.close();
         }
-        return result;
+        return convertedModels;
     }
 
     public Boolean isRowExist(List<Map<Object, Object>> keyValueWithTypeList, Class entityClass) throws Exception {

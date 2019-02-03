@@ -557,11 +557,22 @@ public abstract class BaseService<T extends BaseEntity> extends Core {
         return modelList;
     }
 
-    public List<Object[]> executeNativeQuery(String hql, int queryType) throws Exception {
-        initEntityModel();
-        List<Object[]> result;
+    public <M> List<M> executeNativeQuery(String hql, Class<M> clazz, int queryType) throws Exception {
+        List<M> modelList = new ArrayList<>();
+        List<M> tempList;
         try {
-            result = this.dao.executeNativeSqlQuery(hql, queryType);
+            tempList = (List<M>) this.dao.executeNativeSqlQuery(hql, clazz, queryType);
+
+            int size = tempList.size();
+            if (size > 0) {
+                for (Object model : tempList) {
+                    model = Core.modelMapper.map(model, clazz);
+                    modelList.add((M) model);
+                }
+            }
+
+            //result = this.dao.executeNativeSqlQuery(hql, queryType);
+
         } catch (Exception ex) {
             log.error(ex.getMessage());
             for(Throwable throwable: ex.getSuppressed()){
@@ -569,7 +580,7 @@ public abstract class BaseService<T extends BaseEntity> extends Core {
             }
             throw ex;
         }
-        return result;
+        return modelList;
     }
 
    /* protected BllResponseMessage getDefaultBllResponse(){
