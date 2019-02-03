@@ -354,9 +354,11 @@ public class StockService extends BaseService<Stock> {
 
             list = this.executeHqlQuery(queryBuilderString.toString(),AvailableStockView.class,SqlEnum.QueryType.Join.get());
 
+            totalStockAmount = list.stream().mapToDouble(AvailableStockView::getTotalPrice).sum();
+
             responseMessage = this.buildResponseMessage(list);
 
-            if(list.size()>0) {
+           /* if(list.size()>0) {
 
 
                 queryBuilderForTotalStockPrice.append("GROUP BY stock.in_out, stock.store_id ")
@@ -365,7 +367,7 @@ public class StockService extends BaseService<Stock> {
                 //Core.resetPaginationVariable();
                 totalStockAmount = this.executeNativeQuery(queryBuilderForTotalStockPrice.toString(), Double.class, SqlEnum.QueryType.Select.get()).get(0);
                 //totalStockAmount = this.executeNativeQuery(queryBuilderForTotalStockPrice.toString(), Total.class, SqlEnum.QueryType.Select.get()).get(0);
-            }
+            }*/
 
             stockViewModel = new StockViewModel();
             stockViewModel.setAvailableStockViewList(list);
