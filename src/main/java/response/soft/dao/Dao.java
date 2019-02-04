@@ -713,7 +713,8 @@ public class Dao<T> extends BaseDao {
                 result = (ArrayList) query.getResultList();
 
             result.forEach(item -> {
-                convertedModels.add((M)(item.toString()));
+                if(item!=null)
+                    convertedModels.add((M)(item.toString()));
             });
 
 

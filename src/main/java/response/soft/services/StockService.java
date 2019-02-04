@@ -255,31 +255,13 @@ public class StockService extends BaseService<Stock> {
                     .append("WHERE v.availableQty>0 ");*/
             //=========================================================
 
-            /*select v.categoryId,
-                    v.categoryName,
-                    v.productId,
-                    v.productName,
-                    v.modelNo,
-                    sum(v.totalPrice) as totalPrice,
-            sum(v.availableQty) as availableQty
-            from AvailableStockView v
-            inner join Stock stock on v.productId = stock.productId
-            where stock.storeId = '5f748c8c-0a8a-4148-87b8-bd5afe18a501'
-            and v.availableQty>0
-            group by
-            v.categoryId,
-                    v.categoryName,
-                    v.productId,
-                    v.productName,
-                    v.modelNo,
-                    v.totalPrice,
-                    v.availableQty*/
 
 
 
 
 
-            queryBuilderString.append("SELECT v.categoryId, ")
+
+         /*   queryBuilderString.append("SELECT v.categoryId, ")
                     .append("v.categoryName, ")
                     .append("v.productId, ")
                     .append("v.productName, ")
@@ -288,14 +270,18 @@ public class StockService extends BaseService<Stock> {
                     .append("v.availableQty ")
                     .append("FROM AvailableStockView v ")
                     .append("INNER JOIN Stock stock ON stock.productId = v.productId ")
-                    .append("WHERE stock.inOut=1 AND v.availableQty>0  ");
+                    .append("WHERE v.availableQty>0  ");*/
 
+
+            queryBuilderString.append("SELECT v ")
+                    .append("FROM AvailableStockView v ")
+                    .append("WHERE v.availableQty>0  ");
 
             //joinQuery = queryBuilderString.toString();
 
 
             if(storeId!=null && !StringUtils.isEmpty(storeId)){
-                queryBuilderString.append("AND stock.storeId ='"+storeId+"' ");
+                queryBuilderString.append("AND v.storeId ='"+storeId+"' ");
 
                 queryBuilderForTotalStockPrice.append("AND stock.store_id ='"+storeId+"' ");
 
@@ -314,7 +300,8 @@ public class StockService extends BaseService<Stock> {
             }
 
             if(!StringUtils.isEmpty(fromDate) && !StringUtils.isEmpty(toDate)){
-                queryBuilderString.append("AND stock.date BETWEEN '" + fromDate+" 00:00:00' AND '"+toDate+" 23:59:59.999999'");
+                queryBuilderString.append("AND v.stockDate BETWEEN '" + fromDate+" 00:00:00.0' AND '"+toDate+" 00:00:00.0'");
+                //queryBuilderString.append("AND v.date BETWEEN '" + fromDate+"' AND '"+toDate+"'");
                 queryBuilderForTotalStockPrice.append("AND stock.date BETWEEN '" + fromDate+" 00:00:00' AND '"+toDate+" 23:59:59.999999'");
             }
 
@@ -341,7 +328,7 @@ public class StockService extends BaseService<Stock> {
                     v.modelNo,
                     v.totalPrice,
                     v.availableQty*/
-
+/*
             queryBuilderString.append(" group by ")
                     .append("v.categoryId, ")
                     .append("v.categoryName, ")
@@ -349,25 +336,25 @@ public class StockService extends BaseService<Stock> {
                     .append("v.productName, ")
                     .append("v.modelNo, ")
                     .append("v.totalPrice, ")
-                    .append("v.availableQty");
+                    .append("v.availableQty");*/
 
 
-            list = this.executeHqlQuery(queryBuilderString.toString(),AvailableStockView.class,SqlEnum.QueryType.Join.get());
+            list = this.executeHqlQuery(queryBuilderString.toString(),AvailableStockView.class,SqlEnum.QueryType.View.get());
 
-            totalStockAmount = list.stream().mapToDouble(AvailableStockView::getTotalPrice).sum();
+            //totalStockAmount = list.stream().mapToDouble(AvailableStockView::getTotalPrice).sum();
 
             responseMessage = this.buildResponseMessage(list);
 
-           /* if(list.size()>0) {
+            if(list.size()>0) {
 
 
                 queryBuilderForTotalStockPrice.append("GROUP BY stock.in_out, stock.store_id ")
                         .append(") stock_total");
 
-                //Core.resetPaginationVariable();
+                Core.resetPaginationVariable();
                 totalStockAmount = this.executeNativeQuery(queryBuilderForTotalStockPrice.toString(), Double.class, SqlEnum.QueryType.Select.get()).get(0);
                 //totalStockAmount = this.executeNativeQuery(queryBuilderForTotalStockPrice.toString(), Total.class, SqlEnum.QueryType.Select.get()).get(0);
-            }*/
+            }
 
             stockViewModel = new StockViewModel();
             stockViewModel.setAvailableStockViewList(list);

@@ -5,6 +5,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.UUID;
 
 @Data
@@ -13,6 +14,10 @@ import java.util.UUID;
 @Immutable
 @Table(name = "available_stock_view")
 public class AvailableStockView implements Serializable {
+
+    @Id
+    @Column(name = "store_id")
+    private UUID storeId;
 
     @Id
     @Column(name = "category_id")
@@ -36,4 +41,7 @@ public class AvailableStockView implements Serializable {
 
     @Column(name = "available_qty")
     private Integer availableQty;
+
+    @Column(name = "stock_date")
+    private Date stockDate;
 }

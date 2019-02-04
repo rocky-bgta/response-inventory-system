@@ -13,17 +13,20 @@
         <createView replaceIfExists="true"
                     schemaName="inventory"
                     viewName="available_stock_view">
-            SELECT
+
+            SELECT			stock_sum.store_id,
             category.id AS category_id,
             category.name AS category_name,
             stock_sum.product_id,
             product.name AS product_name,
             product.model_no,
             sum(stock_sum.in_total_price_sum) - sum(stock_sum.out_total_price_sum) AS total_price,
-            sum(stock_sum.in_qty_sum) - sum(stock_sum.out_qty_sum) AS available_qty
+            sum(stock_sum.in_qty_sum) - sum(stock_sum.out_qty_sum) AS available_qty,
+            stock_sum.date AS stock_date
 
             FROM
             (SELECT
+            stock.store_id,
             stock.product_id,
             stock.in_out,
             case stock.in_out when 1 then sum(stock.total) else 0 end as in_total_price_sum,
@@ -32,20 +35,25 @@
             case stock.in_out when 2 then sum(stock.quantity) else 0 end as out_qty_sum,
             stock.quantity,
             stock.unit_price,
-            stock.total
+            stock.total,
+            stock.date::date
             FROM stock stock
             GROUP BY
+            stock.store_id,
             stock.product_id,
             stock.in_out,
             stock.quantity,
             stock.unit_price,
-            stock.total
+            stock.total,
+            stock.date::date
             )
 
             stock_sum
             INNER JOIN product product ON product.id = stock_sum.product_id
             INNER JOIN category category ON product.category_id = category.id
-            GROUP BY stock_sum.product_id, product.name, product.model_no, category.id, category.name
+            --WHERE stock_sum.store_id = '98a846d8-7b12-4569-b348-7ad3bb0d6470'
+            GROUP BY stock_sum.product_id, product.name, product.model_no, category.id, category.name, stock_sum.store_id,stock_sum.date
+
         </createView>
 
     </changeSet>
