@@ -703,20 +703,69 @@ public class Dao<T> extends BaseDao {
         //List<Object[]> result = new ArrayList<>();
         Session session=null;
         List<M> convertedModels = new ArrayList<>();
-        ArrayList result=null;
+        List<M> result;
+        ArrayList getOne;
+        Integer pageOffset= Core.pageOffset.get();
+        Integer pageSize= Core.pageSize.get();
+        Long count;
         try {
             session = getSession();
             session.beginTransaction();
-            NativeQuery query = session.createNativeQuery(hql);
+            NativeQuery query=null;
 
-            if (SqlEnum.QueryType.Select.get() == queryType)
-                result = (ArrayList) query.getResultList();
+            if (SqlEnum.QueryType.Select.get() == queryType) {
 
-            result.forEach(item -> {
-                if(item!=null)
-                    convertedModels.add((M)(item.toString()));
-            });
+/*
+                if (pageOffset != null && (pageSize!=null && pageSize>0)) {
+                    convertedModels = session.createQuery(hql,clazz)
+                            .setFirstResult(Core.pageOffset.get())
+                            .setMaxResults(Core.pageSize.get()).getResultList();
+                }else {
+                    convertedModels =  session.createQuery(hql,clazz).getResultList();
+                }*/
 
+
+                if (pageOffset != null && (pageSize!=null && pageSize>0)) {
+                    convertedModels = session.createNativeQuery(hql, clazz)
+                            .setFirstResult(Core.pageOffset.get())
+                            .setMaxResults(Core.pageSize.get()).getResultList();
+                }else {
+                    convertedModels =  session.createQuery(hql,clazz).getResultList();
+                }
+
+                if (convertedModels.size() > 0) {
+                    //( (Integer) session.createQuery(hql).iterate().next() ).intValue();
+                    count = (long)session.createNativeQuery(hql,clazz).getResultList().size();
+                    Core.totalRowCount.set(count);
+                    Core.recordsFilteredCount.set(count);
+                }else {
+                    Core.totalRowCount.set(0L);
+                    Core.recordsFilteredCount.set(0L);
+                }
+
+
+               /* result =  query.getResultList();
+                if (result.size() > 0) {
+                    convertedModels =  result;
+                }*/
+
+
+            }
+
+            if (SqlEnum.QueryType.GetOne.get() == queryType) {
+                query = session.createNativeQuery(hql);
+                getOne = (ArrayList) query.getResultList();
+
+                for(Object object: getOne){
+                    convertedModels.add((M)object.toString());
+                }
+
+                /*List<M> finalConvertedModels = convertedModels;
+                getOne.forEach(item -> {
+                    if (item != null)
+                        finalConvertedModels.add((M) (item.toString()));
+                });*/
+            }
 
             if (SqlEnum.QueryType.Update.get() == queryType)
                 query.executeUpdate();

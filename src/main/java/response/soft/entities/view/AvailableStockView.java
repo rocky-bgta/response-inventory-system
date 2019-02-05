@@ -5,7 +5,6 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
 import java.util.UUID;
 
 @Data
@@ -42,6 +41,6 @@ public class AvailableStockView implements Serializable {
     @Column(name = "available_qty")
     private Integer availableQty;
 
-    @Column(name = "stock_date")
-    private Date stockDate;
+   /* @Column(name = "stock_date")
+    private Date stockDate;*/
 }

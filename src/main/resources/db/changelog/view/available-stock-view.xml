@@ -21,9 +21,7 @@
             product.name AS product_name,
             product.model_no,
             sum(stock_sum.in_total_price_sum) - sum(stock_sum.out_total_price_sum) AS total_price,
-            sum(stock_sum.in_qty_sum) - sum(stock_sum.out_qty_sum) AS available_qty,
-            stock_sum.date AS stock_date
-
+            sum(stock_sum.in_qty_sum) - sum(stock_sum.out_qty_sum) AS available_qty
             FROM
             (SELECT
             stock.store_id,
@@ -35,8 +33,7 @@
             case stock.in_out when 2 then sum(stock.quantity) else 0 end as out_qty_sum,
             stock.quantity,
             stock.unit_price,
-            stock.total,
-            stock.date::date
+            stock.total
             FROM stock stock
             GROUP BY
             stock.store_id,
@@ -44,15 +41,13 @@
             stock.in_out,
             stock.quantity,
             stock.unit_price,
-            stock.total,
-            stock.date::date
+            stock.total
             )
 
             stock_sum
             INNER JOIN product product ON product.id = stock_sum.product_id
             INNER JOIN category category ON product.category_id = category.id
-            --WHERE stock_sum.store_id = '98a846d8-7b12-4569-b348-7ad3bb0d6470'
-            GROUP BY stock_sum.product_id, product.name, product.model_no, category.id, category.name, stock_sum.store_id,stock_sum.date
+            GROUP BY stock_sum.product_id, product.name, product.model_no, category.id, category.name, stock_sum.store_id
 
         </createView>
 
