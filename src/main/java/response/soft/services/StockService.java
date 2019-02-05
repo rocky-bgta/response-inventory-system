@@ -228,6 +228,7 @@ public class StockService extends BaseService<Stock> {
             }*/
 
             availableStock=" SELECT " +
+                    " main_stock.store_name,"+
                     " main_stock.store_id," +
                     " main_stock.category_id," +
                     " main_stock.category_name," +
@@ -242,7 +243,7 @@ public class StockService extends BaseService<Stock> {
 
 
 
-            availableStock+="SELECT stock_sum.store_id," +
+            availableStock+="SELECT  stock_sum.store_id, stock_sum.store_name," +
                     "category.id AS category_id," +
                     "category.name AS category_name," +
                     "stock_sum.product_id," +
@@ -252,6 +253,7 @@ public class StockService extends BaseService<Stock> {
                     "sum(stock_sum.in_qty_sum) - sum(stock_sum.out_qty_sum) AS available_qty " +
                     "FROM " +
                     "(SELECT " +
+                    "store.name as store_name,"+
                     "stock.store_id," +
                     "stock.product_id," +
                     "stock.in_out," +
@@ -262,7 +264,9 @@ public class StockService extends BaseService<Stock> {
                     "stock.quantity," +
                     "stock.unit_price," +
                     "stock.total " +
-                    "FROM stock stock WHERE stock is not null ";
+                    "FROM stock stock " +
+                    "INNER JOIN store store ON stock.store_id = store.id "+
+                    "WHERE stock is not null ";
 
 
 
@@ -294,6 +298,7 @@ public class StockService extends BaseService<Stock> {
             }
 
             availableStock+="GROUP BY " +
+                    "store.name,"+
                     "stock.store_id," +
                     "stock.product_id," +
                     "stock.in_out," +
@@ -315,7 +320,7 @@ public class StockService extends BaseService<Stock> {
 
 
 
-            availableStock+="GROUP BY stock_sum.product_id, product.name, product.model_no, category.id, category.name, stock_sum.store_id ) main_stock ";
+            availableStock+="GROUP BY stock_sum.product_id, product.name, product.model_no, category.id, category.name, stock_sum.store_id, stock_sum.store_name ) main_stock ";
             availableStock+="WHERE available_qty>0";
 
 

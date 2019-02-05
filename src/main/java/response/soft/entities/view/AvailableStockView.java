@@ -19,6 +19,10 @@ public class AvailableStockView implements Serializable {
     private UUID storeId;
 
     @Id
+    @Column(name = "store_name")
+    private String storeName;
+
+    @Id
     @Column(name = "category_id")
     private UUID categoryId;
 
