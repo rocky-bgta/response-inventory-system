@@ -228,15 +228,15 @@ public class StockService extends BaseService<Stock> {
             }*/
 
             availableStock=" SELECT " +
-                    " main_stock.store_name,"+
-                    " main_stock.store_id," +
-                    " main_stock.category_id," +
-                    " main_stock.category_name," +
-                    " main_stock.product_id," +
-                    " main_stock.product_name," +
-                    " main_stock.model_no," +
-                    " main_stock.total_price," +
-                    " main_stock.available_qty" +
+                    " v.store_name,"+
+                    " v.store_id," +
+                    " v.category_id," +
+                    " v.category_name," +
+                    " v.product_id," +
+                    " v.product_name," +
+                    " v.model_no," +
+                    " v.total_price," +
+                    " v.available_qty" +
                     " FROM " +
                     " " +
                     " ( ";
@@ -320,25 +320,26 @@ public class StockService extends BaseService<Stock> {
 
 
 
-            availableStock+="GROUP BY stock_sum.product_id, product.name, product.model_no, category.id, category.name, stock_sum.store_id, stock_sum.store_name ) main_stock ";
-            availableStock+="WHERE available_qty>0";
+            availableStock+="GROUP BY stock_sum.product_id, product.name, product.model_no, category.id, category.name, stock_sum.store_id, stock_sum.store_name ) v ";
+            availableStock+="WHERE v.available_qty>0";
 
 
-          /*
+
             //============ full text search ===========================================
             if ((searchKey != null && !StringUtils.isEmpty(searchKey))) {
                 queryBuilderString
                         .append("AND ( ")
-                        .append("lower(v.categoryName) LIKE '%" + searchKey + "%' ")
-                        .append("OR lower(v.modelNo) LIKE '%" + searchKey + "%' ")
-                        .append("OR lower(v.productName) LIKE '%" + searchKey + "%' ")
-                        .append("OR CAST(v.totalPrice AS string) LIKE '%" + searchKey + "%' ")
-                        .append("OR CAST(v.availableQty AS string) LIKE '%" + searchKey + "%' ")
+                        .append("lower(v.category_name) LIKE '%" + searchKey + "%' ")
+                        .append("OR lower(v.store_name) LIKE '%" + searchKey + "%' ")
+                        .append("OR lower(v.model_no) LIKE '%" + searchKey + "%' ")
+                        .append("OR lower(v.product_name) LIKE '%" + searchKey + "%' ")
+                        .append("OR CAST(v.total_price AS VARCHAR ) LIKE '%" + searchKey + "%' ")
+                        .append("OR CAST(v.available_qty AS VARCHAR) LIKE '%" + searchKey + "%' ")
                         .append(") ");
             }
             //============ full text search ===========================================
 
-           */
+
 
 
 
