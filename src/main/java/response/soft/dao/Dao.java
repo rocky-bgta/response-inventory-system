@@ -715,6 +715,8 @@ public class Dao<T> extends BaseDao {
 
             if (SqlEnum.QueryType.Select.get() == queryType) {
 
+                if (Core.shortColumnName.get() != null && Core.shortColumnName.get() != "")
+                    hql+= " ORDER BY v." + Core.shortColumnName.get() + " " + Core.shortDirection.get().toUpperCase();
 /*
                 if (pageOffset != null && (pageSize!=null && pageSize>0)) {
                     convertedModels = session.createQuery(hql,clazz)

@@ -16,34 +16,34 @@ public class AvailableStockView implements Serializable {
 
     @Id
     @Column(name = "store_id")
-    private UUID storeId;
+    private UUID store_id;
 
     @Id
     @Column(name = "store_name")
-    private String storeName;
+    private String store_name;
 
     @Id
     @Column(name = "category_id")
-    private UUID categoryId;
+    private UUID category_id;
 
     @Column(name = "category_name")
-    private String categoryName;
+    private String category_name;
 
     @Id
     @Column(name = "product_id")
-    private UUID productId;
+    private UUID product_id;
 
     @Column(name = "product_name")
-    private String productName;
+    private String product_name;
 
     @Column(name = "model_no")
-    private String modelNo;
+    private String model_no;
 
     @Column(name = "total_price")
-    private Double totalPrice;
+    private Double total_price;
 
     @Column(name = "available_qty")
-    private Integer availableQty;
+    private Integer available_qty;
 
    /* @Column(name = "stock_date")
     private Date stockDate;*/
