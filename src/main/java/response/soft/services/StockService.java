@@ -321,13 +321,13 @@ public class StockService extends BaseService<Stock> {
 
 
             availableStock+="GROUP BY stock_sum.product_id, product.name, product.model_no, category.id, category.name, stock_sum.store_id, stock_sum.store_name ) v ";
-            availableStock+="WHERE v.available_qty>0";
+            availableStock+="WHERE v.available_qty>0 ";
 
 
 
             //============ full text search ===========================================
             if ((searchKey != null && !StringUtils.isEmpty(searchKey))) {
-                queryBuilderString
+               /* queryBuilderString
                         .append("AND ( ")
                         .append("lower(v.category_name) LIKE '%" + searchKey + "%' ")
                         .append("OR lower(v.store_name) LIKE '%" + searchKey + "%' ")
@@ -335,7 +335,16 @@ public class StockService extends BaseService<Stock> {
                         .append("OR lower(v.product_name) LIKE '%" + searchKey + "%' ")
                         .append("OR CAST(v.total_price AS VARCHAR ) LIKE '%" + searchKey + "%' ")
                         .append("OR CAST(v.available_qty AS VARCHAR) LIKE '%" + searchKey + "%' ")
-                        .append(") ");
+                        .append(") ");*/
+
+                availableStock+="AND ( ";
+                availableStock+="lower(v.category_name) LIKE '%" + searchKey + "%' ";
+                availableStock+="OR lower(v.store_name) LIKE '%" + searchKey + "%' ";
+                availableStock+="OR lower(v.model_no) LIKE '%" + searchKey + "%' ";
+                availableStock+="OR lower(v.product_name) LIKE '%" + searchKey + "%' ";
+                availableStock+="OR CAST(v.total_price AS VARCHAR ) LIKE '%" + searchKey + "%' ";
+                availableStock+="OR CAST(v.available_qty AS VARCHAR) LIKE '%" + searchKey + "%' ";
+                availableStock+=") ";
             }
             //============ full text search ===========================================
 
