@@ -53,6 +53,7 @@ public class Dao<T> extends BaseDao {
             session = this.getSessionForUpdateOperation(); //getSession();
 
             //session.getTransaction().begin();
+            session.clear();
             session.save(t);
             session.flush();
             session.refresh(t);
@@ -82,6 +83,7 @@ public class Dao<T> extends BaseDao {
         Session session;
         try {
             session = this.getSessionForUpdateOperation();//getSession();
+            session.clear();
             //session.beginTransaction();
 
 
@@ -126,6 +128,7 @@ public class Dao<T> extends BaseDao {
         Session session;
         try {
             session = this.getSessionForUpdateOperation();
+            session.clear();
             //session.beginTransaction();
 
             primaryKeyField = this.getPrimaryKeyFieldName();
@@ -434,6 +437,7 @@ public class Dao<T> extends BaseDao {
         Session session;
         try {
             session = this.getSessionForUpdateOperation();
+            session.clear();
             //session.beginTransaction();
             Query updateQuery = session.createQuery(updateHql);
 
@@ -481,6 +485,7 @@ public class Dao<T> extends BaseDao {
         Session session;
         try {
             session = getSessionForUpdateOperation();
+            session.clear();
             //session.beginTransaction();
             session.delete(t);
             session.flush();
@@ -504,6 +509,7 @@ public class Dao<T> extends BaseDao {
         Session session;
         try {
             session = getSessionForUpdateOperation();
+            session.clear();
             primaryKeyField = this.getPrimaryKeyFieldName();
             query = new StringBuilder();
             Class clazz = Core.runTimeEntityType.get();
@@ -538,6 +544,7 @@ public class Dao<T> extends BaseDao {
         Session session;
         try {
             session = getSessionForUpdateOperation();
+            session.clear();
             //session.beginTransaction();
             Query q = session.createQuery(hql);
             //Set value
@@ -858,7 +865,6 @@ public class Dao<T> extends BaseDao {
 
         return session;
     }
-
 
     private Session getSession() throws HibernateException {
         EntityManagerFactory entityManagerFactory;
