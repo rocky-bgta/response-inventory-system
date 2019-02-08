@@ -35,6 +35,7 @@
             stock.unit_price,
             stock.total
             FROM stock stock
+            WHERE stock.status=1
             GROUP BY
             stock.store_id,
             stock.product_id,

@@ -266,7 +266,7 @@ public class StockService extends BaseService<Stock> {
                     "stock.total " +
                     "FROM stock stock " +
                     "INNER JOIN store store ON stock.store_id = store.id "+
-                    "WHERE stock is not null ";
+                    "WHERE stock.status=1 ";
 
 
 
@@ -282,7 +282,7 @@ public class StockService extends BaseService<Stock> {
                     .append("CASE stock.in_out WHEN 2 THEN SUM(stock.total) ELSE 0 END AS out_total ")
                     .append("FROM stock stock ")
                     .append("INNER JOIN product product ON stock.product_id = product.id ")
-                    .append("WHERE stock.store_id IS NOT NULL ");
+                    .append("WHERE stock.status=1 ");
             //=========================================================
 
 
