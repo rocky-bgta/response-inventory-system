@@ -22,6 +22,8 @@ public class SalesProductViewModel extends BaseModel {
     private String barcode;
     private String image;
     private Double discount;
+    private UUID vendorId;
+    private String vendorName;
     //=========================
     private Double salePrice;
     private Integer salesQty;

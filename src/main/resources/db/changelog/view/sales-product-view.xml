@@ -25,10 +25,14 @@
             sale_product_view.sale_price,
             sale_product_view.description,
             sale_product_view.barcode,
-            sale_product_view.image
+            sale_product_view.image,
+            sale_product_view.vendor_id,
+            sale_product_view.vendor_name
             FROM (SELECT sip
             .product_id,
             sip.store_id AS store_id,
+            sip.vendor_id,
+            vendor.name AS vendor_name,
             COUNT ( sip.product_id ) AS available,
             P.NAME AS product_name,
             cat.NAME AS category_name,
@@ -45,9 +49,11 @@
             LEFT JOIN inventory.product P ON  sip.product_id = P.ID
             LEFT JOIN inventory.category cat ON P.category_id = cat.ID
             LEFT JOIN inventory.brand brn ON P.brand_id = brn.ID
+            LEFT JOIN inventory.vendor vendor ON sip.vendor_id = vendor.id
             WHERE sip.product_status = 1
             GROUP BY
             sip.product_id,
+            sip.vendor_id,
             P.name,
             cat.NAME,
             cat.id,
@@ -58,7 +64,8 @@
             P.description,
             P.barcode,
             P.image,
-            sip.store_id
+            sip.store_id,
+            vendor.name
             ORDER BY
             sip.store_id) sale_product_view
 

@@ -20,4 +20,5 @@ public class StockViewModel {
     private Date toDate;
     private List<AvailableStockView> availableStockViewList;
     private Double totalStockProductPrice;
+    private List<SalesProductViewModel> stockProductListForUpdate;
 }

@@ -54,4 +54,14 @@ public class SalesProductView implements Serializable {
 
     @Column(name = "image")
     private String image;
+
+    @Id
+    @Column(name = "vendor_id")
+    private UUID vendorId;
+
+    @Column(name = "vendor_name")
+    private String vendorName;
+
+
+
 }

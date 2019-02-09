@@ -3,8 +3,10 @@ package response.soft.services;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import response.soft.appenum.InventoryEnum;
 import response.soft.appenum.SqlEnum;
 import response.soft.core.BaseService;
 import response.soft.core.Core;
@@ -13,8 +15,12 @@ import response.soft.core.ResponseMessage;
 import response.soft.entities.Stock;
 import response.soft.entities.view.AvailableStockView;
 import response.soft.model.StockModel;
+import response.soft.model.StoreInProductModel;
+import response.soft.model.StoreOutProductModel;
+import response.soft.model.view.SalesProductViewModel;
 import response.soft.model.view.StockViewModel;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,6 +29,17 @@ public class StockService extends BaseService<Stock> {
 
     private static final Logger log = LoggerFactory.getLogger(StockService.class);
 
+    @Autowired
+    private StoreInProductService storeInProductService;
+
+    @Autowired
+    private StoreOutProductService storeOutProductService;
+
+   /* @Autowired
+    public StockService(StoreInProductService storeInProductService) {
+        this.storeInProductService = storeInProductService;
+    }*/
+
     @Override
     protected void initEntityModel() {
         Core.runTimeModelType.remove();
@@ -30,6 +47,8 @@ public class StockService extends BaseService<Stock> {
         Core.runTimeEntityType.set(Stock.class);
         Core.runTimeModelType.set(StockModel.class);
     }
+
+
 
     public ResponseMessage saveStock(RequestMessage requestMessage) {
         ResponseMessage responseMessage;
@@ -72,55 +91,141 @@ public class StockService extends BaseService<Stock> {
         return responseMessage;
     }
 
+
     public ResponseMessage updateStock(RequestMessage requestMessage) {
         ResponseMessage responseMessage;
-        StockModel requestedStockModel, vendorSearchCondition,oldStockModel;
-        List<StockModel> vendorModelList;
+
+        List<StockModel> stockModelListForDelete;
+        List<StoreInProductModel> storeInProductModelListForDelete;
+        List<StoreOutProductModel> storeOutProductModelListForDelete;
+        List<SalesProductViewModel> salesProductViewModelList;
+        StockViewModel stockViewModel;
+
+        String findStockHql, findStoreInProductHql,findStoreOutProductHql;
+        UUID storeId, productId;
+        StockModel stockModel,savedStockModel;
+        StoreInProductModel storeInProductModel;
+        //int productStatus;
         try {
-            requestedStockModel = Core.processRequestMessage(requestMessage, StockModel.class);
+
+            //productStatus = InventoryEnum.ProductStatus.AVAILABLE.get();
+
+           /* select stock from Stock stock
+            inner join StoreInProduct sip on sip.stockId = stock.id
+            where stock.storeId = '5f748c8c-0a8a-4148-87b8-bd5afe18a501'
+            and stock.productId = 'f1f5cc1c-87e1-4375-b538-eb9cbd0eac60'
+            and sip.productStatus = 1*/
+
+           /* SELECT sip FROM StoreInProduct sip
+            WHERE sip.storeId = '5f748c8c-0a8a-4148-87b8-bd5afe18a501'
+            AND sip.productId = 'f1f5cc1c-87e1-4375-b538-eb9cbd0eac60'
+            AND (sip.productStatus = 2 OR sip.productStatus = 1)*/
+
+
+           /* SELECT sop FROM StoreOutProduct sop
+            WHERE sop.storeId = '5f748c8c-0a8a-4148-87b8-bd5afe18a501'
+            AND sop.productId = 'f1f5cc1c-87e1-4375-b538-eb9cbd0eac60'*/
+
+            stockViewModel = Core.processRequestMessage(requestMessage, StockViewModel.class);
+            if(stockViewModel!=null) {
+                salesProductViewModelList = stockViewModel.getStockProductListForUpdate();
+
+                storeId = stockViewModel.getStoreId();
+                productId = stockViewModel.getProductId();
+
+                findStockHql="select stock from Stock stock " +
+                        "WHERE stock.storeId = '" + storeId+ "' " +
+                        "AND stock.productId = '" + productId+"' " +
+                        "AND (stock.inOut = 2 OR stock.inOut = 1)";
+
+                stockModelListForDelete = this.executeHqlQuery(findStockHql,StockModel.class,SqlEnum.QueryType.Select.get());
+
+                findStoreInProductHql = "SELECT sip FROM StoreInProduct sip " +
+                        "WHERE sip.storeId = '" + storeId+ "' " +
+                        "AND sip.productId = '" + productId+"' " +
+                        "AND (sip.productStatus = 2 OR sip.productStatus = 1)";
+
+
+                storeInProductModelListForDelete = this.executeHqlQuery(findStoreInProductHql,StoreInProductModel.class,SqlEnum.QueryType.Select.get());
+
+
+                findStoreOutProductHql = "SELECT sop FROM StoreOutProduct sop " +
+                        "WHERE sop.storeId = '" + storeId+ "' " +
+                        "AND sop.productId = '" + productId+"' ";
+
+                storeOutProductModelListForDelete = this.executeHqlQuery(findStoreOutProductHql,StoreOutProductModel.class,SqlEnum.QueryType.Select.get());
+
+
+                // delete store out product
+                for(StoreOutProductModel deleteStoreOutProductModel: storeOutProductModelListForDelete){
+                    this.storeOutProductService.delete(deleteStoreOutProductModel);
+                }
+
+                // delete store in product
+                for(StoreInProductModel deleteInStoreInProductModel: storeInProductModelListForDelete){
+                    this.storeInProductService.delete(deleteInStoreInProductModel);
+                }
+
+                // delete stock product
+                for(StockModel deleteStockModel: stockModelListForDelete){
+                    this.delete(deleteStockModel);
+                }
+
+
+                for(SalesProductViewModel salesProductViewModel: salesProductViewModelList){
+                    stockModel = new StockModel();
+                    stockModel.setStoreId(storeId);
+                    stockModel.setProductId(productId);
+                    stockModel.setQuantity(salesProductViewModel.getAvailable());
+                    stockModel.setUnitPrice(salesProductViewModel.getBuyPrice());
+                    stockModel.setTotal(salesProductViewModel.getTotalPrice());
+                    stockModel.setDate(new Date());
+                    stockModel.setInOut(InventoryEnum.Stock.STOCK_IN.get());
+
+                   savedStockModel= this.save(stockModel);
+
+
+                    for(int i=0; i<salesProductViewModel.getAvailable(); i++){
+
+                        /*  storeInProductModel = storeInProductModelListForDelete.stream().filter(
+                                x->x.getStoreId().equals(storeId)
+                                && x.getProductId().equals(productId)
+                                && x.getVendorId().equals(salesProductViewModel.getVendorId())).findFirst().get();
+
+                        */
+
+                        storeInProductModel = new StoreInProductModel();
+                        storeInProductModel.setStockId(savedStockModel.getId());
+                        storeInProductModel.setStoreId(storeId);
+                        storeInProductModel.setProductId(productId);
+                        storeInProductModel.setVendorId(salesProductViewModel.getVendorId());
+                        storeInProductModel.setPrice(salesProductViewModel.getBuyPrice());
+                        storeInProductModel.setProductStatus(InventoryEnum.ProductStatus.AVAILABLE.get());
+                        storeInProductModel.setEntryDate(new Date());
+                        this.storeInProductService.save(storeInProductModel);
+                    }
+                }
+
+
+
+               /* System.out.printf(storeInProductModelListForDelete.size()+"");
+
+                System.out.printf(stockModelListForDelete.size()+"");*/
+
+            }
+
 
             /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(categoryModel);
             for (ConstraintViolation<CountryModel> violation : violations) {
                 log.error(violation.getMessage());
             }*/
 
-            responseMessage = this.buildResponseMessage(requestedStockModel);
-
-            // retrieved old vendor to update created and created date.
-            oldStockModel = this.getByIdActiveStatus(requestedStockModel.getId());
-
-
-
-            vendorSearchCondition = new StockModel();
-            //vendorSearchCondition.setName(vendorModel.getName());
-            vendorModelList = this.getAllByConditionWithActive(vendorSearchCondition);
-            if (vendorModelList.size() == 0) {
-                requestedStockModel = this.update(requestedStockModel,oldStockModel);
-                if (requestedStockModel != null) {
-                    responseMessage.message = "Stock update successfully!";
-                    responseMessage.httpStatus = HttpStatus.OK.value();
-                    Core.commitTransaction();
-                    return responseMessage;
-                    //this.commit();
-                }
-            }
+            responseMessage = this.buildResponseMessage(null);
+            responseMessage.httpStatus = HttpStatus.OK.value();
+            responseMessage.message="Stock Product update successfully";
+            Core.commitTransaction();
 
 
-           /* if(vendorModelList.size()>0){
-                if(StringUtils.equals(vendorModelList.get(0).getName(), vendorModel.getName())){
-                    oldStock = vendorModelList.get(0);
-                    vendorModel = this.update(vendorModel,oldStock);
-                    if (vendorModel != null) {
-                        responseMessage.message = "Stock update successfully!";
-                        responseMessage.httpStatus = HttpStatus.OK.value();
-                        //this.commit();
-                    }
-                }else {
-                    responseMessage.httpStatus = HttpStatus.CONFLICT.value();
-                    responseMessage.message = "Same Stock name already exist";
-                    //this.rollBack();
-                }
-            }*/
 
 
         } catch (Exception ex) {
@@ -203,7 +308,7 @@ public class StockService extends BaseService<Stock> {
         StockViewModel stockViewModel;
         String searchKey;
         String fromDate=null,toDate=null;
-        StringBuilder queryBuilderString =new StringBuilder();
+        //StringBuilder queryBuilderString =new StringBuilder();
         StringBuilder queryBuilderForTotalStockPrice= new StringBuilder();
         Double totalStockAmount=0D;
         String availableStock;

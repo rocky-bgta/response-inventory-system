@@ -34,12 +34,13 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
 
     private static final Logger log = LoggerFactory.getLogger(StoreInProductService.class);
 
-    private final StockService stockService;
-
     @Autowired
-    public StoreInProductService(StockService stockService) {
+    private StockService stockService;
+
+    //@Autowired
+    /*public StoreInProductService(StockService stockService) {
         this.stockService = stockService;
-    }
+    }*/
 
     @Override
     protected void initEntityModel() {
