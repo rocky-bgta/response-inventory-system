@@ -483,11 +483,14 @@ public class Dao<T> extends BaseDao {
     public boolean delete(T t) throws HibernateException {
         boolean isDeleted;
         Session session;
+        Object object;
         try {
             session = getSessionForUpdateOperation();
             session.clear();
+            object= session.merge(t);
+            session.delete(object);
             //session.beginTransaction();
-            session.delete(t);
+            //session.delete(t);
             session.flush();
             //session.getTransaction().commit();
             //session.close();
@@ -578,7 +581,7 @@ public class Dao<T> extends BaseDao {
         //StringBuilder queryBuilderString = new StringBuilder();
         Long count;
         try {
-            session = getSession();
+            session = getSession();// this.getSessionForUpdateOperation();// getSession();
             session.beginTransaction();
             Query q=null;
 
