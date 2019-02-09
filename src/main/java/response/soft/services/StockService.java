@@ -243,6 +243,24 @@ public class StockService extends BaseService<Stock> {
         StockModel vendorModel;
         Integer numberOfDeletedRow;
         try {
+
+/*
+            SELECT
+            stock.ID as stock_id,
+                    stock.store_id,
+                    stock.product_id,
+                    stock.in_out,
+                    stock.quantity,
+                    stock.total,
+                    sip.id as sip_id
+            FROM
+            stock stock
+            INNER JOIN store_in_product sip ON stock.ID = sip.stock_id
+            WHERE
+            sip.product_status = 1
+            AND sip.product_id = 'f1f5cc1c-87e1-4375-b538-eb9cbd0eac60'
+            AND sip.store_id = '5f748c8c-0a8a-4148-87b8-bd5afe18a501'*/
+
             //categoryModel = Core.processRequestMessage(requestMessage, StockModel.class);
 
             /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(categoryModel);
