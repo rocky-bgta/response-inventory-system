@@ -491,7 +491,7 @@ public abstract class BaseService<T extends BaseEntity> extends Core {
         try {
             hql = this.queryBuilder(whereCondition,
                     SqlEnum.QueryType.Delete.get());
-            keyValueParis = Core.getKeyValuePairFromObject(whereCondition);
+            keyValueParis = Core.getKeyValuePairFromObject(whereCondition,SqlEnum.QueryType.Delete.get());
             numOfDeletedRows = this.dao.deleteByConditions(hql, keyValueParis);
         } catch (Exception ex) {
             log.error(ex.getMessage());

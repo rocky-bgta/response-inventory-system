@@ -249,8 +249,13 @@ public abstract class Core {
         Transaction transaction;
         session = SESSION_THREAD_LOCAL_FOR_UPDATE.get();
         transaction = TRANSACTION_THREAD_LOCAL.get();
-        transaction.commit();
-        session.close();
+
+        if(transaction!=null && transaction.isActive()) {
+            transaction.commit();
+        }
+        if(session!=null && session.isOpen())
+            session.close();
+
         restHibernateSession();
     }
 
@@ -553,7 +558,7 @@ public abstract class Core {
                 query.append("" + entityName + " t ");
                 keyValuePairsWhereConditionForDelete = Core.getKeyValuePairFromObject(whereCondition);
                 query.append(" WHERE ");
-                query = this.criteriaBuilder(keyValuePairsWhereConditionForDelete, query, SqlEnum.QueryType.Select.get());
+                query = this.criteriaBuilder(keyValuePairsWhereConditionForDelete, query, SqlEnum.QueryType.Delete.get());
             }
 
             if (SqlEnum.QueryType.Update.get() == queryType) {
@@ -605,7 +610,7 @@ public abstract class Core {
             }
             for (int i = 0; i < criteria.size(); i++) {
                 if (i > 0) {
-                    if (queryType == SqlEnum.QueryType.Select.get())
+                    if (queryType == SqlEnum.QueryType.Select.get() || queryType ==SqlEnum.QueryType.Delete.get() )
                         query.append(" AND ");
                     if (queryType == SqlEnum.QueryType.Update.get())
                         query.append(" , ");

@@ -59,6 +59,8 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
         List<StoreInProductsViewModel> storeInProductsViewModelList;
         StockModel savedStockModel = null;
 
+        Map<StockModel,List<StoreInProductsViewModel>> stockModelStoreInProductsViewModelMap = new HashMap<>();
+
         try {
             String jsonString = Core.jsonMapper.writeValueAsString(requestMessage.data);
             //storeInProductsViewModels=  Core.gson.fromJson(jsonString, StoreInProductsViewModel[].class);
@@ -120,49 +122,34 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
                     stockModel.setTotal(totalPrice);
                     stockModel.setDate(new Date());
                     savedStockModel = this.stockService.save(stockModel);
+
+                    stockModelStoreInProductsViewModelMap.put(savedStockModel, storeInProductsViewModels);
                 }
             }
 
             //StoreInProductModel storeInProductsModel;
 
-            Integer quantity;
-            //Double unitPrice;
+            for (Map.Entry<StockModel, List<StoreInProductsViewModel>> item : stockModelStoreInProductsViewModelMap.entrySet()) {
+                StockModel  stockModel = item.getKey();
+                List<StoreInProductsViewModel> storeInProductsViewModels = item.getValue();
+
+                Integer quantity;
+
+                for (StoreInProductsViewModel storeInProductsViewModel : storeInProductsViewModels) {
+                    quantity = storeInProductsViewModel.getQuantity();
+                    for (int i = 0; i < quantity; i++) {
+                        this.saveStoreInProductsModel(stockModel.getId(), storeInProductsViewModel);
+                    }
+                }
+            }
+
+           /* Integer quantity;
             for (StoreInProductsViewModel storeInProductsViewModel : storeInProductsViewModelList) {
-
                 quantity = storeInProductsViewModel.getQuantity();
-
                 for (int i = 0; i < quantity; i++) {
                     this.saveStoreInProductsModel(savedStockModel.getId(), storeInProductsViewModel);
                 }
-
-
-                // if(quantity==1) {
-
-                // this.saveStoreInProductsModel(savedStockModel.getId(), storeInProductsViewModel);
-
-                  /*  storeInProductsModel = new StoreInProductModel();
-                    storeInProductsModel.setStockId(savedStockModel.getId());
-                    storeInProductsModel.setStoreId(storeInProductsViewModel.getStoreId());
-                    storeInProductsModel.setProductId(storeInProductsViewModel.getProductId());
-                    storeInProductsModel.setVendorId(storeInProductsViewModel.getVendorId());
-                    storeInProductsModel.setPrice(storeInProductsViewModel.getPrice());
-                    storeInProductsModel.setProductStatus(InventoryEnum.ProductStatus.AVAILABLE.get());
-                    storeInProductsModel.setEntryDate(storeInProductsViewModel.getEntryDate());
-                    storeInProductsModel.setManufacturingDate(storeInProductsViewModel.getManufacturingDate());
-                    storeInProductsModel.setExpirationDate(storeInProductsViewModel.getExpirationDate());
-
-                    this.save(storeInProductsModel);*/
-
-              /*
-                }else {
-                    for(int i=0; i<quantity; i++){
-                        this.saveStoreInProductsModel(savedStockModel.getId(), storeInProductsViewModel);
-
-                    }
-                }*/
-
-
-            }
+            }*/
 
 
             responseMessage = this.buildResponseMessage();

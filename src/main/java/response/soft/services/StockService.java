@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import response.soft.appenum.InventoryEnum;
 import response.soft.appenum.SqlEnum;
+import response.soft.appenum.StockEnum;
 import response.soft.core.BaseService;
 import response.soft.core.Core;
 import response.soft.core.RequestMessage;
@@ -16,11 +17,8 @@ import response.soft.entities.Stock;
 import response.soft.entities.view.AvailableStockView;
 import response.soft.model.StockModel;
 import response.soft.model.StoreInProductModel;
-import response.soft.model.StoreOutProductModel;
-import response.soft.model.view.SalesProductViewModel;
 import response.soft.model.view.StockViewModel;
 
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -94,41 +92,63 @@ public class StockService extends BaseService<Stock> {
 
     public ResponseMessage updateStock(RequestMessage requestMessage) {
         ResponseMessage responseMessage;
-
-        List<StockModel> stockModelListForDelete;
-        List<StoreInProductModel> storeInProductModelListForDelete;
-        List<StoreOutProductModel> storeOutProductModelListForDelete;
-        List<SalesProductViewModel> salesProductViewModelList;
         StockViewModel stockViewModel;
-
-        String findStockHql, findStoreInProductHql,findStoreOutProductHql;
+        String findStockIdHql;
         UUID storeId, productId;
-        StockModel stockModel,savedStockModel;
-        StoreInProductModel storeInProductModel;
-        //int productStatus;
+        List<UUID> stockIdList;
+        StockModel whereConditionStockModel;
+        StoreInProductModel whereConditionInProductModel;
         try {
-
-            //productStatus = InventoryEnum.ProductStatus.AVAILABLE.get();
-
-           /* select stock from Stock stock
-            inner join StoreInProduct sip on sip.stockId = stock.id
-            where stock.storeId = '5f748c8c-0a8a-4148-87b8-bd5afe18a501'
-            and stock.productId = 'f1f5cc1c-87e1-4375-b538-eb9cbd0eac60'
-            and sip.productStatus = 1*/
-
-           /* SELECT sip FROM StoreInProduct sip
-            WHERE sip.storeId = '5f748c8c-0a8a-4148-87b8-bd5afe18a501'
-            AND sip.productId = 'f1f5cc1c-87e1-4375-b538-eb9cbd0eac60'
-            AND (sip.productStatus = 2 OR sip.productStatus = 1)*/
-
-
-           /* SELECT sop FROM StoreOutProduct sop
-            WHERE sop.storeId = '5f748c8c-0a8a-4148-87b8-bd5afe18a501'
-            AND sop.productId = 'f1f5cc1c-87e1-4375-b538-eb9cbd0eac60'*/
-
             stockViewModel = Core.processRequestMessage(requestMessage, StockViewModel.class);
-            if(stockViewModel!=null) {
-                salesProductViewModelList = stockViewModel.getStockProductListForUpdate();
+
+
+
+                storeId = stockViewModel.getStoreId();
+                productId = stockViewModel.getProductId();
+
+
+                findStockIdHql="SELECT DISTINCT " +
+                        "stock.id  " +
+                        "FROM " +
+                        "Stock stock " +
+                        "INNER JOIN StoreInProduct sip ON stock.id = sip.stockId " +
+                        "WHERE " +
+                        "sip.productStatus = 1 " +
+                        "AND sip.productId = '" +productId+"' " +
+                        "AND sip.storeId = '" + storeId +"'";
+
+
+                stockIdList = this.executeHqlQuery(findStockIdHql,UUID.class,SqlEnum.QueryType.Select.get());
+
+                for(UUID stockId: stockIdList){
+                    whereConditionStockModel = new StockModel();
+                    whereConditionStockModel.setId(stockId);
+                    whereConditionStockModel.setInOut(StockEnum.STOCK_IN.get());
+                    whereConditionStockModel.setProductId(productId);
+                    whereConditionStockModel.setStoreId(storeId);
+
+                    this.deleteByConditions(whereConditionStockModel);
+                }
+
+                for(UUID stockId: stockIdList){
+                    whereConditionInProductModel = new StoreInProductModel();
+                    whereConditionInProductModel.setStockId(stockId);
+                    whereConditionInProductModel.setProductStatus(InventoryEnum.ProductStatus.AVAILABLE.get());
+                    whereConditionInProductModel.setProductId(productId);
+                    whereConditionInProductModel.setStoreId(storeId);
+
+                    this.storeInProductService.deleteByConditions(whereConditionInProductModel);
+                }
+
+
+
+
+
+                //System.out.println(stockIdList);
+
+
+               /*
+
 
                 storeId = stockViewModel.getStoreId();
                 productId = stockViewModel.getProductId();
@@ -170,9 +190,9 @@ public class StockService extends BaseService<Stock> {
                 for(StockModel deleteStockModel: stockModelListForDelete){
                     this.delete(deleteStockModel);
                 }
+*/
 
-
-                for(SalesProductViewModel salesProductViewModel: salesProductViewModelList){
+               /* for(SalesProductViewModel salesProductViewModel: salesProductViewModelList){
                     stockModel = new StockModel();
                     stockModel.setStoreId(storeId);
                     stockModel.setProductId(productId);
@@ -187,12 +207,12 @@ public class StockService extends BaseService<Stock> {
 
                     for(int i=0; i<salesProductViewModel.getAvailable(); i++){
 
-                        /*  storeInProductModel = storeInProductModelListForDelete.stream().filter(
+                        *//*  storeInProductModel = storeInProductModelListForDelete.stream().filter(
                                 x->x.getStoreId().equals(storeId)
                                 && x.getProductId().equals(productId)
                                 && x.getVendorId().equals(salesProductViewModel.getVendorId())).findFirst().get();
 
-                        */
+                        *//*
 
                         storeInProductModel = new StoreInProductModel();
                         storeInProductModel.setStockId(savedStockModel.getId());
@@ -205,14 +225,14 @@ public class StockService extends BaseService<Stock> {
                         this.storeInProductService.save(storeInProductModel);
                     }
                 }
-
+*/
 
 
                /* System.out.printf(storeInProductModelListForDelete.size()+"");
 
                 System.out.printf(stockModelListForDelete.size()+"");*/
 
-            }
+
 
 
             /*Set<ConstraintViolation<CountryModel>> violations = this.validator.validate(categoryModel);
@@ -221,9 +241,14 @@ public class StockService extends BaseService<Stock> {
             }*/
 
             responseMessage = this.buildResponseMessage(null);
-            responseMessage.httpStatus = HttpStatus.OK.value();
-            responseMessage.message="Stock Product update successfully";
-            Core.commitTransaction();
+            if(stockIdList.size()>0) {
+                responseMessage.httpStatus = HttpStatus.OK.value();
+                responseMessage.message="Stock Product Deleted successfully";
+                Core.commitTransaction();
+            }else {
+                responseMessage.httpStatus = HttpStatus.CONFLICT.value();
+                responseMessage.message="Failed to Deleted Product stock successfully";
+            }
 
 
 
