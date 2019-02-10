@@ -58,10 +58,10 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
     public ResponseMessage saveStoreInProducts(RequestMessage requestMessage) {
         ResponseMessage responseMessage;
         List<StoreInProductsViewModel> storeInProductsViewModelList;
-        StockModel savedStockModel = null;
+        StockModel savedStockModel;
 
         Map<StockModel,List<StoreInProductsViewModel>> stockModelStoreInProductsViewModelMap = new HashMap<>();
-
+        Date productEntryDate;
         try {
             String jsonString = Core.jsonMapper.writeValueAsString(requestMessage.data);
             //storeInProductsViewModels=  Core.gson.fromJson(jsonString, StoreInProductsViewModel[].class);
@@ -71,6 +71,7 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
                     jsonString, new TypeReference<List<StoreInProductsViewModel>>() {
                     });
 
+            productEntryDate = storeInProductsViewModelList.get(0).getEntryDate();
 
             //storeInProductsViewModelList = Core.processRequestMessage(requestMessage, storeInProductsViewModels.getClass());
 
@@ -121,7 +122,7 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
                     stockModel.setQuantity(totalQuantity);
                     stockModel.setUnitPrice(unitPrice);
                     stockModel.setTotal(totalPrice);
-                    stockModel.setDate(new Date());
+                    stockModel.setDate(productEntryDate);
                     savedStockModel = this.stockService.save(stockModel);
 
                     stockModelStoreInProductsViewModelMap.put(savedStockModel, storeInProductsViewModels);
