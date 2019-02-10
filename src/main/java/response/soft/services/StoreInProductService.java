@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import response.soft.Utils.AppUtils;
 import response.soft.appenum.InventoryEnum;
 import response.soft.appenum.SqlEnum;
 import response.soft.core.BaseService;
@@ -109,10 +110,10 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
                         price = productByStore.getPrice();
                         quantity = productByStore.getQuantity();
                         totalQuantity += quantity;
-                        totalPrice += price * quantity;
+                        totalPrice += AppUtils.roundNumber( price * quantity);
                         //System.out.println(productByStore);
                     }
-                    unitPrice = totalPrice / totalQuantity;
+                    unitPrice = AppUtils.roundNumber(totalPrice / totalQuantity);
                     StockModel stockModel = new StockModel();
                     stockModel.setStoreId(storeId);
                     stockModel.setProductId(productId);

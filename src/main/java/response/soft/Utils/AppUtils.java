@@ -4,6 +4,7 @@ package response.soft.Utils;
 
 
 import org.apache.commons.lang3.StringUtils;
+import org.decimal4j.util.DoubleRounder;
 import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -382,5 +383,11 @@ public final class AppUtils {
             paymentStatus = InventoryEnum.PaymentStatus.PARTIAL.get();
         }
         return paymentStatus;
+    }
+
+    public static Double roundNumber(Double givenNumber){
+        Double result;
+        result= DoubleRounder.round(givenNumber.doubleValue(), 2);
+        return result;
     }
 }
