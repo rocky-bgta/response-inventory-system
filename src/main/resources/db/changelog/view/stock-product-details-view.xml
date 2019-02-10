@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+
+
+    <changeSet id="04" author="Salahin Rocky">
+
+        <createView replaceIfExists="true"
+                    schemaName="inventory"
+                    viewName="stock_product_details_view">
+            SELECT
+            stock_detail_view.product_id,
+            stock_detail_view.store_id ,
+            stock_detail_view.vendor_id ,
+            stock_detail_view.vendor_name ,
+            stock_detail_view.product_name ,
+            stock_detail_view.category_id ,
+            stock_detail_view.category_name ,
+            stock_detail_view.brand_name ,
+            stock_detail_view.model_no ,
+            stock_detail_view.stock_qty,
+            stock_detail_view.buy_price,
+            stock_detail_view.sale_price,
+            stock_detail_view.entry_date
+            FROM ( SELECT
+            sip.product_id,
+            sip.store_id AS store_id,
+            sip.vendor_id,
+            vendor.name AS vendor_name,
+            COUNT ( sip.product_id ) AS stock_qty,
+            P.NAME AS product_name,
+            cat.NAME AS category_name,
+            cat.id AS category_id,
+            brn.NAME AS brand_name,
+            P.model_no,
+            sip.price AS buy_price,
+            p.sale_price,
+            sip.entry_date
+            FROM
+            inventory.store_in_product sip
+            LEFT JOIN inventory.product P ON  sip.product_id = P.ID
+            LEFT JOIN inventory.category cat ON P.category_id = cat.ID
+            LEFT JOIN inventory.brand brn ON P.brand_id = brn.ID
+            LEFT JOIN inventory.vendor vendor ON sip.vendor_id = vendor.id
+            WHERE sip.product_status = 1
+            GROUP BY
+            sip.product_id,
+            sip.vendor_id,
+            P.name,
+            cat.NAME,
+            cat.id,
+            brn.NAME,
+            P.model_no,
+            sip.price,
+            p.sale_price,
+            sip.store_id,
+            vendor.name,
+            sip.entry_date
+            ORDER BY
+            sip.store_id) stock_detail_view
+
+        </createView>
+
+    </changeSet>
+</databaseChangeLog>

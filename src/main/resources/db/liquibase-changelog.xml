@@ -31,6 +31,7 @@
     <include file="changelog/view/sales-product-view.xml" relativeToChangelogFile="true"/>
     <include file="changelog/view/available-stock-view.xml" relativeToChangelogFile="true"/>
     <include file="changelog/view/invoice-history-view.xml" relativeToChangelogFile="true"/>
+    <include file="changelog/view/stock-product-details-view.xml" relativeToChangelogFile="true"/>
 
 
 
