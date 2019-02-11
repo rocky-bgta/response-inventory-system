@@ -92,7 +92,7 @@ public class SalesHistoryService extends BaseService<SalesHistory> {
         Double currentInvoicePayment;
 
         //===== stock variable ========================
-        StockModel findStockModel, whereConditionStockModel;
+        StockModel findStockModel, whereConditionStockModel,newStockModelForStockOut;
         Double unitPrice,totalPrice;
         //=============================================
 
@@ -175,16 +175,16 @@ public class SalesHistoryService extends BaseService<SalesHistory> {
 
                 totalPrice = unitPrice*salesQty;
 
-                findStockModel = new StockModel();
-                findStockModel.setStoreId(storeId);
-                findStockModel.setVendorId(salesProductViewModel.getVendorId());
-                findStockModel.setProductId(salesProductViewModel.getProductId());
-                findStockModel.setInOut(InventoryEnum.Stock.STOCK_OUT.get());
-                findStockModel.setQuantity(salesQty);
-                findStockModel.setUnitPrice(unitPrice);
-                findStockModel.setDate(invoiceDate);
-                findStockModel.setTotal(totalPrice);
-                this.stockService.save(findStockModel);
+                newStockModelForStockOut = new StockModel();
+                newStockModelForStockOut.setStoreId(storeId);
+                newStockModelForStockOut.setVendorId(salesProductViewModel.getVendorId());
+                newStockModelForStockOut.setProductId(salesProductViewModel.getProductId());
+                newStockModelForStockOut.setInOut(InventoryEnum.Stock.STOCK_OUT.get());
+                newStockModelForStockOut.setQuantity(salesQty);
+                newStockModelForStockOut.setUnitPrice(unitPrice);
+                newStockModelForStockOut.setDate(invoiceDate);
+                newStockModelForStockOut.setTotal(totalPrice);
+                this.stockService.save(newStockModelForStockOut);
                 // =========== First update stock end =========================================================
 
 
