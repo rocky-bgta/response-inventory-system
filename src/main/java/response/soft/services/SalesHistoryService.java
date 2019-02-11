@@ -92,7 +92,7 @@ public class SalesHistoryService extends BaseService<SalesHistory> {
         Double currentInvoicePayment;
 
         //===== stock variable ========================
-        StockModel stockModel, whereConditionStockModel;
+        StockModel findStockModel, whereConditionStockModel;
         Double unitPrice,totalPrice;
         //=============================================
 
@@ -167,28 +167,32 @@ public class SalesHistoryService extends BaseService<SalesHistory> {
 
                 // =========== First update stock =========================================================
                 whereConditionStockModel = new StockModel();
+                whereConditionStockModel.setVendorId(salesProductViewModel.getVendorId());
                 whereConditionStockModel.setStoreId(storeId);
                 whereConditionStockModel.setProductId(salesProductViewModel.getProductId());
-                stockModel = this.stockService.getAllByConditionWithActive(whereConditionStockModel).get(0);
-                unitPrice = stockModel.getUnitPrice();
+                findStockModel = this.stockService.getAllByConditionWithActive(whereConditionStockModel).get(0);
+                unitPrice = findStockModel.getUnitPrice();
 
                 totalPrice = unitPrice*salesQty;
 
-                stockModel = new StockModel();
-                stockModel.setStoreId(storeId);
-                stockModel.setProductId(salesProductViewModel.getProductId());
-                stockModel.setInOut(InventoryEnum.Stock.STOCK_OUT.get());
-                stockModel.setQuantity(salesQty);
-                stockModel.setUnitPrice(unitPrice);
-                stockModel.setDate(invoiceDate);
-                stockModel.setTotal(totalPrice);
-                this.stockService.save(stockModel);
+                findStockModel = new StockModel();
+                findStockModel.setStoreId(storeId);
+                findStockModel.setVendorId(salesProductViewModel.getVendorId());
+                findStockModel.setProductId(salesProductViewModel.getProductId());
+                findStockModel.setInOut(InventoryEnum.Stock.STOCK_OUT.get());
+                findStockModel.setQuantity(salesQty);
+                findStockModel.setUnitPrice(unitPrice);
+                findStockModel.setDate(invoiceDate);
+                findStockModel.setTotal(totalPrice);
+                this.stockService.save(findStockModel);
                 // =========== First update stock end =========================================================
 
 
                 // get available required products from stock ==========================================
                 whereConditionSIN = new StoreInProductModel();
                 whereConditionSIN.setStoreId(storeId);
+                whereConditionSIN.setStockId(findStockModel.getId());
+                whereConditionSIN.setVendorId(salesProductViewModel.getVendorId());
                 whereConditionSIN.setProductId(salesProductViewModel.getProductId());
                 whereConditionSIN.setProductStatus(InventoryEnum.ProductStatus.AVAILABLE.get());
 
@@ -213,7 +217,7 @@ public class SalesHistoryService extends BaseService<SalesHistory> {
                     storeOutProductModel.setStoreId(updatedStoreInProductModel.getStoreId());
                     storeOutProductModel.setStoreInProductId(updatedStoreInProductModel.getId());
                     storeOutProductModel.setProductId(updatedStoreInProductModel.getProductId());
-                    storeOutProductModel.setDate(new Date());
+                    storeOutProductModel.setDate(invoiceDate);
                     savedStoreOutProductModel = this.storeOutProductService.save(storeOutProductModel);
 
                     // insert data into sales history table

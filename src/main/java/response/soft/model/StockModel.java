@@ -12,6 +12,7 @@ import java.util.UUID;
 public class StockModel extends BaseModel {
     private UUID id;
     private UUID storeId;
+    private UUID vendorId;
     private UUID productId;
     private Integer inOut;
     private Integer quantity;

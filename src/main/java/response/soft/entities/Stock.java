@@ -29,6 +29,10 @@ public class Stock extends BaseEntity {
     @NotNull
     private UUID storeId;
 
+    @Column(name = "vendor_id")
+    @NotNull
+    private UUID vendorId;
+
     @Column(name = "product_id")
     @NotNull
     private UUID productId;

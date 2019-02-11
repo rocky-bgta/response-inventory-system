@@ -103,10 +103,12 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
                     Double price, totalPrice = 0d, unitPrice;
                     Integer totalQuantity = 0, quantity;
                     UUID storeId = null, productId = null;
+                    UUID vendorId =null;
 
                     for (StoreInProductsViewModel productByStore : storeInProductsViewModels) {
                         storeId = productByStore.getStoreId();
                         productId = productByStore.getProductId();
+                        vendorId = productByStore.getVendorId();
 
                         price = productByStore.getPrice();
                         quantity = productByStore.getQuantity();
@@ -117,6 +119,7 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
                     unitPrice = AppUtils.roundNumber(totalPrice / totalQuantity);
                     StockModel stockModel = new StockModel();
                     stockModel.setStoreId(storeId);
+                    stockModel.setVendorId(vendorId);
                     stockModel.setProductId(productId);
                     stockModel.setInOut(InventoryEnum.Stock.STOCK_IN.get());
                     stockModel.setQuantity(totalQuantity);
