@@ -78,4 +78,17 @@ public class StockController {
         return responseMessage;
     }
 
+    @ApiOperation(value ="", response = Object.class)
+    @ResponseStatus(HttpStatus.OK)
+    @RequestMapping(value = "/product-details-list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseMessage getStockProductDetails(@RequestBody RequestMessage requestMessage,
+                                                  @RequestParam(value="storeId") String storeId,
+                                                  @RequestParam(value="productId", required = false) String productId,
+                                                  @RequestParam(value="categoryId", required = false) String categoryId){
+        ResponseMessage responseMessage;
+        responseMessage = this.stockService.getStockProductDetailsListByStoreIdAndProductIdAndCategoryId(
+                requestMessage,storeId,productId,categoryId);
+        return responseMessage;
+    }
+
 }

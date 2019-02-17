@@ -15,6 +15,7 @@ import response.soft.core.RequestMessage;
 import response.soft.core.ResponseMessage;
 import response.soft.entities.Stock;
 import response.soft.entities.view.AvailableStockView;
+import response.soft.entities.view.StockProductDetailView;
 import response.soft.model.StockModel;
 import response.soft.model.StoreInProductModel;
 import response.soft.model.view.StockViewModel;
@@ -30,8 +31,8 @@ public class StockService extends BaseService<Stock> {
     @Autowired
     private StoreInProductService storeInProductService;
 
-    @Autowired
-    private StoreOutProductService storeOutProductService;
+    //@Autowired
+    //private StoreOutProductService storeOutProductService;
 
    /* @Autowired
     public StockService(StoreInProductService storeInProductService) {
@@ -46,6 +47,56 @@ public class StockService extends BaseService<Stock> {
         Core.runTimeModelType.set(StockModel.class);
     }
 
+    public ResponseMessage getStockProductDetailsListByStoreIdAndProductIdAndCategoryId(
+            RequestMessage requestMessage,
+            String storeId,
+            String productId,
+            String categoryId
+            //String barcode
+    ) {
+
+        ResponseMessage responseMessage = null;
+        //List<SalesProductViewModel> salesProductViewModelList = null;
+        List<StockProductDetailView> stockProductDetailViewList;
+
+        StringBuilder queryBuilder = new StringBuilder();
+
+        try {
+            Core.processRequestMessage(requestMessage);
+            queryBuilder.append("SELECT v FROM StockProductDetailView v WHERE v.storeId='" + storeId + "' ");
+
+            if (!StringUtils.isEmpty(productId) && !StringUtils.equals(productId, "null"))
+                queryBuilder.append("AND v.productId = '" + productId + "' ");
+
+            /*if (!StringUtils.isEmpty(barcode) && !StringUtils.equals(barcode, "null"))
+                queryBuilder.append("AND v.barcode = '" + barcode + "' ");*/
+
+            if (!StringUtils.isEmpty(categoryId) && !StringUtils.equals(categoryId, "null"))
+                queryBuilder.append("AND v.categoryId = '" + categoryId + "' ");
+
+
+            stockProductDetailViewList = this.executeHqlQuery(queryBuilder.toString(), StockProductDetailView.class, SqlEnum.QueryType.View.get());
+
+            responseMessage = this.buildResponseMessage();
+            if (stockProductDetailViewList != null && stockProductDetailViewList.size() > 0) {
+                responseMessage.data = stockProductDetailViewList;
+                responseMessage.httpStatus = HttpStatus.FOUND.value();
+                responseMessage.message = "Retrieve Stock product details successfully";
+            } else {
+                responseMessage.httpStatus = HttpStatus.NOT_FOUND.value();
+                responseMessage.message = "Failed to retrieve Stock product details";
+            }
+
+
+        } catch (Exception ex) {
+            responseMessage = this.buildFailedResponseMessage("Internal server error");
+            ex.printStackTrace();
+            //this.rollBack();
+            log.error("getStockProductDetailsListByStoreIdAndProductIdAndCategoryId -> save got exception");
+        }
+
+        return responseMessage;
+    }
 
 
     public ResponseMessage saveStock(RequestMessage requestMessage) {

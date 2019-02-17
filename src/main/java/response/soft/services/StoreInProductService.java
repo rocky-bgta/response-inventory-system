@@ -417,7 +417,7 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
         StringBuilder queryBuilder = new StringBuilder();
 
         try {
-            this.resetPaginationVariable();
+            //this.resetPaginationVariable();
             Core.processRequestMessage(requestMessage);
             queryBuilder.append("SELECT v FROM SalesProductView v WHERE v.storeId='" + storeId + "' ");
 
@@ -445,7 +445,10 @@ public class StoreInProductService extends BaseService<StoreInProduct> {
 
 
         } catch (Exception ex) {
+            responseMessage = this.buildFailedResponseMessage("Internal server error");
             ex.printStackTrace();
+            //this.rollBack();
+            log.error("getSalesProductListByStoreIdOrProductIdOrCategoryIdOrBarcode -> save got exception");
         }
 
         return responseMessage;

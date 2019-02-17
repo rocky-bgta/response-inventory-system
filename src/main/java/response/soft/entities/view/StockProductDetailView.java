@@ -20,6 +20,9 @@ public class StockProductDetailView implements Serializable {
     @Column(name = "product_id")
     private UUID productId;
 
+    @Column(name = "product_name")
+    private String productName;
+
     @Id
     @Column(name = "store_id")
     private UUID storeId;
@@ -29,16 +32,13 @@ public class StockProductDetailView implements Serializable {
     private UUID vendorId;
 
     @Column(name = "vendor_name")
-    private UUID vendorName;
-
-    @Column(name = "category_name")
-    private String categoryName;
+    private String vendorName;
 
     @Column(name = "category_id")
     private String categoryId;
 
-    @Column(name = "product_name")
-    private String productName;
+    @Column(name = "category_name")
+    private String categoryName;
 
     @Column(name = "brand_name")
     private String brandName;
