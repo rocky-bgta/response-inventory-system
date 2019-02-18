@@ -404,8 +404,9 @@ public class StockService extends BaseService<Stock> {
         String fromDate=null,toDate=null;
         //StringBuilder queryBuilderString =new StringBuilder();
         StringBuilder queryBuilderForTotalStockPrice= new StringBuilder();
+        String totalStockPriceNativeSql;
         Double totalStockAmount=0D;
-        String availableStock;
+        String availableStockNativeSql;
         try {
             stockViewModel =  Core.processRequestMessage(requestMessage,StockViewModel.class);
             if(stockViewModel!=null){
@@ -426,7 +427,7 @@ public class StockService extends BaseService<Stock> {
                 log.error(violation.getMessage());
             }*/
 
-            availableStock=" SELECT " +
+            availableStockNativeSql=" SELECT " +
                     " v.store_name,"+
                     " v.store_id," +
                     " v.category_id," +
@@ -442,7 +443,7 @@ public class StockService extends BaseService<Stock> {
 
 
 
-            availableStock+="SELECT  stock_sum.store_id, stock_sum.store_name," +
+            availableStockNativeSql+="SELECT  stock_sum.store_id, stock_sum.store_name," +
                     "category.id AS category_id," +
                     "category.name AS category_name," +
                     "stock_sum.product_id," +
@@ -475,28 +476,60 @@ public class StockService extends BaseService<Stock> {
 
 
             //========= total stock price===============================
-            queryBuilderForTotalStockPrice.append("SELECT (sum(stock_total.into_total) - sum(stock_total.out_total)) as total FROM (" )
+
+            totalStockPriceNativeSql="SELECT sum(v.total_price) FROM " +
+                    "( " +
+                    "  SELECT " +
+                    "   SUM ( stock_sum.in_total_price_sum ) - SUM ( stock_sum.out_total_price_sum ) AS total_price, " +
+                    "   SUM ( stock_sum.in_qty_sum ) - SUM ( stock_sum.out_qty_sum ) AS available_qty  " +
+                    "  FROM " +
+                    "   ( " +
+                    "     SELECT " +
+                    "      stock.product_id, " +
+                    "      stock.in_out, " +
+                    "     CASE  stock.in_out  WHEN 1 THEN SUM ( stock.total ) ELSE 0  END AS in_total_price_sum, " +
+                    "     CASE  stock.in_out  WHEN 2 THEN SUM ( stock.total ) ELSE 0  END AS out_total_price_sum, " +
+                    "     CASE  stock.in_out  WHEN 1 THEN SUM ( stock.quantity ) ELSE 0 END AS in_qty_sum, " +
+                    "     CASE  stock.in_out  WHEN 2 THEN SUM ( stock.quantity ) ELSE 0 END AS out_qty_sum, " +
+                    "      stock.quantity, " +
+                    "      stock.unit_price, " +
+                    "      stock.total  " +
+                    "     FROM " +
+                    "      stock stock " +
+                    "      INNER JOIN store store ON stock.store_id = store.ID  " +
+                    "     WHERE " +
+                    "      stock.status = 1 ";
+            
+
+
+
+            /*queryBuilderForTotalStockPrice.append("SELECT (sum(stock_total.into_total) - sum(stock_total.out_total)) as total FROM (" )
                     .append("SELECT stock.store_id, ")
                     .append("CASE stock.in_out WHEN 1 THEN SUM(stock.total) ELSE 0 END As into_total, ")
                     .append("CASE stock.in_out WHEN 2 THEN SUM(stock.total) ELSE 0 END AS out_total ")
                     .append("FROM stock stock ")
                     .append("INNER JOIN product product ON stock.product_id = product.id ")
-                    .append("WHERE stock.status=1 ");
+                    .append("INNER JOIN category category ON product.category_id = category.id ")
+                    .append("WHERE stock.status=1 ");*/
             //=========================================================
 
 
             if(storeId!=null && !StringUtils.isEmpty(storeId)){
-                availableStock+="AND stock.store_id ='" +storeId+ "' ";
-                queryBuilderForTotalStockPrice.append("AND stock.store_id ='"+storeId+"' ");
+                availableStockNativeSql+="AND stock.store_id ='" +storeId+ "' ";
+
+                totalStockPriceNativeSql+="AND stock.store_id = '"+storeId+"' ";
+
+                //queryBuilderForTotalStockPrice.append("AND stock.store_id ='"+storeId+"' ");
 
             }
 
             if(!StringUtils.isEmpty(fromDate) && !StringUtils.isEmpty(toDate)){
-                availableStock+="AND stock.date BETWEEN '" + fromDate+" 00:00:00' AND '"+toDate+" 23:59:59.999999' ";
-                queryBuilderForTotalStockPrice.append("AND stock.date BETWEEN '" + fromDate+" 00:00:00' AND '"+toDate+" 23:59:59.999999' ");
+                availableStockNativeSql+="AND stock.date BETWEEN '" + fromDate+" 00:00:00' AND '"+toDate+" 23:59:59.999999' ";
+                //queryBuilderForTotalStockPrice.append("AND stock.date BETWEEN '" + fromDate+" 00:00:00' AND '"+toDate+" 23:59:59.999999' ");
+                totalStockPriceNativeSql+="AND stock.date BETWEEN '" + fromDate+" 00:00:00' AND '"+toDate+" 23:59:59.999999' ";
             }
 
-            availableStock+="GROUP BY " +
+            availableStockNativeSql+="GROUP BY " +
                     "store.name,"+
                     "stock.store_id," +
                     "stock.product_id," +
@@ -510,17 +543,29 @@ public class StockService extends BaseService<Stock> {
                     "INNER JOIN category category ON product.category_id = category.id ";
 
 
+            totalStockPriceNativeSql+="GROUP BY " +
+                    "      stock.product_id, " +
+                    "      stock.in_out, " +
+                    "      stock.quantity, " +
+                    "      stock.unit_price, " +
+                    "      stock.total  " +
+                    "   ) stock_sum " +
+                    "   INNER JOIN product product ON product.ID = stock_sum.product_id " +
+                    "   INNER JOIN category category ON product.category_id = category.ID  ";
+
+
             if(categoryId!=null &&  !StringUtils.isEmpty(categoryId)){
                 //queryBuilderString.append("AND v.categoryId='"+categoryId+"' ");
-                availableStock+="WHERE category.id = '"+categoryId+"' ";
-                queryBuilderForTotalStockPrice.append("AND product.category_id ='"+categoryId+"' ");
-                //queryBuilderForTotalStockPrice.append("AND v.categoryId='"+categoryId+"' ");
+                availableStockNativeSql+="WHERE category.id = '"+categoryId+"' ";
+                //queryBuilderForTotalStockPrice.append("AND product.category_id ='"+categoryId+"' ");
+                totalStockPriceNativeSql+= " WHERE category.ID = '"+categoryId+"' ";
+
             }
 
 
 
-            availableStock+="GROUP BY stock_sum.product_id, product.name, product.model_no, category.id, category.name, stock_sum.store_id, stock_sum.store_name ) v ";
-            availableStock+="WHERE v.available_qty>0 ";
+            availableStockNativeSql+="GROUP BY stock_sum.product_id, product.name, product.model_no, category.id, category.name, stock_sum.store_id, stock_sum.store_name ) v ";
+            availableStockNativeSql+="WHERE v.available_qty>0 ";
 
 
 
@@ -536,14 +581,14 @@ public class StockService extends BaseService<Stock> {
                         .append("OR CAST(v.available_qty AS VARCHAR) LIKE '%" + searchKey + "%' ")
                         .append(") ");*/
 
-                availableStock+="AND ( ";
-                availableStock+="lower(v.category_name) LIKE '%" + searchKey + "%' ";
-                availableStock+="OR lower(v.store_name) LIKE '%" + searchKey + "%' ";
-                availableStock+="OR lower(v.model_no) LIKE '%" + searchKey + "%' ";
-                availableStock+="OR lower(v.product_name) LIKE '%" + searchKey + "%' ";
-                availableStock+="OR CAST(v.total_price AS VARCHAR ) LIKE '%" + searchKey + "%' ";
-                availableStock+="OR CAST(v.available_qty AS VARCHAR) LIKE '%" + searchKey + "%' ";
-                availableStock+=") ";
+                availableStockNativeSql+="AND ( ";
+                availableStockNativeSql+="lower(v.category_name) LIKE '%" + searchKey + "%' ";
+                availableStockNativeSql+="OR lower(v.store_name) LIKE '%" + searchKey + "%' ";
+                availableStockNativeSql+="OR lower(v.model_no) LIKE '%" + searchKey + "%' ";
+                availableStockNativeSql+="OR lower(v.product_name) LIKE '%" + searchKey + "%' ";
+                availableStockNativeSql+="OR CAST(v.total_price AS VARCHAR ) LIKE '%" + searchKey + "%' ";
+                availableStockNativeSql+="OR CAST(v.available_qty AS VARCHAR) LIKE '%" + searchKey + "%' ";
+                availableStockNativeSql+=") ";
             }
             //============ full text search ===========================================
 
@@ -557,7 +602,7 @@ public class StockService extends BaseService<Stock> {
             //totalStockAmount = list.stream().mapToDouble(AvailableStockView::getTotalPrice).sum();
 
 
-            list = this.executeNativeQuery(availableStock,AvailableStockView.class,SqlEnum.QueryType.Select.get());
+            list = this.executeNativeQuery(availableStockNativeSql,AvailableStockView.class,SqlEnum.QueryType.Select.get());
 
 
             responseMessage = this.buildResponseMessage(list);
@@ -565,11 +610,18 @@ public class StockService extends BaseService<Stock> {
             if(list.size()>0) {
 
 
-                queryBuilderForTotalStockPrice.append("GROUP BY stock.in_out, stock.store_id ")
+               /* queryBuilderForTotalStockPrice.append("GROUP BY stock.in_out, stock.store_id ")
                         .append(") stock_total");
+                */
+
+               totalStockPriceNativeSql+="GROUP BY " +
+                       "   stock_sum.product_id " +
+                       " ) v  " +
+                       "WHERE " +
+                       " v.available_qty > 0";
 
                 Core.resetPaginationVariable();
-                totalStockAmount = this.executeNativeQuery(queryBuilderForTotalStockPrice.toString(), Double.class, SqlEnum.QueryType.GetOne.get()).get(0);
+                totalStockAmount = this.executeNativeQuery(totalStockPriceNativeSql, Double.class, SqlEnum.QueryType.GetOne.get()).get(0);
                 //totalStockAmount = this.executeNativeQuery(queryBuilderForTotalStockPrice.toString(), Total.class, SqlEnum.QueryType.Select.get()).get(0);
             }
 
