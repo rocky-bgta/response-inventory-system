@@ -222,6 +222,7 @@ public class Dao<T> extends BaseDao {
             session = this.getSessionFroReadOperation();
             //session.beginTransaction();
             Query q = session.createQuery(hql);
+            q.setCacheable(true);
             likeQuery= StringUtils.contains(hql,"LIKE");
             for (Map.Entry<Object, Object> entry : keyValueParis.entrySet()) {
                 key = entry.getKey().toString();
